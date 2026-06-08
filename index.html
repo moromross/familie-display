@@ -425,6 +425,19 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'DM Sans',san
   cursor:pointer; z-index:200;
   display:flex; align-items:center; justify-content:center;
 }
+
+/* iOS touch fix */
+[role="button"], .s-save-btn, #gear-btn, .scroll-btn, .week-btn, .week-close-btn, .s-add-btn {
+  cursor: pointer;
+  -webkit-appearance: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 </style>
 </head>
 <body>
@@ -474,16 +487,16 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'DM Sans',san
     <div class="col-head" style="position:relative">
       <div class="col-head-label">Kind 3</div>
       <div class="col-head-name" id="head-k3"><span class="col-head-dot" style="background:var(--col-k3)"></span>Kind 3</div>
-      <button class="week-btn" onclick="openWeek()">7 Tage ›</button>
+      <div class="week-btn" role="button" id="week-btn">7 Tage ›</div>
     </div>
   </div>
 
   <div id="cal-body-wrap">
     <!-- Scroll controls -->
     <div id="cal-scroll-controls">
-      <button class="scroll-btn" onclick="scrollCal(-200)">▲</button>
-      <button class="scroll-btn" onclick="scrollCal(200)">▼</button>
-      <button class="scroll-btn" onclick="nextDay()" title="Nächster Tag" style="font-size:0.7rem">+1</button>
+      <div class="scroll-btn" role="button" id="scroll-up">▲</div>
+      <div class="scroll-btn" role="button" id="scroll-dn">▼</div>
+      <div class="scroll-btn" role="button" id="scroll-next" style="font-size:0.7rem">+1</div>
     </div>
 
     <div id="cal-scroll">
@@ -508,7 +521,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'DM Sans',san
 <div id="scr-week" class="screen">
   <div id="week-topbar">
     <div id="week-topbar-title">Nächste 7 Tage</div>
-    <button class="week-close-btn" onclick="closeWeek()">✕ Zurück</button>
+    <div class="week-close-btn" role="button" id="week-close-btn">✕ Zurück</div>
   </div>
   <div id="week-colheads"></div>
   <div id="week-body"></div>
@@ -516,7 +529,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'DM Sans',san
 
 <!-- ════════ SETTINGS ════════ -->
 <div id="scr-settings" class="screen">
-  <button id="settings-close-btn" onclick="closeSettings()">✕ Schließen</button>
+  <div id="settings-close-btn" role="button">✕ Schließen</div>
   <div class="s-title">⚙ Einstellungen</div>
 
   <div class="s-section">
@@ -584,7 +597,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'DM Sans',san
       <div class="s-field"><input class="s-input photo-url" type="url" placeholder="https://...foto2.jpg"></div>
       <div class="s-field"><input class="s-input photo-url" type="url" placeholder="https://...foto3.jpg"></div>
     </div>
-    <button class="s-add-btn" onclick="addPhotoField()">+ Foto hinzufügen</button>
+    <div class="s-add-btn" role="button" id="add-photo-btn">+ Foto hinzufügen</div>
     <div class="s-field" style="margin-top:12px">
       <label class="s-label">Intervall (Sekunden)</label>
       <input class="s-input" id="slide-secs" type="number" value="30" min="5" max="600" style="width:100px">
@@ -608,11 +621,11 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'DM Sans',san
     </div>
   </div>
 
-  <button class="s-save-btn" onclick="saveSettings()">💾 Speichern &amp; Starten</button>
+  <div class="s-save-btn" id="save-btn" role="button">💾 Speichern &amp; Starten</div>
 </div>
 
 <!-- Gear button always visible -->
-<button id="gear-btn" onclick="openSettings()">⚙️</button>
+<div id="gear-btn" role="button">⚙️</div>
 
 <script>
 // ═══════════════════════════════════════
@@ -1268,6 +1281,39 @@ function escH(s) {
 // START
 // ═══════════════════════════════════════
 init();
+
+// ═══════════════════════════════════════
+// iOS-SAFE TOUCH EVENTS
+// ═══════════════════════════════════════
+function tap(id, fn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  // Use both touchend and click for maximum iOS compatibility
+  ['touchend','click'].forEach(evt => {
+    el.addEventListener(evt, function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      fn();
+    }, { passive: false });
+  });
+}
+
+tap('save-btn',        saveSettings);
+tap('gear-btn',        openSettings);
+tap('settings-close-btn', closeSettings);
+tap('week-close-btn',  closeWeek);
+tap('week-btn',        openWeek);
+tap('scroll-up',       () => scrollCal(-200));
+tap('scroll-dn',       () => scrollCal(200));
+tap('scroll-next',     nextDay);
+tap('add-photo-btn',   addPhotoField);
+
+// Slideshow tap
+document.getElementById('scr-slide').addEventListener('touchend', function(e) {
+  e.preventDefault();
+  onSlideTap();
+}, { passive: false });
+
 </script>
 </body>
 </html>
