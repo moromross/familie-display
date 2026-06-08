@@ -217,6 +217,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 #s-close-btn{position:fixed;top:10px;right:12px;background:var(--ink);color:#fff;border:none;border-radius:7px;padding:7px 13px;font-size:.68rem;cursor:pointer;z-index:400;font-family:'DM Sans',sans-serif;touch-action:manipulation;-webkit-user-select:none;user-select:none;}
 #gear-btn{position:fixed;bottom:12px;left:12px;z-index:250;width:34px;height:34px;border-radius:50%;background:rgba(26,22,18,.15);border:1px solid rgba(26,22,18,.2);display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;}
 
+/* Windy embed card */
+.windy-card{background:#0d1b2a;border-bottom:1px solid var(--rule);padding:10px 14px;}
+.windy-title{font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:#7eb8d4;font-weight:600;margin-bottom:8px;}
+.windy-frame{width:100%;height:40vh;border:none;border-radius:8px;overflow:hidden;display:block;}
+.windy-fallback{display:none;padding:20px;text-align:center;color:rgba(255,255,255,.4);font-size:.75rem;}
+
 /* iOS tap fix */
 [role=button]{cursor:pointer;-webkit-appearance:none;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
 </style>
@@ -319,7 +325,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   <div class="s-sec">
     <h3>📍 Standorte & Wetter</h3>
     <div class="s-f"><label class="s-lbl">Wohnort (Wetter)</label><input class="s-inp" id="s-city" type="text" value="Wohltorf"></div>
-    <div class="s-f"><label class="s-lbl">Segelrevier (Segelwetter)</label><input class="s-inp" id="s-sail" type="text" value="Kiel"></div>
+    <div class="s-f"><label class="s-lbl">Segelrevier (Segelwetter + Windy)</label><input class="s-inp" id="s-sail" type="text" value="Kiel"></div>
   </div>
 
   <div class="s-sec">
@@ -998,6 +1004,32 @@ function buildNewsCards(articles){
 }
 
 // ══════════════════════════════════════════════
+// WINDY EMBED CARD
+// ══════════════════════════════════════════════
+async function buildWindyCard(){
+  // Geocode the sail location to get lat/lon for Windy URL
+  let lat=54.32, lon=10.13; // Kiel fallback
+  try{
+    const loc=await geocode(cfg.sail);
+    lat=loc.latitude; lon=loc.longitude;
+  }catch(e){}
+  const zoom=10;
+  const windyUrl=`https://embed.windy.com/embed2.html?lat=${lat}&lon=${lon}`
+    +`&detailLat=${lat}&detailLon=${lon}`
+    +`&zoom=${zoom}&level=surface&overlay=wind`
+    +`&menu=&message=true&marker=true&calendar=now&pressure=`
+    +`&type=map&location=coordinates&detail=&metricWind=bft&metricTemp=%C2%B0C&radarRange=-1`;
+  return`<div class="windy-card">
+    <div class="windy-title">🌊 Windy — ${cfg.sail}</div>
+    <iframe class="windy-frame" src="${windyUrl}"
+      allowfullscreen
+      onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    </iframe>
+    <div class="windy-fallback">Windy konnte nicht geladen werden</div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════
 // FEED SCROLL
 // ══════════════════════════════════════════════
 function startFeedScroll(){
@@ -1043,6 +1075,10 @@ async function buildFeed(){
   if(homeW){html+=sh('☀️ Wetter')+buildWeatherCard(homeW.loc,homeW.data);}
   addRes();
   if(sailW){html+=sh('⛵ Segelwetter')+buildSailCard(sailW.loc,sailW.data);}
+  addRes();
+  // Windy embed — async, insert after build
+  const windyHtml=await buildWindyCard();
+  html+=sh('🌊 Windy Live')+windyHtml;
   addRes();
   html+=sh('🏖️ Schulferien')+buildHolidayCard();
   addRes();
