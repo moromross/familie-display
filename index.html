@@ -35,58 +35,73 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 /* Section header */
 .sh{background:var(--ink);padding:7px 14px;display:flex;align-items:center;gap:8px;}
 .sh-rule{flex:1;height:1px;background:rgba(255,255,255,.15);}
-.sh-label{font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600;white-space:nowrap;}
+.sh-label{font-size:.84rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600;white-space:nowrap;}
 
 /* News card */
 .nc{background:var(--paper);border-bottom:1px solid var(--rule);padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
-.nc-img{width:66px;height:50px;object-fit:cover;border-radius:3px;flex-shrink:0;background:var(--rule);}
-.nc-ph{width:66px;height:50px;flex-shrink:0;background:var(--rule);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--ink3);}
+.nc-img{width:66px;height:50px;object-fit:cover;border-radius:3px;flex-shrink:0;}
 .nc-body{flex:1;min-width:0;}
 .nc-res{font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:3px;}
 .nc-title{font-family:'Playfair Display',serif;font-size:.9rem;line-height:1.3;color:var(--ink);margin-bottom:4px;}
 .nc-desc{font-size:.68rem;color:var(--ink2);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .nc-time{font-size:.56rem;color:var(--ink3);margin-top:4px;font-family:'JetBrains Mono',monospace;}
 
-/* Weather card — minimal */
-.wc{background:#e8f4f8;padding:14px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:16px;}
-.wc-icon{font-size:2.4rem;flex-shrink:0;}
-.wc-body{flex:1;}
-.wc-loc{font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:4px;}
-.wc-temp{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--ink);line-height:1;}
-.wc-desc{font-size:.72rem;color:var(--ink2);margin-top:3px;}
-.wc-rain{font-size:.72rem;color:var(--blue);margin-top:2px;}
+/* Weather card — heute groß, morgen/übermorgen klein */
+.wc{background:#dff0f8;border-bottom:1px solid var(--rule);padding:14px;}
+.wc-loc{font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:10px;}
+.wc-row{display:flex;gap:10px;align-items:stretch;}
+.wc-today{flex:2;background:rgba(255,255,255,.8);border-radius:8px;padding:12px;display:flex;align-items:center;gap:12px;}
+.wc-today-icon{font-size:2.8rem;flex-shrink:0;}
+.wc-today-body{}
+.wc-today-temp{font-family:'Playfair Display',serif;font-size:2.4rem;color:var(--ink);line-height:1;}
+.wc-today-desc{font-size:.72rem;color:var(--ink2);margin-top:3px;}
+.wc-today-rain{font-size:.7rem;color:var(--blue);margin-top:3px;}
+.wc-small-col{flex:1;display:flex;flex-direction:column;gap:6px;}
+.wc-small{background:rgba(255,255,255,.6);border-radius:7px;padding:8px;text-align:center;}
+.wc-small-day{font-size:.52rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+.wc-small-icon{font-size:1.4rem;}
+.wc-small-temp{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--ink);margin-top:2px;}
+.wc-small-rain{font-size:.6rem;color:var(--blue);margin-top:1px;}
 
-/* Sailing card */
-.sc{background:#e8f0f8;padding:14px;border-bottom:1px solid var(--rule);}
-.sc-title{font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:10px;}
-.sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.sc-day{background:rgba(255,255,255,.7);border-radius:7px;padding:10px;}
-.sc-day-name{font-family:'Playfair Display',serif;font-size:.88rem;color:var(--blue);margin-bottom:6px;}
-.sc-row{display:flex;justify-content:space-between;margin-bottom:4px;}
-.sc-lbl{font-size:.62rem;color:var(--ink2);}
-.sc-val{font-size:.75rem;font-weight:600;}
-.bft-bar{display:flex;gap:2px;margin-top:5px;}
-.bft-seg{height:5px;flex:1;border-radius:1px;background:var(--rule2);}
-.bft-seg.on{background:var(--blue);}
+/* Sailing card — Windy style */
+.sc{background:#0d1b2a;border-bottom:1px solid var(--rule);padding:14px;}
+.sc-title{font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:#7eb8d4;font-weight:600;margin-bottom:12px;}
+.sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sc-day{background:rgba(255,255,255,.06);border-radius:8px;padding:10px;border:1px solid rgba(255,255,255,.1);}
+.sc-day-name{font-family:'Playfair Display',serif;font-size:.9rem;color:#e8f4ff;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+/* Windrose */
+.sc-rose-wrap{display:flex;justify-content:center;margin-bottom:8px;}
+.sc-rose{width:60px;height:60px;position:relative;}
+.sc-rose svg{width:100%;height:100%;}
+/* Bft color band */
+.sc-bft-band{display:flex;gap:2px;margin:6px 0 3px;}
+.sc-bft-seg{height:7px;flex:1;border-radius:1px;}
+.sc-row{display:flex;justify-content:space-between;margin-bottom:4px;align-items:center;}
+.sc-lbl{font-size:.6rem;color:rgba(255,255,255,.45);}
+.sc-val{font-size:.75rem;font-weight:600;color:#e8f4ff;}
+.sc-rain-ok{color:#7ec8a0;}.sc-rain-warn{color:#f4a261;}.sc-rain-bad{color:#e07070;}
+.sc-bft-label{font-size:.58rem;color:rgba(255,255,255,.4);margin-top:1px;}
 
 /* Holiday card */
 .hc{background:#f0f8e8;padding:14px;border-bottom:1px solid var(--rule);}
 .hc-title{font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:600;margin-bottom:10px;}
 .hc-row{display:flex;gap:10px;align-items:flex-start;}
-/* primary state — large */
-.hc-main{flex:2;background:rgba(255,255,255,.75);border-radius:8px;padding:12px;}
+.hc-main{flex:2;background:rgba(255,255,255,.8);border-radius:8px;padding:12px;}
 .hc-main-state{font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;}
-.hc-main-name{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--ink);margin:3px 0;}
-.hc-main-days{font-size:2rem;font-weight:700;color:var(--green);line-height:1;}
-.hc-main-lbl{font-size:.6rem;color:var(--ink3);}
-.hc-main-dates{font-size:.62rem;color:var(--ink2);margin-top:5px;}
-/* secondary state — small */
-.hc-sec{flex:1;background:rgba(255,255,255,.55);border-radius:8px;padding:8px;}
+.hc-main-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--ink);margin:3px 0 6px;}
+.hc-main-rund{font-size:.6rem;color:var(--ink3);margin-bottom:1px;}
+.hc-main-weeks{font-size:2.2rem;font-weight:700;color:var(--green);line-height:1;}
+.hc-main-noch{font-size:.6rem;color:var(--ink3);margin-top:1px;}
+.hc-main-exact{font-size:.65rem;color:var(--ink2);margin-top:4px;}
+.hc-main-dates{font-size:.6rem;color:var(--ink3);margin-top:3px;}
+.hc-sec{flex:1;background:rgba(255,255,255,.6);border-radius:8px;padding:8px;}
 .hc-sec-state{font-size:.5rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;}
-.hc-sec-name{font-size:.72rem;color:var(--ink);margin:2px 0;font-weight:500;}
-.hc-sec-days{font-size:1.2rem;font-weight:700;color:var(--green);line-height:1;}
-.hc-sec-lbl{font-size:.55rem;color:var(--ink3);}
-.hc-sec-dates{font-size:.58rem;color:var(--ink2);margin-top:3px;}
+.hc-sec-name{font-size:.7rem;color:var(--ink);margin:2px 0 4px;font-weight:500;}
+.hc-sec-rund{font-size:.52rem;color:var(--ink3);}
+.hc-sec-weeks{font-size:1.3rem;font-weight:700;color:var(--green);line-height:1;}
+.hc-sec-noch{font-size:.5rem;color:var(--ink3);}
+.hc-sec-exact{font-size:.58rem;color:var(--ink2);margin-top:3px;}
+.hc-sec-dates{font-size:.55rem;color:var(--ink3);margin-top:2px;}
 
 /* Birthday card */
 .bc{background:var(--accent-light);border-bottom:1px solid var(--rule);border-left:4px solid var(--accent);padding:12px 14px;}
@@ -670,7 +685,7 @@ async function geocode(city){
 }
 async function getWeather(city){
   const loc=await geocode(city);
-  const url=`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,weathercode,precipitation_probability&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,windspeed_10m_max,weathercode&wind_speed_unit=kn&timezone=Europe%2FBerlin&forecast_days=8`;
+  const url=`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,weathercode,precipitation_probability&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,windspeed_10m_max,winddirection_10m_dominant,weathercode&wind_speed_unit=kn&timezone=Europe%2FBerlin&forecast_days=8`;
   const r=await fetch(url);
   return{loc,data:await r.json()};
 }
@@ -749,59 +764,166 @@ function buildWeekendCard(){
 function sh(label){return`<div class="sh"><span class="sh-rule"></span><span class="sh-label">${label}</span><span class="sh-rule"></span></div>`;}
 
 function buildWeatherCard(loc,data){
-  const c=data.current;
-  const rain=c.precipitation_probability??0;
-  return`<div class="wc"><div class="wc-icon">${wmoIcon(c.weathercode)}</div><div class="wc-body"><div class="wc-loc">🌍 ${loc.name}</div><div class="wc-temp">${Math.round(c.temperature_2m)}°C</div><div class="wc-desc">${wmoDesc(c.weathercode)}</div><div class="wc-rain">🌧 Regen: ${rain}%</div></div></div>`;
+  const c=data.current,d=data.daily;
+  const rain0=c.precipitation_probability??0;
+  const ds=['So','Mo','Di','Mi','Do','Fr','Sa'];
+  function sm(i){
+    const dt=new Date();dt.setDate(dt.getDate()+i);
+    const mn=Math.round(d.temperature_2m_min[i]),mx=Math.round(d.temperature_2m_max[i]);
+    const r=d.precipitation_probability_max[i]??0;
+    return`<div class="wc-small">
+      <div class="wc-small-day">${ds[dt.getDay()]}</div>
+      <div class="wc-small-icon">${wmoIcon(d.weathercode[i])}</div>
+      <div class="wc-small-temp">${mx}° <span style="font-size:.7rem;color:var(--ink3)">${mn}°</span></div>
+      <div class="wc-small-rain">🌧 ${r}%</div>
+    </div>`;
+  }
+  return`<div class="wc">
+    <div class="wc-loc">🌍 ${loc.name}</div>
+    <div class="wc-row">
+      <div class="wc-today">
+        <div class="wc-today-icon">${wmoIcon(c.weathercode)}</div>
+        <div class="wc-today-body">
+          <div class="wc-today-temp">${Math.round(c.temperature_2m)}°C</div>
+          <div class="wc-today-desc">${wmoDesc(c.weathercode)}</div>
+          <div class="wc-today-rain">🌧 Regen: ${rain0}%</div>
+        </div>
+      </div>
+      <div class="wc-small-col">${sm(1)}${sm(2)}</div>
+    </div>
+  </div>`;
+}
+
+// Windy-style BFT color
+function bftColor(b){
+  const colors=['#c8e6ff','#a8d8ff','#7dc8f0','#5ab4e0','#38a0d0',
+                '#f0d060','#e8a030','#e07020','#d04010','#c02000','#900000','#600000','#300000'];
+  return colors[Math.min(b,12)];
+}
+// Wind direction arrow SVG
+function windRoseSvg(deg,bft){
+  const col=bftColor(bft);
+  const r=deg*(Math.PI/180);
+  const cx=30,cy=30,len=20;
+  const x2=cx+Math.sin(r)*len,y2=cy-Math.cos(r)*len;
+  const x1=cx-Math.sin(r)*len*0.5,y1=cy+Math.cos(r)*len*0.5;
+  return`<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="30" cy="30" r="28" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+    <line x1="30" y1="4" x2="30" y2="10" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+    <line x1="30" y1="50" x2="30" y2="56" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+    <line x1="4" y1="30" x2="10" y2="30" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+    <line x1="50" y1="30" x2="56" y2="30" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+    <text x="30" y="9" text-anchor="middle" font-size="6" fill="rgba(255,255,255,.4)" font-family="sans-serif">N</text>
+    <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="3" stroke-linecap="round"/>
+    <polygon points="${x2},${y2} ${x2-Math.cos(r)*6-Math.sin(r)*3},${y2+Math.sin(r)*6-Math.cos(r)*3} ${x2-Math.cos(r)*6+Math.sin(r)*3},${y2+Math.sin(r)*6+Math.cos(r)*3}" fill="${col}"/>
+    <circle cx="30" cy="30" r="3" fill="${col}"/>
+    <text x="30" y="34" text-anchor="middle" font-size="8" font-weight="bold" fill="${col}" font-family="monospace">${bft}</text>
+  </svg>`;
 }
 
 function buildSailCard(loc,data){
   const today=new Date();
   const dSat=(6-today.getDay()+7)%7||7;
   const satI=dSat,sunI=dSat+1;
+
   function dc(i,label){
     if(i>=data.daily.windspeed_10m_max.length)return'';
-    const w=data.daily.windspeed_10m_max[i],bft=kn2bft(w),rain=data.daily.precipitation_probability_max[i];
-    const segs=Array.from({length:12},(_,j)=>`<div class="bft-seg${j<bft?' on':''}"></div>`).join('');
-    return`<div class="sc-day"><div class="sc-day-name">${label} ${wmoIcon(data.daily.weathercode[i])}</div>
-      <div class="sc-row"><span class="sc-lbl">Wind</span><span class="sc-val">${Math.round(w)} kn / Bft ${bft}</span></div>
-      <div class="bft-bar">${segs}</div>
-      <div style="font-size:.58rem;color:var(--ink3);margin-top:2px">${bftLbl(bft)}</div>
-      <div class="sc-row" style="margin-top:5px"><span class="sc-lbl">Regen</span><span class="sc-val" style="color:${rain>50?'var(--accent)':'var(--green)'}">${rain}%</span></div>
-      <div class="sc-row"><span class="sc-lbl">Max</span><span class="sc-val">${Math.round(data.daily.temperature_2m_max[i])}°C</span></div>
+    const w=data.daily.windspeed_10m_max[i];
+    const bft=kn2bft(w);
+    const rain=data.daily.precipitation_probability_max[i]??0;
+    const wdir=data.daily.winddirection_10m_dominant?.[i]??0;
+    const col=bftColor(bft);
+    const rainCls=rain<=30?'sc-rain-ok':rain<=60?'sc-rain-warn':'sc-rain-bad';
+    // BFT color band
+    const band=Array.from({length:12},(_,j)=>{
+      const bc=j<bft?bftColor(j+1):'rgba(255,255,255,.08)';
+      return`<div class="sc-bft-seg" style="background:${bc}"></div>`;
+    }).join('');
+    return`<div class="sc-day">
+      <div class="sc-day-name">${label} <span style="font-size:.85rem">${wmoIcon(data.daily.weathercode[i])}</span></div>
+      <div class="sc-rose-wrap"><div class="sc-rose">${windRoseSvg(wdir,bft)}</div></div>
+      <div class="sc-bft-band">${band}</div>
+      <div class="sc-bft-label">${bftLbl(bft)}</div>
+      <div class="sc-row" style="margin-top:6px">
+        <span class="sc-lbl">Wind</span>
+        <span class="sc-val" style="color:${col}">${Math.round(w)} kn &nbsp;Bft ${bft}</span>
+      </div>
+      <div class="sc-row">
+        <span class="sc-lbl">Regen</span>
+        <span class="sc-val ${rainCls}">${rain}%</span>
+      </div>
+      <div class="sc-row">
+        <span class="sc-lbl">Temp max</span>
+        <span class="sc-val">${Math.round(data.daily.temperature_2m_max[i])}°C</span>
+      </div>
     </div>`;
   }
   return`<div class="sc"><div class="sc-title">⛵ Segelwetter ${loc.name} — Nächstes Wochenende</div><div class="sc-grid">${dc(satI,'Samstag')}${dc(sunI,'Sonntag')}</div></div>`;
 }
 
+function roundWeeks(days){
+  if(days===0)return{rund:'heute',weeks:'',noch:'',exact:''};
+  if(days<=6)return{rund:'rund',weeks:days+' Tag'+(days===1?'':'e'),noch:'noch',exact:''};
+  const w=Math.ceil(days/7);
+  return{rund:'rund',weeks:w+' Woche'+(w===1?'':'n'),noch:'noch',exact:days+' Tage genau'};
+}
 function buildHolidayCard(){
   const f1=nextFerien(cfg.st1),f2=nextFerien(cfg.st2);
   function fmtD(d){return d.toLocaleDateString('de-DE',{day:'numeric',month:'short'});}
   function main(f,code){
     if(!f)return`<div class="hc-main"><div class="hc-main-state">${STNAMES[code]||code}</div><div class="hc-main-name">–</div></div>`;
-    return`<div class="hc-main">
-      <div class="hc-main-state">${STNAMES[code]||code}</div>
+    if(f.inF){
+      const left=Math.ceil((f.end-new Date())/86400000);
+      return`<div class="hc-main"><div class="hc-main-state">${STNAMES[code]||code}</div>
+        <div class="hc-main-name">${f.name}</div>
+        <div class="hc-main-weeks" style="color:var(--accent)">🎉 Ferien!</div>
+        <div class="hc-main-exact">noch ${left} Tage</div>
+        <div class="hc-main-dates">${fmtD(f.start)} – ${fmtD(f.end)}</div></div>`;
+    }
+    const rw=roundWeeks(f.days);
+    return`<div class="hc-main"><div class="hc-main-state">${STNAMES[code]||code}</div>
       <div class="hc-main-name">${f.name}</div>
-      ${f.inF?`<div class="hc-main-days" style="color:var(--accent)">🎉 Ferien!</div>`:`<div class="hc-main-days">${f.days}</div><div class="hc-main-lbl">Tage bis Beginn</div>`}
-      <div class="hc-main-dates">${fmtD(f.start)} – ${fmtD(f.end)}</div>
-    </div>`;
+      <div class="hc-main-rund">${rw.rund}</div>
+      <div class="hc-main-weeks">${rw.weeks}</div>
+      <div class="hc-main-noch">${rw.noch}</div>
+      ${rw.exact?`<div class="hc-main-exact">${rw.exact}</div>`:''}
+      <div class="hc-main-dates">${fmtD(f.start)} – ${fmtD(f.end)}</div></div>`;
   }
   function sec(f,code){
     if(!f)return`<div class="hc-sec"><div class="hc-sec-state">${STNAMES[code]||code}</div><div class="hc-sec-name">–</div></div>`;
-    return`<div class="hc-sec">
-      <div class="hc-sec-state">${STNAMES[code]||code}</div>
+    if(f.inF){
+      const left=Math.ceil((f.end-new Date())/86400000);
+      return`<div class="hc-sec"><div class="hc-sec-state">${STNAMES[code]||code}</div>
+        <div class="hc-sec-name">${f.name}</div>
+        <div class="hc-sec-weeks" style="color:var(--accent)">🎉</div>
+        <div class="hc-sec-exact">noch ${left}d</div>
+        <div class="hc-sec-dates">${fmtD(f.start)} – ${fmtD(f.end)}</div></div>`;
+    }
+    const rw=roundWeeks(f.days);
+    return`<div class="hc-sec"><div class="hc-sec-state">${STNAMES[code]||code}</div>
       <div class="hc-sec-name">${f.name}</div>
-      ${f.inF?`<div class="hc-sec-days" style="color:var(--accent)">🎉</div>`:`<div class="hc-sec-days">${f.days}</div><div class="hc-sec-lbl">Tage</div>`}
-      <div class="hc-sec-dates">${fmtD(f.start)} – ${fmtD(f.end)}</div>
-    </div>`;
+      <div class="hc-sec-rund">${rw.rund}</div>
+      <div class="hc-sec-weeks">${rw.weeks}</div>
+      <div class="hc-sec-noch">${rw.noch}</div>
+      ${rw.exact?`<div class="hc-sec-exact">${rw.exact}</div>`:''}
+      <div class="hc-sec-dates">${fmtD(f.start)} – ${fmtD(f.end)}</div></div>`;
   }
   return`<div class="hc"><div class="hc-title">🏖️ Schulferien</div><div class="hc-row">${main(f1,cfg.st1)}${sec(f2,cfg.st2)}</div></div>`;
 }
 
 function buildBdayCards(){
-  return getBirthdays().map(b=>{
+  const bdays=getBirthdays();
+  if(!bdays.length){
+    return`<div class="bc" style="opacity:.6;border-left-color:var(--ink3)">
+      <div class="bc-hdr" style="color:var(--ink3)">🎁 Geburtstage</div>
+      <div style="font-size:.72rem;color:var(--ink3);font-style:italic">Keine Geburtstage in den nächsten 7 Tagen</div>
+    </div>`;
+  }
+  return bdays.map(b=>{
     const name=b.summary.replace(/geburtstag/gi,'').trim()||b.summary;
     const isToday=b.days===0;
-    return`<div class="bc"><div class="bc-hdr">${isToday?'🎂 HEUTE GEBURTSTAG!':'🎁 Geburtstag in '+b.days+' Tag'+(b.days===1?'':'en')}</div>
+    return`<div class="bc${isToday?' bc-today':''}">
+      <div class="bc-hdr">${isToday?'🎂 HEUTE GEBURTSTAG!':'🎁 in '+b.days+' Tag'+(b.days===1?'':'en')}</div>
       <div class="${isToday?'bc-name-today':'bc-name-soon'}">${esc(name)}</div>
       ${!isToday?`<div class="bc-sub">am ${b.date.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div>`:''}
     </div>`;
@@ -810,7 +932,7 @@ function buildBdayCards(){
 
 function buildNewsCards(articles){
   return articles.map(a=>{
-    const img=a.img?`<img class="nc-img" src="${a.img}" onerror="this.style.display='none'">`:`<div class="nc-ph">📰</div>`;
+    const img=a.img?`<img class="nc-img" src="${a.img}" onerror="this.parentElement.style.flexDirection='column';this.remove()" loading="lazy">`:'';
     const t=a.pubDate?new Date(a.pubDate).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}):'';
     return`<div class="nc">${img}<div class="nc-body"><div class="nc-res">${a.ressort}</div><div class="nc-title">${esc(a.title)}</div>${a.desc?`<div class="nc-desc">${esc(a.desc)}</div>`:''} ${t?`<div class="nc-time">${t}</div>`:''}</div></div>`;
   }).join('');
@@ -852,21 +974,28 @@ async function buildFeed(){
 
   const byRes=newsRes.map((a,i)=>a.length?{label:FAZ[i].label,articles:a}:null).filter(Boolean);
   let html='',ri=0;
-  const addRes=()=>{if(ri<byRes.length){const r=byRes[ri++];html+=sh('FAZ — '+r.label)+buildNewsCards(r.articles);}};
+  const addRes=()=>{
+    if(ri<byRes.length){const r=byRes[ri++];html+=sh('FAZ — '+r.label)+buildNewsCards(r.articles);}
+  };
 
-  // Birthdays
-  const bdHtml=buildBdayCards();
-  if(bdHtml)html+=sh('🎂 Geburtstage')+bdHtml;
-
+  // Interleaved feed: ressort → section → ressort → section …
+  html+=sh('🎂 Geburtstage')+buildBdayCards();
   addRes();
-  if(homeW)html+=sh('Wetter')+buildWeatherCard(homeW.loc,homeW.data);
+  if(homeW){html+=sh('☀️ Wetter')+buildWeatherCard(homeW.loc,homeW.data);}
   addRes();
-  if(sailW)html+=sh('Segelwetter')+buildSailCard(sailW.loc,sailW.data);
+  if(sailW){html+=sh('⛵ Segelwetter')+buildSailCard(sailW.loc,sailW.data);}
   addRes();
   html+=sh('🏖️ Schulferien')+buildHolidayCard();
   addRes();
-  html+=sh('📅 Kommendes Wochenende')+buildWeekendCard();
-  while(ri<byRes.length)addRes();
+  html+=sh('📅 Wochenende')+buildWeekendCard();
+  // remaining ressorts interleaved with repeat of sections
+  const extras=[
+    ()=>html+=sh('🏖️ Schulferien')+buildHolidayCard(),
+    ()=>{if(homeW)html+=sh('☀️ Wetter')+buildWeatherCard(homeW.loc,homeW.data);},
+    ()=>html+=sh('📅 Wochenende')+buildWeekendCard(),
+  ];
+  let ei=0;
+  while(ri<byRes.length){addRes();if(ei<extras.length)extras[ei++]();}
 
   track.innerHTML=html+html; // duplicate for seamless loop
   setTimeout(()=>{startFeedScroll();},200);
