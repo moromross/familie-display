@@ -220,7 +220,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 /* Windy embed card */
 .windy-card{background:#0d1b2a;border-bottom:1px solid var(--rule);padding:10px 14px;}
 .windy-title{font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:#7eb8d4;font-weight:600;margin-bottom:8px;}
-.windy-frame{width:100%;height:40vh;border:none;border-radius:8px;overflow:hidden;display:block;}
+.windy-frame{width:100%;height:27vh;border:none;border-radius:8px;overflow:hidden;display:block;}
 .windy-fallback{display:none;padding:20px;text-align:center;color:rgba(255,255,255,.4);font-size:.75rem;}
 
 /* iOS tap fix */
@@ -1013,14 +1013,30 @@ async function buildWindyCard(){
     const loc=await geocode(cfg.sail);
     lat=loc.latitude; lon=loc.longitude;
   }catch(e){}
+
+  // Next weekend: next Saturday after Monday 00:01
+  // If today is Mon-Fri → this coming Saturday
+  // If today is Sat/Sun → next next Saturday
+  const now=new Date();
+  const dow=now.getDay(); // 0=Sun,1=Mon,...,6=Sat
+  // days until next Saturday (not today if already Sat/Sun)
+  const daysUntilSat = dow===0 ? 6 : dow===6 ? 7 : 6-dow;
+  const nextSat=new Date(now);
+  nextSat.setDate(now.getDate()+daysUntilSat);
+  nextSat.setHours(10,0,0,0);
+  // Format as Unix timestamp for Windy
+  const ts=Math.floor(nextSat.getTime()/1000);
+
   const zoom=10;
   const windyUrl=`https://embed.windy.com/embed2.html?lat=${lat}&lon=${lon}`
     +`&detailLat=${lat}&detailLon=${lon}`
     +`&zoom=${zoom}&level=surface&overlay=wind`
-    +`&menu=&message=true&marker=true&calendar=now&pressure=`
+    +`&menu=&message=true&marker=true&calendar=${ts}&pressure=`
     +`&type=map&location=coordinates&detail=&metricWind=bft&metricTemp=%C2%B0C&radarRange=-1`;
+
+  const satLabel=nextSat.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
   return`<div class="windy-card">
-    <div class="windy-title">🌊 Windy — ${cfg.sail}</div>
+    <div class="windy-title">🌊 Windy — ${cfg.sail} · Wochenende ab ${satLabel}</div>
     <iframe class="windy-frame" src="${windyUrl}"
       allowfullscreen
       onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -1074,10 +1090,10 @@ async function buildFeed(){
   addRes();
   if(homeW){html+=sh('☀️ Wetter')+buildWeatherCard(homeW.loc,homeW.data);}
   addRes();
-  if(sailW){html+=sh('⛵ Segelwetter')+buildSailCard(sailW.loc,sailW.data);}
-  addRes();
-  // Windy embed — async, insert after build
+  // Windy embed — if available, skip sailing table (redundant)
   const windyHtml=await buildWindyCard();
+  const windyAvailable=!!windyHtml;
+  if(sailW && !windyAvailable){html+=sh('⛵ Segelwetter')+buildSailCard(sailW.loc,sailW.data);}
   html+=sh('🌊 Windy Live')+windyHtml;
   addRes();
   html+=sh('🏖️ Schulferien')+buildHolidayCard();
