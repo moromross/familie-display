@@ -351,6 +351,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   <div class="s-save" id="s-save-btn">💾 Speichern &amp; Starten</div>
 </div>
 <div id="gear-btn">⚙️</div>
+<div id="debug-btn" style="position:fixed;bottom:10px;left:10px;z-index:100;width:36px;height:36px;border-radius:50%;background:rgba(200,0,0,.3);border:1px solid rgba(200,0,0,.5);display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;font-size:.7rem;color:#fff;cursor:pointer;">DBG</div>
+<div id="debug-panel" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:700;background:rgba(0,0,0,.92);overflow-y:scroll;padding:14px;-webkit-overflow-scrolling:touch;">
+  <div style="color:#fff;font-family:monospace;font-size:.75rem;line-height:1.6;" id="debug-log">Teste Kalender...</div>
+  <div onclick="gel('debug-panel').style.display='none'" style="position:fixed;top:10px;right:14px;color:#fff;font-size:1.2rem;cursor:pointer;">✕</div>
+</div>
 
 <script>
 // ── CONFIG ──────────────────────────────────────────
@@ -460,11 +465,31 @@ function getWeather(city,cb){
 function fetchIcal(url,calId,color,cb){
   if(!url){cb([]);return;}
   var u=url.replace(/^webcal:\/\//i,'https://');
-  var xhr=new XMLHttpRequest();
-  xhr.open('GET','https://corsproxy.io/?'+encodeURIComponent(u),true);
-  xhr.onreadystatechange=function(){if(xhr.readyState===4){if(xhr.status===200)cb(parseIcal(xhr.responseText,calId,color));else cb([]);}};
-  xhr.onerror=function(){cb([]);};
-  xhr.send();
+  var proxies=[
+    'https://corsproxy.io/?'+encodeURIComponent(u),
+    'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+    'https://cors-anywhere.herokuapp.com/'+u
+  ];
+  var pi=0;
+  function tryNext(){
+    if(pi>=proxies.length){cb([]);return;}
+    var xhr=new XMLHttpRequest();
+    xhr.open('GET',proxies[pi],true);
+    xhr.onreadystatechange=function(){
+      if(xhr.readyState===4){
+        if(xhr.status===200&&xhr.responseText.indexOf('BEGIN:VCALENDAR')>-1){
+          cb(parseIcal(xhr.responseText,calId,color));
+        } else {
+          pi++;tryNext();
+        }
+      }
+    };
+    xhr.onerror=function(){pi++;tryNext();};
+    xhr.timeout=8000;
+    xhr.ontimeout=function(){pi++;tryNext();};
+    xhr.send();
+  }
+  tryNext();
 }
 function parseIcal(txt,calId,color){
   var evs=[],blocks=txt.split('BEGIN:VEVENT').slice(1);
@@ -1034,8 +1059,69 @@ setInterval(function(){
   renderCalendars();
 },60*1000);
 
+// ── DEBUG ─────────────────────────────────────────
+function runDebug(){
+  gel('debug-panel').style.display='block';
+  var log=gel('debug-log');
+  log.innerHTML='🔍 Starte Kalender-Test...<br><br>';
+  var tasks=[
+    {label:'Familienkalender 1',url:cfg.uF1},
+    {label:'Familienkalender 2',url:cfg.uF2},
+    {label:'Kind 1 ('+cfg.nK1+')',url:cfg.uK1},
+    {label:'Kind 2 ('+cfg.nK2+')',url:cfg.uK2},
+    {label:'Kind 3 ('+cfg.nK3+')',url:cfg.uK3}
+  ];
+  for(var i=0;i<tasks.length;i++){
+    (function(t){
+      if(!t.url){log.innerHTML+='⚪ '+t.label+': keine URL<br>';return;}
+      log.innerHTML+='⏳ '+t.label+': teste...<br>';
+      var u=t.url.replace(/^webcal:\/\//i,'https://');
+      var proxy='https://corsproxy.io/?'+encodeURIComponent(u);
+      var xhr=new XMLHttpRequest();
+      xhr.open('GET',proxy,true);
+      xhr.timeout=10000;
+      xhr.onreadystatechange=function(){
+        if(xhr.readyState===4){
+          var isIcal=xhr.responseText&&xhr.responseText.indexOf('BEGIN:VCALENDAR')>-1;
+          var evCount=xhr.responseText?(xhr.responseText.match(/BEGIN:VEVENT/g)||[]).length:0;
+          if(xhr.status===200&&isIcal){
+            log.innerHTML+='✅ '+t.label+': OK — '+evCount+' Termine gefunden<br>';
+          } else if(xhr.status===200&&!isIcal){
+            log.innerHTML+='⚠️ '+t.label+': Antwort OK aber kein Kalender-Format<br>';
+            log.innerHTML+='&nbsp;&nbsp;Antwort: '+esc(xhr.responseText.slice(0,80))+'<br>';
+          } else {
+            log.innerHTML+='❌ '+t.label+': HTTP '+xhr.status+'<br>';
+            // try second proxy
+            var proxy2='https://api.allorigins.win/raw?url='+encodeURIComponent(u);
+            var xhr2=new XMLHttpRequest();
+            xhr2.open('GET',proxy2,true);
+            xhr2.timeout=10000;
+            xhr2.onreadystatechange=function(){
+              if(xhr2.readyState===4){
+                var isIcal2=xhr2.responseText&&xhr2.responseText.indexOf('BEGIN:VCALENDAR')>-1;
+                var evCount2=xhr2.responseText?(xhr2.responseText.match(/BEGIN:VEVENT/g)||[]).length:0;
+                if(xhr2.status===200&&isIcal2){
+                  log.innerHTML+='✅ '+t.label+' (Proxy 2): OK — '+evCount2+' Termine<br>';
+                } else {
+                  log.innerHTML+='❌ '+t.label+' (Proxy 2): auch fehlgeschlagen<br>';
+                }
+              }
+            };
+            xhr2.send();
+          }
+        }
+      };
+      xhr.ontimeout=function(){log.innerHTML+='⏱ '+t.label+': Timeout<br>';};
+      xhr.send();
+    })(tasks[i]);
+  }
+}
+
 var hasConfig=cfg.uF1||cfg.uF2||cfg.uK1||cfg.uK2||cfg.uK3;
 if(!hasConfig)setTimeout(openSettings,1000);
+
+gel('debug-btn').addEventListener('touchend',function(e){e.preventDefault();runDebug();},{passive:false});
+gel('debug-btn').addEventListener('click',function(){runDebug();});
 </script>
 </body>
 </html>
