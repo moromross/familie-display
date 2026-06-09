@@ -1085,7 +1085,22 @@ function runDebug(){
           var isIcal=xhr.responseText&&xhr.responseText.indexOf('BEGIN:VCALENDAR')>-1;
           var evCount=xhr.responseText?(xhr.responseText.match(/BEGIN:VEVENT/g)||[]).length:0;
           if(xhr.status===200&&isIcal){
-            log.innerHTML+='✅ '+t.label+': OK — '+evCount+' Termine gefunden<br>';
+            var evts=parseIcal(xhr.responseText,t.label,'#000');
+            var today=new Date();today.setHours(0,0,0,0);
+            var future=[];
+            for(var k=0;k<evts.length;k++){
+              var diff=Math.round((evts[k].start-today)/86400000);
+              if(diff>=-1&&diff<=14)future.push(evts[k]);
+            }
+            log.innerHTML+='✅ '+t.label+': '+evCount+' Termine total, '+future.length+' in nächsten 14 Tagen<br>';
+            for(var k=0;k<Math.min(future.length,3);k++){
+              var ev=future[k];
+              log.innerHTML+='&nbsp;&nbsp;→ '+esc(ev.summary)+' | '+ev.start.toLocaleDateString('de-DE')+' '+ev.start.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' | allDay:'+ev.allDay+'<br>';
+            }
+            if(!future.length&&evts.length){
+              log.innerHTML+='&nbsp;&nbsp;Erster Termin: '+esc(evts[0].summary)+' am '+evts[0].start.toLocaleDateString('de-DE')+'<br>';
+              log.innerHTML+='&nbsp;&nbsp;Letzter Termin: '+esc(evts[evts.length-1].summary)+' am '+evts[evts.length-1].start.toLocaleDateString('de-DE')+'<br>';
+            }
           } else if(xhr.status===200&&!isIcal){
             log.innerHTML+='⚠️ '+t.label+': Antwort OK aber kein Kalender-Format<br>';
             log.innerHTML+='&nbsp;&nbsp;Antwort: '+esc(xhr.responseText.slice(0,80))+'<br>';
