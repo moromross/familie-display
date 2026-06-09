@@ -465,19 +465,24 @@ function getWeather(city,cb){
 function fetchIcal(url,calId,color,cb){
   if(!url){cb([]);return;}
   var u=url.replace(/^webcal:\/\//i,'https://');
-  var proxies=[
-    'https://corsproxy.io/?'+encodeURIComponent(u),
-    'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
-    'https://cors-anywhere.herokuapp.com/'+u
-  ];
+  // iCloud URLs: try direct first (no proxy needed for published calendars)
+  // then fallback to proxies
+  var isIcloud=u.indexOf('icloud.com')>-1;
+  var urls=isIcloud
+    ? [u,
+       'https://corsproxy.io/?'+encodeURIComponent(u),
+       'https://api.allorigins.win/raw?url='+encodeURIComponent(u)]
+    : ['https://corsproxy.io/?'+encodeURIComponent(u),
+       'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+       u];
   var pi=0;
   function tryNext(){
-    if(pi>=proxies.length){cb([]);return;}
+    if(pi>=urls.length){cb([]);return;}
     var xhr=new XMLHttpRequest();
-    xhr.open('GET',proxies[pi],true);
+    xhr.open('GET',urls[pi],true);
     xhr.onreadystatechange=function(){
       if(xhr.readyState===4){
-        if(xhr.status===200&&xhr.responseText.indexOf('BEGIN:VCALENDAR')>-1){
+        if(xhr.status===200&&xhr.responseText&&xhr.responseText.indexOf('BEGIN:VCALENDAR')>-1){
           cb(parseIcal(xhr.responseText,calId,color));
         } else {
           pi++;tryNext();
@@ -485,7 +490,7 @@ function fetchIcal(url,calId,color,cb){
       }
     };
     xhr.onerror=function(){pi++;tryNext();};
-    xhr.timeout=8000;
+    xhr.timeout=15000;
     xhr.ontimeout=function(){pi++;tryNext();};
     xhr.send();
   }
