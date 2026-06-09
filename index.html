@@ -277,9 +277,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   <div id="row-mid">
     <div id="tile-cal">
       <div id="cal-tabs">
-        <div class="cal-tab active" id="tab-heute" onclick="switchCal('heute')">HEUTE</div>
-        <div class="cal-tab" id="tab-morgen" onclick="switchCal('morgen')">MORGEN</div>
-        <div class="cal-tab" id="tab-wknd" onclick="switchCal('wknd')">WOCHENENDE</div>
+        <div class="cal-tab active" id="tab-heute" onclick="switchCal('heute',true)">HEUTE</div>
+        <div class="cal-tab" id="tab-morgen" onclick="switchCal('morgen',true)">MORGEN</div>
+        <div class="cal-tab" id="tab-wknd" onclick="switchCal('wknd',true)">WOCHENENDE</div>
       </div>
       <div id="cal-body">
         <div class="cal-view active" id="view-heute">
@@ -621,7 +621,7 @@ function startWeatherCycle(){
     wlState=1-wlState;
     gel('wl-weather').className='fade-layer'+(wlState===0?' active':'');
     gel('wl-sail').className='fade-layer'+(wlState===1?' active':'');
-  },2000);
+  },5000);
 }
 
 // ── RENDER: INFO TILE ──────────────────────────────
@@ -680,7 +680,7 @@ function startInfoCycle(){
     infoState=1-infoState;
     gel('info-ferien').className='fade-layer'+(infoState===0?' active':'');
     gel('info-bday').className='fade-layer'+(infoState===1?' active':'');
-  },1200);
+  },2000);
 }
 
 // ── RENDER: CALENDAR ───────────────────────────────
@@ -688,12 +688,17 @@ var currentCalView='heute';
 var calFrozen=false;
 var calAutoTimer=null;
 
-function switchCal(view){
+function switchCal(view,manual){
+  if(manual){
+    calFrozen=!calFrozen;
+    if(!calFrozen)startCalCycle();
+  }
   currentCalView=view;
   var tabs=['heute','morgen','wknd'];
   for(var i=0;i<tabs.length;i++){
     gel('tab-'+tabs[i]).className='cal-tab'+(tabs[i]===view?' active':'');
     gel('view-'+tabs[i]).className='cal-view'+(tabs[i]===view?' active':'');
+    if(tabs[i]===view)calCycleState=i;
   }
 }
 
@@ -903,6 +908,20 @@ function renderFAZ(){
   startFAZCycle();
 }
 
+var calCycleTimer=null;
+var calCycleIdx=0;
+var calCycleViews=['heute','morgen','wknd'];
+
+function startCalCycle(){
+  if(calCycleTimer)clearInterval(calCycleTimer);
+  if(calFrozen)return;
+  calCycleTimer=setInterval(function(){
+    if(calFrozen)return;
+    calCycleIdx=(calCycleIdx+1)%calCycleViews.length;
+    switchCal(calCycleViews[calCycleIdx],false);
+  },4000);
+}
+
 function startFAZCycle(){
   if(fazTimer)clearInterval(fazTimer);
   fazIdx=0;
@@ -992,6 +1011,7 @@ function renderAll(){
   renderWeatherTile();
   renderInfoTile();
   renderCalendars();
+  startCalCycle();
 }
 
 loadCfg();
