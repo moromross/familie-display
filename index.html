@@ -465,33 +465,53 @@ function getWeather(city,cb){
 function fetchIcal(url,calId,color,cb){
   if(!url){cb([]);return;}
   var u=url.replace(/^webcal:\/\//i,'https://');
-  // iCloud URLs: try direct first (no proxy needed for published calendars)
-  // then fallback to proxies
-  var isIcloud=u.indexOf('icloud.com')>-1;
-  var urls=isIcloud
-    ? [u,
-       'https://corsproxy.io/?'+encodeURIComponent(u),
-       'https://api.allorigins.win/raw?url='+encodeURIComponent(u)]
-    : ['https://corsproxy.io/?'+encodeURIComponent(u),
-       'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
-       u];
+  var proxies=[
+    'https://corsproxy.io/?'+encodeURIComponent(u),
+    'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+    'https://thingproxy.freeboard.io/fetch/'+u,
+    u
+  ];
   var pi=0;
   function tryNext(){
-    if(pi>=urls.length){cb([]);return;}
+    if(pi>=proxies.length){cb([]);return;}
     var xhr=new XMLHttpRequest();
-    xhr.open('GET',urls[pi],true);
+    xhr.open('GET',proxies[pi],true);
+    // Accept partial responses too
     xhr.onreadystatechange=function(){
       if(xhr.readyState===4){
-        if(xhr.status===200&&xhr.responseText&&xhr.responseText.indexOf('BEGIN:VCALENDAR')>-1){
-          cb(parseIcal(xhr.responseText,calId,color));
-        } else {
+        var txt=xhr.responseText||'';
+        if(xhr.status===200&&txt.indexOf('BEGIN:VCALENDAR')>-1){
+          cb(parseIcal(txt,calId,color));
+        } else if(xhr.status===413||xhr.status===502||xhr.status===503||xhr.status===0){
           pi++;tryNext();
+        } else if(xhr.status!==200){
+          pi++;tryNext();
+        } else {
+          // got 200 but no calendar data
+          pi++;tryNext();
+        }
+      }
+      // For very large files, try to use partial data when available
+      if(xhr.readyState===3){
+        var txt=xhr.responseText||'';
+        if(txt.length>50000&&txt.indexOf('BEGIN:VCALENDAR')>-1){
+          // We have enough data, parse what we have
+          cb(parseIcal(txt,calId,color));
+          xhr.abort();
         }
       }
     };
     xhr.onerror=function(){pi++;tryNext();};
-    xhr.timeout=15000;
-    xhr.ontimeout=function(){pi++;tryNext();};
+    xhr.timeout=20000;
+    xhr.ontimeout=function(){
+      // On timeout, try to use whatever we got
+      var txt=xhr.responseText||'';
+      if(txt.indexOf('BEGIN:VCALENDAR')>-1){
+        cb(parseIcal(txt,calId,color));
+      } else {
+        pi++;tryNext();
+      }
+    };
     xhr.send();
   }
   tryNext();
