@@ -316,13 +316,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   <div class="s-sec">
     <h3>🏫 Untis Stundenpläne</h3>
     <div class="s-f"><label class="s-lbl">Kind 1 Name</label><input class="s-inp" id="n-k1" type="text" placeholder="Emma"></div>
+    <div class="s-f"><label class="s-lbl">Kind 1 Synonyme (kommagetrennt)</label><input class="s-inp" id="syn-k1" type="text" placeholder="mu12, Em, Emma M."></div>
     <div class="s-f"><label class="s-lbl">Kind 1 Untis URL</label>
       <div class="s-row"><input type="color" class="s-swatch" id="c-k1" value="#6a51a3"><input class="s-inp" id="u-k1" type="url" placeholder="https://mese.webuntis.com/..."></div>
       <div class="s-hint">Untis App → Einstellungen → Kalender-Abo → URL kopieren</div></div>
     <div class="s-f"><label class="s-lbl">Kind 2 Name</label><input class="s-inp" id="n-k2" type="text" placeholder="Luca"></div>
+    <div class="s-f"><label class="s-lbl">Kind 2 Synonyme (kommagetrennt)</label><input class="s-inp" id="syn-k2" type="text" placeholder="mu14, Lu, Luca M."></div>
     <div class="s-f"><label class="s-lbl">Kind 2 Untis URL</label>
       <div class="s-row"><input type="color" class="s-swatch" id="c-k2" value="#31a354"><input class="s-inp" id="u-k2" type="url" placeholder="https://mese.webuntis.com/..."></div></div>
     <div class="s-f"><label class="s-lbl">Kind 3 Name</label><input class="s-inp" id="n-k3" type="text" placeholder="Mia"></div>
+    <div class="s-f"><label class="s-lbl">Kind 3 Synonyme (kommagetrennt)</label><input class="s-inp" id="syn-k3" type="text" placeholder="mi, Mia K."></div>
     <div class="s-f"><label class="s-lbl">Kind 3 Untis URL</label>
       <div class="s-row"><input type="color" class="s-swatch" id="c-k3" value="#d94701"><input class="s-inp" id="u-k3" type="url" placeholder="https://mese.webuntis.com/..."></div></div>
   </div>
@@ -351,17 +354,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   <div class="s-save" id="s-save-btn">💾 Speichern &amp; Starten</div>
 </div>
 <div id="gear-btn">⚙️</div>
-<div id="debug-btn" style="position:fixed;bottom:10px;left:10px;z-index:100;width:36px;height:36px;border-radius:50%;background:rgba(200,0,0,.3);border:1px solid rgba(200,0,0,.5);display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;font-size:.7rem;color:#fff;cursor:pointer;">DBG</div>
-<div id="debug-panel" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:700;background:rgba(0,0,0,.92);overflow-y:scroll;padding:14px;-webkit-overflow-scrolling:touch;">
-  <div style="color:#fff;font-family:monospace;font-size:.75rem;line-height:1.6;" id="debug-log">Teste Kalender...</div>
-  <div onclick="gel('debug-panel').style.display='none'" style="position:fixed;top:10px;right:14px;color:#fff;font-size:1.2rem;cursor:pointer;">✕</div>
-</div>
 
 <script>
 // ── CONFIG ──────────────────────────────────────────
 var cfg = {
   uF1:'',uF2:'',uK1:'',uK2:'',uK3:'',
   nK1:'Kind 1',nK2:'Kind 2',nK3:'Kind 3',
+  synK1:'',synK2:'',synK3:'',
   cF1:'#2171b5',cF2:'#e6550d',cK1:'#6a51a3',cK2:'#31a354',cK3:'#d94701',
   city:'Wohltorf',sail:'Kiel',st1:'SH',st2:'HH'
 };
@@ -373,6 +372,7 @@ function saveCfg(){
   cfg.uF1=gv('u-f1');cfg.uF2=gv('u-f2');
   cfg.uK1=gv('u-k1');cfg.uK2=gv('u-k2');cfg.uK3=gv('u-k3');
   cfg.nK1=gv('n-k1')||'Kind 1';cfg.nK2=gv('n-k2')||'Kind 2';cfg.nK3=gv('n-k3')||'Kind 3';
+  cfg.synK1=gv('syn-k1');cfg.synK2=gv('syn-k2');cfg.synK3=gv('syn-k3');
   cfg.cF1=gv('c-f1');cfg.cF2=gv('c-f2');
   cfg.cK1=gv('c-k1');cfg.cK2=gv('c-k2');cfg.cK3=gv('c-k3');
   cfg.city=gv('s-city')||'Wohltorf';cfg.sail=gv('s-sail')||'Kiel';
@@ -732,8 +732,28 @@ function eoD(d){var x=new Date(d);x.setHours(23,59,59,999);return x;}
 
 function colId(calId){if(calId==='fam1'||calId==='fam2')return 'fam';if(calId==='k1')return 'k1';if(calId==='k2')return 'k2';if(calId==='k3')return 'k3';return null;}
 
+function getKidTerms(kidNum){
+  // returns array of name + synonyms for a kid (1,2,3)
+  var name = kidNum===1?cfg.nK1:kidNum===2?cfg.nK2:cfg.nK3;
+  var syns = kidNum===1?cfg.synK1:kidNum===2?cfg.synK2:cfg.synK3;
+  var terms = [];
+  if(name&&name.trim()) terms.push(name.trim().toLowerCase());
+  if(syns){
+    var parts = syns.split(',');
+    for(var i=0;i<parts.length;i++){
+      var s=parts[i].trim();
+      if(s) terms.push(s.toLowerCase());
+    }
+  }
+  return terms;
+}
+
 function buildChildCopies(evts){
-  var kids=[{id:'k1',name:cfg.nK1,color:cfg.cK1},{id:'k2',name:cfg.nK2,color:cfg.cK2},{id:'k3',name:cfg.nK3,color:cfg.cK3}];
+  var kids=[
+    {id:'k1',num:1,color:cfg.cK1},
+    {id:'k2',num:2,color:cfg.cK2},
+    {id:'k3',num:3,color:cfg.cK3}
+  ];
   var copies=[];
   for(var i=0;i<evts.length;i++){
     var ev=evts[i];
@@ -741,7 +761,12 @@ function buildChildCopies(evts){
     var hay=(ev.summary+' '+(ev.desc||'')+' '+(ev.location||'')).toLowerCase();
     for(var j=0;j<kids.length;j++){
       var k=kids[j];
-      if(k.name&&k.name.trim()&&hay.indexOf(k.name.toLowerCase())>-1){
+      var terms=getKidTerms(k.num);
+      var matched=false;
+      for(var ti=0;ti<terms.length;ti++){
+        if(hay.indexOf(terms[ti])>-1){matched=true;break;}
+      }
+      if(matched){
         copies.push({summary:ev.summary,desc:ev.desc,location:ev.location,start:ev.start,end:ev.end,allDay:ev.allDay,calId:k.id,color:k.color,isCopy:true,origColor:ev.color});
       }
     }
@@ -990,6 +1015,7 @@ function openSettings(){
   gel('u-f1').value=cfg.uF1;gel('u-f2').value=cfg.uF2;
   gel('c-f1').value=cfg.cF1;gel('c-f2').value=cfg.cF2;
   gel('n-k1').value=cfg.nK1;gel('n-k2').value=cfg.nK2;gel('n-k3').value=cfg.nK3;
+  gel('syn-k1').value=cfg.synK1||'';gel('syn-k2').value=cfg.synK2||'';gel('syn-k3').value=cfg.synK3||'';
   gel('u-k1').value=cfg.uK1;gel('u-k2').value=cfg.uK2;gel('u-k3').value=cfg.uK3;
   gel('c-k1').value=cfg.cK1;gel('c-k2').value=cfg.cK2;gel('c-k3').value=cfg.cK3;
   gel('s-city').value=cfg.city;gel('s-sail').value=cfg.sail;
@@ -1097,8 +1123,6 @@ function runDebug(){
 var hasConfig=cfg.uF1||cfg.uF2||cfg.uK1||cfg.uK2||cfg.uK3;
 if(!hasConfig)setTimeout(openSettings,1000);
 
-gel('debug-btn').addEventListener('touchend',function(e){e.preventDefault();runDebug();},{passive:false});
-gel('debug-btn').addEventListener('click',function(){runDebug();});
 </script>
 </body>
 </html>
