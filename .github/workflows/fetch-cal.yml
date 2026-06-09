@@ -3,13 +3,16 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
- 
+
+permissions:
+  contents: write
+
 jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
- 
+      - uses: actions/checkout@v4
+
       - name: Fetch and filter calendars
         env:
           CAL1_URL: ${{ secrets.CAL1_URL }}
@@ -21,7 +24,7 @@ jobs:
           python3 << 'PYEOF'
           import urllib.request, re, os
           from datetime import datetime, timedelta
- 
+
           urls = [
             ("cal1.ics",  os.environ.get("CAL1_URL","")),
             ("cal2.ics",  os.environ.get("CAL2_URL","")),
@@ -29,11 +32,11 @@ jobs:
             ("calk2.ics", os.environ.get("CALK2_URL","")),
             ("calk3.ics", os.environ.get("CALK3_URL","")),
           ]
- 
+
           today = datetime.now()
           date_from = (today - timedelta(days=1)).strftime("%Y%m%d")
           date_to   = (today + timedelta(days=8)).strftime("%Y%m%d")
- 
+
           for fname, url in urls:
             if not url:
               open(fname,'w').write("BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n")
@@ -53,7 +56,6 @@ jobs:
                   if date_from <= d <= date_to:
                     filtered.append("BEGIN:VEVENT" + blk)
                 else:
-                  # timed events with DTSTART:YYYYMMDDTHHmmss
                   m2 = re.search(r'DTSTART[^:]*:(\d{8})T', blk)
                   if m2:
                     d = m2.group(1)
@@ -66,7 +68,7 @@ jobs:
               print(fname + " error: " + str(e))
               open(fname,'w').write("BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n")
           PYEOF
- 
+
       - name: Commit calendars
         run: |
           git config user.email "action@github.com"
