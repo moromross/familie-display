@@ -1,0 +1,60 @@
+name: Fetch Calendars
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Fetch and filter calendars
+        run: |
+          python3 << 'EOF'
+          import urllib.request, re
+          from datetime import datetime, timedelta
+
+          urls = [
+            ("cal1.ics", "${{ secrets.CAL1_URL }}"),
+            ("cal2.ics", "${{ secrets.CAL2_URL }}"),
+            ("calk1.ics", "${{ secrets.CALK1_URL }}"),
+            ("calk2.ics", "${{ secrets.CALK2_URL }}"),
+            ("calk3.ics", "${{ secrets.CALK3_URL }}"),
+          ]
+
+          today = datetime.now()
+          date_from = (today - timedelta(days=1)).strftime("%Y%m%d")
+          date_to   = (today + timedelta(days=8)).strftime("%Y%m%d")
+
+          for fname, url in urls:
+            if not url or url.startswith("${{"):
+              open(fname,'w').write("BEGIN:VCALENDAR\nEND:VCALENDAR")
+              continue
+            url = url.replace("webcal://","https://")
+            try:
+              data = urllib.request.urlopen(url, timeout=30).read().decode("utf-8","ignore")
+              # Filter only relevant events
+              blocks = data.split("BEGIN:VEVENT")
+              header = blocks[0]
+              filtered = []
+              for blk in blocks[1:]:
+                m = re.search(r'DTSTART[^:]*:(\d{8})', blk)
+                if m:
+                  d = m.group(1)
+                  if date_from <= d <= date_to:
+                    filtered.append("BEGIN:VEVENT" + blk)
+              result = header + "".join(filtered) + "END:VCALENDAR"
+              open(fname,'w').write(result)
+              print(f"{fname}: {len(filtered)} events")
+            except Exception as e:
+              print(f"{fname} error: {e}")
+              open(fname,'w').write("BEGIN:VCALENDAR\nEND:VCALENDAR")
+          EOF
+      - name: Commit calendars
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add cal1.ics cal2.ics calk1.ics calk2.ics calk3.ics
+          git diff --staged --quiet || git commit -m "Update calendars"
+          git push
