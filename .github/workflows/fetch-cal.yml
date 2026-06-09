@@ -3,38 +3,46 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
-
+ 
 jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+ 
       - name: Fetch and filter calendars
+        env:
+          CAL1_URL: ${{ secrets.CAL1_URL }}
+          CAL2_URL: ${{ secrets.CAL2_URL }}
+          CALK1_URL: ${{ secrets.CALK1_URL }}
+          CALK2_URL: ${{ secrets.CALK2_URL }}
+          CALK3_URL: ${{ secrets.CALK3_URL }}
         run: |
-          python3 << 'EOF'
-          import urllib.request, re
+          python3 << 'PYEOF'
+          import urllib.request, re, os
           from datetime import datetime, timedelta
-
+ 
           urls = [
-            ("cal1.ics", "${{ secrets.CAL1_URL }}"),
-            ("cal2.ics", "${{ secrets.CAL2_URL }}"),
-            ("calk1.ics", "${{ secrets.CALK1_URL }}"),
-            ("calk2.ics", "${{ secrets.CALK2_URL }}"),
-            ("calk3.ics", "${{ secrets.CALK3_URL }}"),
+            ("cal1.ics",  os.environ.get("CAL1_URL","")),
+            ("cal2.ics",  os.environ.get("CAL2_URL","")),
+            ("calk1.ics", os.environ.get("CALK1_URL","")),
+            ("calk2.ics", os.environ.get("CALK2_URL","")),
+            ("calk3.ics", os.environ.get("CALK3_URL","")),
           ]
-
+ 
           today = datetime.now()
           date_from = (today - timedelta(days=1)).strftime("%Y%m%d")
           date_to   = (today + timedelta(days=8)).strftime("%Y%m%d")
-
+ 
           for fname, url in urls:
-            if not url or url.startswith("${{"):
-              open(fname,'w').write("BEGIN:VCALENDAR\nEND:VCALENDAR")
+            if not url:
+              open(fname,'w').write("BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n")
+              print(fname + ": no URL configured")
               continue
             url = url.replace("webcal://","https://")
             try:
-              data = urllib.request.urlopen(url, timeout=30).read().decode("utf-8","ignore")
-              # Filter only relevant events
+              req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+              data = urllib.request.urlopen(req, timeout=30).read().decode("utf-8","ignore")
               blocks = data.split("BEGIN:VEVENT")
               header = blocks[0]
               filtered = []
@@ -44,17 +52,25 @@ jobs:
                   d = m.group(1)
                   if date_from <= d <= date_to:
                     filtered.append("BEGIN:VEVENT" + blk)
-              result = header + "".join(filtered) + "END:VCALENDAR"
+                else:
+                  # timed events with DTSTART:YYYYMMDDTHHmmss
+                  m2 = re.search(r'DTSTART[^:]*:(\d{8})T', blk)
+                  if m2:
+                    d = m2.group(1)
+                    if date_from <= d <= date_to:
+                      filtered.append("BEGIN:VEVENT" + blk)
+              result = header + "".join(filtered) + "END:VCALENDAR\n"
               open(fname,'w').write(result)
-              print(f"{fname}: {len(filtered)} events")
+              print(fname + ": " + str(len(filtered)) + " events")
             except Exception as e:
-              print(f"{fname} error: {e}")
-              open(fname,'w').write("BEGIN:VCALENDAR\nEND:VCALENDAR")
-          EOF
+              print(fname + " error: " + str(e))
+              open(fname,'w').write("BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n")
+          PYEOF
+ 
       - name: Commit calendars
         run: |
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
           git add cal1.ics cal2.ics calk1.ics calk2.ics calk3.ics
-          git diff --staged --quiet || git commit -m "Update calendars"
+          git diff --staged --quiet || git commit -m "Update calendars $(date -u +%H:%M)"
           git push
