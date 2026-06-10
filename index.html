@@ -657,9 +657,9 @@ function renderWeatherTile(){
   if(sailWeather&&sailWeatherLoc){
     var today=new Date();
     var dSat=(6-today.getDay()+7)%7||7;
-    var HOURS=[6,9,12,15,18],HLABELS=['06','09','12','15','18'];
-    var SHOW_HOURS=12; // only show this hour label centered
-    function dayTbl(offset,label){
+    var HOURS=[6,9,12,15,18];
+
+    function dayCells(offset){
       var td=new Date(today);td.setDate(today.getDate()+offset);
       var ds2=td.getFullYear()+'-'+p2(td.getMonth()+1)+'-'+p2(td.getDate());
       var times=sailWeather.hourly.time||[];
@@ -669,39 +669,22 @@ function renderWeatherTile(){
         for(var ti=0;ti<times.length;ti++){if(times[ti]===tgt){fi=ti;break;}}
         idxs.push(fi);
       }
-      // Header: only "12 Uhr" centered across all 5 columns
-      var hdr='<th class="st-lbl"></th>'
-        +'<th class="st-hdr" style="text-align:center" colspan="5">12 Uhr</th>';
-      // dummy - actual columns still 5
-      var hdrReal='<th class="st-lbl"></th>';
-      for(var hi=0;hi<HOURS.length;hi++)hdrReal+='<th class="st-hdr" style="font-size:.45rem;opacity:.5">'+HOURS[hi]+'h</th>';
-      var rW='<tr><td class="st-lbl">Bft</td>';
-      var rG='<tr><td class="st-lbl">Böen</td>';
-      var rR='<tr><td class="st-lbl">mm</td>';
-      var rD='<tr><td class="st-lbl">↑</td>';
+      var rR='',rW='',rG='',rD='';
       for(var ci=0;ci<idxs.length;ci++){
         var idx=idxs[ci];
         var w=idx>=0?kn2bft(sailWeather.hourly.windspeed_10m[idx]):null;
         var g=idx>=0?kn2bft(sailWeather.hourly.windgusts_10m[idx]||0):null;
         var dir=idx>=0?sailWeather.hourly.winddirection_10m[idx]:null;
         var rain=idx>=0?Math.round((sailWeather.hourly.precipitation[idx]||0)*10)/10:null;
-        var wc2=w!==null?bftColor(w):'transparent';
-        var wtx=w!==null&&w>=7?'#fff':'#000';
-        var gc2=g!==null?bftColor(g):'transparent';
-        var gtx=g!==null&&g>=7?'#fff':'#000';
-        var rc=rain!==null?(rain>2?'#e07070':rain>0.5?'#f0c040':'#7ec8a0'):'transparent';
-        rW+='<td class="st-cell st-bft" style="background:'+wc2+';color:'+wtx+'">'+(w!==null?w:'')+'</td>';
-        rG+='<td class="st-cell st-bft" style="background:'+gc2+';color:'+gtx+'">'+(g!==null?g:'')+'</td>';
-        rR+='<td class="st-cell" style="color:'+rc+';font-weight:600">'+(rain!==null?rain:'')+'</td>';
+        var wc=w!==null?bftColor(w):'transparent', wtx=w!==null&&w>=7?'#fff':'#000';
+        var gc=g!==null?bftColor(g):'transparent', gtx=g!==null&&g>=7?'#fff':'#000';
+        var rc=rain!==null&&rain>0?(rain>2?'#e07070':rain>0.5?'#f0c040':'#a8d8a0'):'transparent';
+        rR+='<td class="st-cell" style="color:'+rc+';font-weight:600">'+(rain!==null&&rain>0?rain:'')+'</td>';
+        rW+='<td class="st-cell st-bft" style="background:'+wc+';color:'+wtx+'">'+(w!==null?w:'')+'</td>';
+        rG+='<td class="st-cell st-bft" style="background:'+gc+';color:'+gtx+'">'+(g!==null?g:'')+'</td>';
         rD+='<td class="st-cell">'+(dir!==null?wdirArrow(dir,bftColor(w||0)):'')+'</td>';
       }
-      rW+='</tr>';rG+='</tr>';rR+='</tr>';rD+='</tr>';
-      return '<div class="sl-day">'
-        +'<table class="sail-tbl" style="height:100%">'
-        +'<thead>'
-        +'<tr><th class="st-lbl"></th><th class="st-hdr" colspan="5" style="text-align:center;font-size:.45rem;color:#7eb8d4;padding:1px 0">12 Uhr</th></tr>'
-        +'</thead>'
-        +'<tbody>'+rW+rG+rR+rD+'</tbody></table></div>';
+      return {rR:rR,rW:rW,rG:rG,rD:rD};
     }
     var today2=new Date();
     var dSat2=(6-today2.getDay()+7)%7||7;
@@ -709,7 +692,25 @@ function renderWeatherTile(){
     var sun2=new Date(sat2);sun2.setDate(sat2.getDate()+1);
     var ms2=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
     var satLabel=sat2.getDate()+'. / '+sun2.getDate()+'. '+ms2[sat2.getMonth()];
-    gel('wl-sail').innerHTML='<div class="sl"><div class="sl-title">⛵ '+sailWeatherLoc.name+' ('+satLabel+')</div><div class="sl-grid">'+dayTbl(dSat,'Sa')+dayTbl(dSat+1,'So')+'</div></div>';
+    var c1=dayCells(dSat), c2=dayCells(dSat+1);
+    // Single table: labels | Sa cells | gap | So cells
+    var LBLW='20px';
+    var html='<div class="sl">'
+      +'<div class="sl-title">⛵ '+sailWeatherLoc.name+' ('+satLabel+')</div>'
+      +'<table class="sail-tbl" style="height:calc(100% - 22px)">'
+      +'<thead><tr>'
+      +'<th style="width:'+LBLW+'"></th>'
+      +'<th colspan="5" style="text-align:center;font-size:.45rem;color:#7eb8d4;padding-bottom:1px">Sa</th>'
+      +'<th style="width:6px"></th>'
+      +'<th colspan="5" style="text-align:center;font-size:.45rem;color:#7eb8d4;padding-bottom:1px">So</th>'
+      +'</tr></thead>'
+      +'<tbody>'
+      +'<tr><td class="st-lbl">mm</td>'+c1.rR+'<td></td>'+c2.rR+'</tr>'
+      +'<tr><td class="st-lbl">Bft</td>'+c1.rW+'<td></td>'+c2.rW+'</tr>'
+      +'<tr><td class="st-lbl">Böen</td>'+c1.rG+'<td></td>'+c2.rG+'</tr>'
+      +'<tr><td class="st-lbl">↑</td>'+c1.rD+'<td></td>'+c2.rD+'</tr>'
+      +'</tbody></table></div>';
+    gel('wl-sail').innerHTML=html;
   } else {
     gel('wl-sail').innerHTML='<div class="sl"><div class="sl-title">Segelwetter wird geladen…</div></div>';
   }
