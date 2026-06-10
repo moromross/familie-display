@@ -449,8 +449,21 @@ function roundWeeks(days){
 function wmoIcon(c){if(c===0)return'☀️';if(c<=2)return'⛅';if(c<=3)return'☁️';if(c<=49)return'🌫️';if(c<=59)return'🌦️';if(c<=69)return'🌧️';if(c<=79)return'🌨️';if(c<=82)return'🌧️';return'⛈️';}
 function wmoDesc(c){if(c===0)return'Sonnig';if(c<=2)return'Leicht bewölkt';if(c<=3)return'Bedeckt';if(c<=49)return'Neblig';if(c<=59)return'Nieselregen';if(c<=69)return'Regen';if(c<=79)return'Schnee';return'Gewitter';}
 function bftColor(b){
-  // Exact Windy color scale as shown in reference image
-  var colors=['#eeeeee','#b4f0a0','#78e878','#3cdc50','#f0f000','#e8c800','#e8a000','#e87800','#e84800','#e80000','#b40000','#960096','#6400c8'];
+  var colors=[
+    '#ffffff', // 0 - weiß
+    '#e0e0e0', // 1 - hellgrau
+    '#b8d4e8', // 2 - blassblau-grau
+    '#80b8f0', // 3 - hellblau
+    '#40c040', // 4 - grün
+    '#c8a000', // 5 - orangegrün
+    '#e07800', // 6 - orange
+    '#e03000', // 7 - rot
+    '#c00000', // 8 - dunkelrot
+    '#a00000', // 9 - dunkelrot
+    '#800080', // 10 - violett
+    '#600060', // 11 - dunkelviolett
+    '#400040'  // 12 - sehr dunkelviolett
+  ];
   return colors[Math.min(b,12)];
 }
 function kn2bft(k){if(k<1)return 0;if(k<4)return 1;if(k<7)return 2;if(k<11)return 3;if(k<17)return 4;if(k<22)return 5;if(k<28)return 6;if(k<34)return 7;if(k<41)return 8;if(k<48)return 9;if(k<56)return 10;if(k<64)return 11;return 12;}
@@ -613,9 +626,12 @@ function renderWeatherTile(){
       var dt=new Date();dt.setDate(dt.getDate()+i);
       return '<div class="wl-sm"><div class="wl-sm-d">'+DS[dt.getDay()]+'</div><div class="wl-sm-i">'+wmoIcon(d.weathercode[i])+'</div><div class="wl-sm-t">'+Math.round(d.temperature_2m_max[i])+'°</div><div class="wl-sm-r">'+( d.precipitation_probability_max[i]||0)+'%</div></div>';
     };
-    gel('wl-weather').innerHTML='<div class="wl">'
+    gel('wl-weather').innerHTML=''
+      +'<div class="wl">'
       +'<div class="wl-loc">🌍 '+homeWeatherLoc.name+'</div>'
-      +'<div class="wl-main-row">'
+      +'<table style="width:100%;height:calc(100% - 20px);border-collapse:collapse;table-layout:fixed">'
+      +'<tr>'
+      +'<td style="width:66%;vertical-align:middle;padding-right:5px">'
         +'<div class="wl-today">'
           +'<div class="wl-today-icon">'+wmoIcon(c.weathercode)+'</div>'
           +'<div class="wl-today-body">'
@@ -624,8 +640,15 @@ function renderWeatherTile(){
             +'<div class="wl-today-rain">🌧 '+rain+'%</div>'
           +'</div>'
         +'</div>'
-        +'<div class="wl-small-col">'+sm(1)+sm(2)+'</div>'
-      +'</div>'
+      +'</td>'
+      +'<td style="width:34%;vertical-align:top">'
+        +'<table style="width:100%;height:100%;border-collapse:collapse">'
+        +'<tr><td style="height:50%;padding-bottom:3px">'+sm(1)+'</td></tr>'
+        +'<tr><td style="height:50%">'+sm(2)+'</td></tr>'
+        +'</table>'
+      +'</td>'
+      +'</tr>'
+      +'</table>'
       +'</div>';
   } else {
     gel('wl-weather').innerHTML='<div class="wl"><div class="wl-loc">Wetter wird geladen…</div></div>';
@@ -635,6 +658,7 @@ function renderWeatherTile(){
     var today=new Date();
     var dSat=(6-today.getDay()+7)%7||7;
     var HOURS=[6,9,12,15,18],HLABELS=['06','09','12','15','18'];
+    var SHOW_HOURS=12; // only show this hour label centered
     function dayTbl(offset,label){
       var td=new Date(today);td.setDate(today.getDate()+offset);
       var ds2=td.getFullYear()+'-'+p2(td.getMonth()+1)+'-'+p2(td.getDate());
@@ -645,9 +669,12 @@ function renderWeatherTile(){
         for(var ti=0;ti<times.length;ti++){if(times[ti]===tgt){fi=ti;break;}}
         idxs.push(fi);
       }
-      // Header: "6 Uhr", "9 Uhr" etc, centered
-      var hdr='<th class="st-lbl"></th>';
-      for(var hi=0;hi<HOURS.length;hi++)hdr+='<th class="st-hdr">'+HOURS[hi]+' Uhr</th>';
+      // Header: only "12 Uhr" centered across all 5 columns
+      var hdr='<th class="st-lbl"></th>'
+        +'<th class="st-hdr" style="text-align:center" colspan="5">12 Uhr</th>';
+      // dummy - actual columns still 5
+      var hdrReal='<th class="st-lbl"></th>';
+      for(var hi=0;hi<HOURS.length;hi++)hdrReal+='<th class="st-hdr" style="font-size:.45rem;opacity:.5">'+HOURS[hi]+'h</th>';
       var rW='<tr><td class="st-lbl">Bft</td>';
       var rG='<tr><td class="st-lbl">Böen</td>';
       var rR='<tr><td class="st-lbl">mm</td>';
@@ -670,8 +697,11 @@ function renderWeatherTile(){
       }
       rW+='</tr>';rG+='</tr>';rR+='</tr>';rD+='</tr>';
       return '<div class="sl-day"><div class="sl-day-name">'+label+'</div>'
-        +'<table class="sail-tbl"><thead><tr>'+hdr+'</tr></thead>'
-        +'<tbody>'+rW+rG+rR+rD+'</tbody></table></div>';
+        +'<table class="sail-tbl" style="height:calc(100% - 28px)">'
+        +'<thead>'
+        +'<tr><th class="st-lbl"></th><th class="st-hdr" colspan="5" style="text-align:center;font-size:.6rem;color:#7eb8d4;padding-bottom:3px">12 Uhr</th></tr>'
+        +'</thead>'
+        +'<tbody style="height:100%">'+rW+rG+rR+rD+'</tbody></table></div>';
     }
     var today2=new Date();
     var dSat2=(6-today2.getDay()+7)%7||7;
