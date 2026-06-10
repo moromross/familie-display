@@ -448,7 +448,11 @@ function roundWeeks(days){
 // ── WEATHER ────────────────────────────────────────
 function wmoIcon(c){if(c===0)return'☀️';if(c<=2)return'⛅';if(c<=3)return'☁️';if(c<=49)return'🌫️';if(c<=59)return'🌦️';if(c<=69)return'🌧️';if(c<=79)return'🌨️';if(c<=82)return'🌧️';return'⛈️';}
 function wmoDesc(c){if(c===0)return'Sonnig';if(c<=2)return'Leicht bewölkt';if(c<=3)return'Bedeckt';if(c<=49)return'Neblig';if(c<=59)return'Nieselregen';if(c<=69)return'Regen';if(c<=79)return'Schnee';return'Gewitter';}
-function bftColor(b){var colors=['#c8c8c8','#9bdb64','#6dc73c','#44c232','#f5f500','#f0c800','#f0a000','#f07800','#f04800','#f00000','#c80000','#a000c8','#6400c8'];return colors[Math.min(b,12)];}
+function bftColor(b){
+  // Exact Windy color scale as shown in reference image
+  var colors=['#eeeeee','#b4f0a0','#78e878','#3cdc50','#f0f000','#e8c800','#e8a000','#e87800','#e84800','#e80000','#b40000','#960096','#6400c8'];
+  return colors[Math.min(b,12)];
+}
 function kn2bft(k){if(k<1)return 0;if(k<4)return 1;if(k<7)return 2;if(k<11)return 3;if(k<17)return 4;if(k<22)return 5;if(k<28)return 6;if(k<34)return 7;if(k<41)return 8;if(k<48)return 9;if(k<56)return 10;if(k<64)return 11;return 12;}
 function bftLbl(b){return['Windstill','Leiser Zug','Leichte Brise','Schwache Brise','Mäßige Brise','Frische Brise','Starker Wind','Steifer Wind','Stürmisch','Sturm','Schwerer Sturm','Orkanartig','Orkan'][Math.min(b,12)];}
 function wdirArrow(deg,col){return'<svg width="18" height="18" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><g transform="rotate('+deg+',10,10)"><line x1="10" y1="16" x2="10" y2="4" stroke="'+col+'" stroke-width="3" stroke-linecap="round"/><polyline points="5,9 10,3 15,9" fill="none" stroke="'+col+'" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></g></svg>';}
@@ -641,24 +645,41 @@ function renderWeatherTile(){
         for(var ti=0;ti<times.length;ti++){if(times[ti]===tgt){fi=ti;break;}}
         idxs.push(fi);
       }
-      var hdr='<th class="st-lbl" style="width:26px"></th>';
-      for(var hi=0;hi<HLABELS.length;hi++)hdr+='<th class="st-hdr">'+HLABELS[hi]+'</th>';
-      var rW='<tr><td class="st-lbl">Bft</td>',rG='<tr><td class="st-lbl">Böen</td>',rD='<tr><td class="st-lbl">↑</td>';
+      // Header: "6 Uhr", "9 Uhr" etc, centered
+      var hdr='<th class="st-lbl"></th>';
+      for(var hi=0;hi<HOURS.length;hi++)hdr+='<th class="st-hdr">'+HOURS[hi]+' Uhr</th>';
+      var rW='<tr><td class="st-lbl">Bft</td>';
+      var rG='<tr><td class="st-lbl">Böen</td>';
+      var rR='<tr><td class="st-lbl">mm</td>';
+      var rD='<tr><td class="st-lbl">↑</td>';
       for(var ci=0;ci<idxs.length;ci++){
         var idx=idxs[ci];
         var w=idx>=0?kn2bft(sailWeather.hourly.windspeed_10m[idx]):null;
         var g=idx>=0?kn2bft(sailWeather.hourly.windgusts_10m[idx]||0):null;
         var dir=idx>=0?sailWeather.hourly.winddirection_10m[idx]:null;
-        var wc2=w!==null?bftColor(w):'transparent',wtx=w!==null&&w>=6?'#fff':'#000';
-        var gc2=g!==null?bftColor(g):'transparent',gtx=g!==null&&g>=6?'#fff':'#000';
+        var rain=idx>=0?Math.round((sailWeather.hourly.precipitation[idx]||0)*10)/10:null;
+        var wc2=w!==null?bftColor(w):'transparent';
+        var wtx=w!==null&&w>=7?'#fff':'#000';
+        var gc2=g!==null?bftColor(g):'transparent';
+        var gtx=g!==null&&g>=7?'#fff':'#000';
+        var rc=rain!==null?(rain>2?'#e07070':rain>0.5?'#f0c040':'#7ec8a0'):'transparent';
         rW+='<td class="st-cell st-bft" style="background:'+wc2+';color:'+wtx+'">'+(w!==null?w:'')+'</td>';
         rG+='<td class="st-cell st-bft" style="background:'+gc2+';color:'+gtx+'">'+(g!==null?g:'')+'</td>';
+        rR+='<td class="st-cell" style="color:'+rc+';font-weight:600">'+(rain!==null?rain:'')+'</td>';
         rD+='<td class="st-cell">'+(dir!==null?wdirArrow(dir,bftColor(w||0)):'')+'</td>';
       }
-      rW+='</tr>';rG+='</tr>';rD+='</tr>';
-      return '<div class="sl-day"><div class="sl-day-name">'+label+'</div><table class="sail-tbl"><thead><tr>'+hdr+'</tr></thead><tbody>'+rW+rG+rD+'</tbody></table></div>';
+      rW+='</tr>';rG+='</tr>';rR+='</tr>';rD+='</tr>';
+      return '<div class="sl-day"><div class="sl-day-name">'+label+'</div>'
+        +'<table class="sail-tbl"><thead><tr>'+hdr+'</tr></thead>'
+        +'<tbody>'+rW+rG+rR+rD+'</tbody></table></div>';
     }
-    gel('wl-sail').innerHTML='<div class="sl"><div class="sl-title">⛵ Segelwetter '+sailWeatherLoc.name+'</div><div class="sl-grid">'+dayTbl(dSat,'Sa')+dayTbl(dSat+1,'So')+'</div></div>';
+    var today2=new Date();
+    var dSat2=(6-today2.getDay()+7)%7||7;
+    var sat2=new Date(today2);sat2.setDate(today2.getDate()+dSat2);
+    var sun2=new Date(sat2);sun2.setDate(sat2.getDate()+1);
+    var ms2=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+    var satLabel=sat2.getDate()+'. / '+sun2.getDate()+'. '+ms2[sat2.getMonth()];
+    gel('wl-sail').innerHTML='<div class="sl"><div class="sl-title">⛵ '+sailWeatherLoc.name+' ('+satLabel+')</div><div class="sl-grid">'+dayTbl(dSat,'Sa')+dayTbl(dSat+1,'So')+'</div></div>';
   } else {
     gel('wl-sail').innerHTML='<div class="sl"><div class="sl-title">Segelwetter wird geladen…</div></div>';
   }
@@ -673,7 +694,7 @@ function startWeatherCycle(){
     wlState=1-wlState;
     gel('wl-weather').className='fade-layer'+(wlState===0?' active':'');
     gel('wl-sail').className='fade-layer'+(wlState===1?' active':'');
-  },6000);
+  },8000);
 }
 
 // ── RENDER: INFO TILE ──────────────────────────────
