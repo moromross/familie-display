@@ -92,22 +92,35 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 #tile-info{
   -webkit-flex:1;flex:1;
 }
-.fl{background:#f0f8e8;height:100%;padding:10px 12px;overflow:hidden;}
-.fl-title{font-size:.63rem;letter-spacing:.08em;text-transform:uppercase;color:var(--green);font-weight:600;margin-bottom:6px;}
-.fl-main{background:rgba(255,255,255,.8);border-radius:7px;padding:10px;margin-bottom:6px;}
-.fl-state{font-size:.6rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;}
-.fl-name{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--ink);margin:2px 0 4px;}
-.fl-rund{font-size:.65rem;color:var(--ink3);}
-.fl-weeks{font-size:2rem;font-weight:700;color:var(--green);line-height:1;}
-.fl-noch{font-size:.65rem;color:var(--ink3);}
-.fl-exact{font-size:.7rem;color:var(--ink2);margin-top:3px;}
-.fl-dates{font-size:.62rem;color:var(--ink3);margin-top:2px;}
-.fl-sec{background:rgba(255,255,255,.5);border-radius:6px;padding:6px 8px;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:8px;}
-.fl-sec-left{-webkit-flex:1;flex:1;}
-.fl-sec-state{font-size:.52rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;}
-.fl-sec-name{font-size:.72rem;color:var(--ink);font-weight:500;margin:1px 0;}
-.fl-sec-days{font-size:1.1rem;font-weight:700;color:var(--green);}
-.fl-sec-exact{font-size:.58rem;color:var(--ink2);}
+.fl{background:#f0f8e8;height:100%;padding:8px 10px;overflow:hidden;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;}
+/* Primary block: 63% */
+.fl-main{background:rgba(255,255,255,.85);border-radius:7px;padding:7px 10px;height:63%;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:space-between;justify-content:space-between;}
+.fl-divider{height:2%;background:rgba(26,74,42,.2);border-radius:2px;margin:2px 0;-webkit-flex-shrink:0;flex-shrink:0;}
+/* Secondary block: remaining */
+.fl-sec{background:rgba(255,255,255,.6);border-radius:6px;padding:5px 8px;-webkit-flex:1;flex:1;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:space-between;justify-content:space-between;}
+/* Row 1 */
+.fl-name-row{display:-webkit-flex;display:flex;-webkit-align-items:baseline;align-items:baseline;gap:5px;-webkit-flex-wrap:wrap;flex-wrap:wrap;}
+.fl-name{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--ink);font-weight:700;}
+.fl-state{font-size:.58rem;color:var(--ink3);}
+/* Row 2: weeks left + details right, vertically centered */
+.fl-count-row{display:-webkit-flex;display:flex;-webkit-align-items:stretch;align-items:stretch;gap:8px;}
+.fl-weeks-block{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:5px;-webkit-flex-shrink:0;flex-shrink:0;}
+.fl-in{font-size:.6rem;color:var(--ink3);}
+.fl-weeks{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:var(--green);line-height:1;white-space:nowrap;}
+.fl-details{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:center;justify-content:center;-webkit-flex:1;flex:1;}
+.fl-exact{font-size:.6rem;color:var(--ink2);line-height:1.3;}
+.fl-dates{font-size:.6rem;color:var(--ink3);line-height:1.3;}
+/* Secondary rows */
+.fl-sec-name-row{display:-webkit-flex;display:flex;-webkit-align-items:baseline;align-items:baseline;gap:4px;-webkit-flex-wrap:wrap;flex-wrap:wrap;}
+.fl-sec-name{font-family:'Playfair Display',serif;font-size:.78rem;color:var(--ink);font-weight:700;}
+.fl-sec-state{font-size:.5rem;color:var(--ink3);}
+.fl-sec-count-row{display:-webkit-flex;display:flex;-webkit-align-items:stretch;align-items:stretch;gap:6px;}
+.fl-sec-weeks-block{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:4px;-webkit-flex-shrink:0;flex-shrink:0;}
+.fl-sec-in{font-size:.52rem;color:var(--ink3);}
+.fl-sec-weeks{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--green);line-height:1;white-space:nowrap;}
+.fl-sec-details{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:center;justify-content:center;-webkit-flex:1;flex:1;}
+.fl-sec-exact{font-size:.52rem;color:var(--ink2);line-height:1.3;}
+.fl-sec-dates{font-size:.52rem;color:var(--ink3);line-height:1.3;}
 /* Birthdays */
 .bl{background:#fff0f0;height:100%;padding:10px 12px;overflow:hidden;}
 .bl-title{font-size:.63rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:6px;}
@@ -129,7 +142,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 }
 #cal-tabs{
   display:-webkit-flex;display:flex;
-  background:var(--ink);
+  background:#1a3a5c;
   -webkit-flex-shrink:0;flex-shrink:0;
   height:36px;
 }
@@ -205,8 +218,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .wknd-cols{display:-webkit-flex;display:flex;-webkit-flex:1;flex:1;overflow:hidden;}
 .wknd-col{-webkit-flex:1;flex:1;border-right:1px solid var(--rule);display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;}
 .wknd-col:last-child{border-right:none;}
-.wknd-col-head{padding:7px 8px;background:var(--ink);color:#fff;font-family:'Playfair Display',serif;font-size:.95rem;-webkit-flex-shrink:0;flex-shrink:0;}
-.wknd-col-head-sub{font-size:.55rem;color:rgba(255,255,255,.5);margin-top:1px;}
+.wknd-col-head{padding:5px 8px;background:#fff9c4;color:#1a1612;font-family:'Playfair Display',serif;font-size:.85rem;-webkit-flex-shrink:0;flex-shrink:0;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:6px;border-bottom:1px solid #e8e0a0;}
+.wknd-col-head-sub{font-size:.68rem;color:#5a5020;margin-left:4px;}
 .wknd-scroll{-webkit-flex:1;flex:1;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:6px;}
 .wknd-ev{margin-bottom:5px;border-radius:4px;padding:5px 6px;border-left:3px solid;}
 .wknd-ev-time{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--ink3);}
@@ -295,6 +308,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
     </div>
   </div>
 
+  <!-- SEPARATOR -->
+  <div style="height:2px;background:#1a3a5c;border-radius:2px;margin:0 2px;flex-shrink:0"></div>
   <!-- BOTTOM: FAZ -->
   <div class="tile" id="row-bot">
     <div id="tile-faz"></div>
@@ -476,7 +491,7 @@ function fetchLocalIcs(filename,calId,color,cb){
     }
   };
   xhr.onerror=function(){cb([]);};
-  xhr.timeout=10000;
+  xhr.timeout=15000;
   xhr.ontimeout=function(){cb([]);};
   xhr.send();
 }
@@ -645,7 +660,7 @@ function startWeatherCycle(){
     wlState=1-wlState;
     gel('wl-weather').className='fade-layer'+(wlState===0?' active':'');
     gel('wl-sail').className='fade-layer'+(wlState===1?' active':'');
-  },5000);
+  },6000);
 }
 
 // ── RENDER: INFO TILE ──────────────────────────────
@@ -659,16 +674,37 @@ function renderInfoTile(){
   var fmtD=function(d){return d.getDate()+'. '+(MON[d.getMonth()]).slice(0,3);};
   function ferienBlock(f,code,big){
     if(!f)return'';
-    if(f.inF){
-      var left=Math.ceil((f.end-new Date())/86400000);
-      if(big)return'<div class="fl-main"><div class="fl-state">'+(STNAMES[code]||code)+'</div><div class="fl-name">'+f.name+'</div><div class="fl-weeks" style="color:var(--accent)">🎉 Ferien!</div><div class="fl-exact">noch '+left+' Tage</div><div class="fl-dates">'+fmtD(f.start)+' – '+fmtD(f.end)+'</div></div>';
-      return'<div class="fl-sec"><div class="fl-sec-left"><div class="fl-sec-state">'+(STNAMES[code]||code)+'</div><div class="fl-sec-name">'+f.name+'</div><div class="fl-sec-days" style="color:var(--accent)">🎉</div><div class="fl-sec-exact">noch '+left+'d</div></div></div>';
+    var sn=STNAMES[code]||code;
+    var inF=f.inF;
+    var days=inF?Math.ceil((f.end-new Date())/86400000):f.days;
+    var rw=roundWeeks(days);
+    var wLabel=inF?rw.weeks:rw.weeks;
+    var wColor=inF?'var(--accent)':'var(--green)';
+    var prefix=inF?'noch':'in';
+    if(big){
+      return'<div class="fl-main">'
+        +'<div class="fl-name-row"><span class="fl-name">'+f.name+'</span><span class="fl-state">für '+sn+'</span></div>'
+        +'<div class="fl-count-row">'
+          +'<div class="fl-weeks-block"><span class="fl-in">'+prefix+'</span><span class="fl-weeks" style="color:'+wColor+'">'+wLabel+'</span></div>'
+          +'<div class="fl-details">'
+            +(rw.exact?'<span class="fl-exact">('+rw.exact+')</span>':'')
+            +'<span class="fl-dates">'+fmtD(f.start)+' – '+fmtD(f.end)+'</span>'
+          +'</div>'
+        +'</div>'
+        +'</div>';
     }
-    var rw=roundWeeks(f.days);
-    if(big)return'<div class="fl-main"><div class="fl-state">'+(STNAMES[code]||code)+'</div><div class="fl-name">'+f.name+'</div><div class="fl-rund">'+rw.rund+'</div><div class="fl-weeks">'+rw.weeks+'</div><div class="fl-noch">'+rw.noch+'</div>'+(rw.exact?'<div class="fl-exact">'+rw.exact+'</div>':'')+'<div class="fl-dates">'+fmtD(f.start)+' – '+fmtD(f.end)+'</div></div>';
-    return'<div class="fl-sec"><div class="fl-sec-left"><div class="fl-sec-state">'+(STNAMES[code]||code)+'</div><div class="fl-sec-name">'+f.name+'</div><div class="fl-sec-days">'+rw.weeks+'</div>'+(rw.exact?'<div class="fl-sec-exact">'+rw.exact+'</div>':'')+'</div></div>';
+    return'<div class="fl-sec">'
+      +'<div class="fl-sec-name-row"><span class="fl-sec-name">'+f.name+'</span><span class="fl-sec-state">für '+sn+'</span></div>'
+      +'<div class="fl-sec-count-row">'
+        +'<div class="fl-sec-weeks-block"><span class="fl-sec-in">'+prefix+'</span><span class="fl-sec-weeks" style="color:'+wColor+'">'+wLabel+'</span></div>'
+        +'<div class="fl-sec-details">'
+          +(rw.exact?'<span class="fl-sec-exact">('+rw.exact+')</span>':'')
+          +'<span class="fl-sec-dates">'+fmtD(f.start)+' – '+fmtD(f.end)+'</span>'
+        +'</div>'
+      +'</div>'
+      +'</div>';
   }
-  gel('info-ferien').innerHTML='<div class="fl"><div class="fl-title">🏖️ Schulferien</div>'+ferienBlock(f1,cfg.st1,true)+ferienBlock(f2,cfg.st2,false)+'</div>';
+  gel('info-ferien').innerHTML='<div class="fl">'+ferienBlock(f1,cfg.st1,true)+'<div class="fl-divider"></div>'+ferienBlock(f2,cfg.st2,false)+'</div>';
 
   // Birthdays
   var today=new Date();today.setHours(0,0,0,0);
@@ -704,13 +740,26 @@ function startInfoCycle(){
     infoState=1-infoState;
     gel('info-ferien').className='fade-layer'+(infoState===0?' active':'');
     gel('info-bday').className='fade-layer'+(infoState===1?' active':'');
-  },2000);
+  },5000);
 }
 
 // ── RENDER: CALENDAR ───────────────────────────────
 var currentCalView='heute';
 var calFrozen=false;
 var calAutoTimer=null;
+
+function updateCalTabLabels(){
+  var now=new Date();
+  var tomorrow=new Date(now);tomorrow.setDate(now.getDate()+1);
+  var dSat=(6-now.getDay()+7)%7||7;
+  var sat=new Date(now);sat.setDate(now.getDate()+dSat);
+  var sun=new Date(sat);sun.setDate(sat.getDate()+1);
+  var ms=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+  var ds=['So','Mo','Di','Mi','Do','Fr','Sa'];
+  gel('tab-heute').innerHTML='HEUTE<br><span style="font-size:.65rem;font-weight:400;opacity:.7">&nbsp;'+ds[now.getDay()]+', '+now.getDate()+'. '+ms[now.getMonth()]+'.</span>';
+  gel('tab-morgen').innerHTML='MORGEN<br><span style="font-size:.65rem;font-weight:400;opacity:.7">&nbsp;'+ds[tomorrow.getDay()]+', '+tomorrow.getDate()+'. '+ms[tomorrow.getMonth()]+'.</span>';
+  gel('tab-wknd').innerHTML='WOCHENENDE<br><span style="font-size:.65rem;font-weight:400;opacity:.7">&nbsp;'+sat.getDate()+'./'+sun.getDate()+'. '+ms[sat.getMonth()]+'.</span>';
+}
 
 function switchCal(view,manual){
   if(manual){
@@ -723,6 +772,18 @@ function switchCal(view,manual){
     gel('tab-'+tabs[i]).className='cal-tab'+(tabs[i]===view?' active':'');
     gel('view-'+tabs[i]).className='cal-view'+(tabs[i]===view?' active':'');
     if(tabs[i]===view)calCycleState=i;
+  }
+  // When switching to heute, scroll to red line at 27%
+  if(view==='heute'){
+    setTimeout(function(){
+      var sw=gel('dv-heute')?gel('dv-heute').querySelector('.day-scroll-wrap'):null;
+      if(sw){
+        var now=new Date();
+        var startH=Math.max(0,now.getHours()-1);
+        var nowPx=(now.getHours()+now.getMinutes()/60-startH)*HH;
+        sw.scrollTop=Math.max(0,nowPx-sw.clientHeight*0.27);
+      }
+    },50);
   }
 }
 
@@ -903,7 +964,7 @@ function buildWkndView(container){
       if((ev.calId==='fam1'||ev.calId==='fam2')&&sameDay(ev.start,d))evts.push(ev);
     }
     evts.sort(function(a,b){return a.start-b.start;});
-    var h='<div class="wknd-col"><div class="wknd-col-head">'+DAY[d.getDay()]+'<div class="wknd-col-head-sub">'+d.getDate()+'. '+MON[d.getMonth()]+'</div></div><div class="wknd-scroll">';
+    var h='<div class="wknd-col"><div class="wknd-col-head">'+DAY[d.getDay()]+'<span class="wknd-col-head-sub">'+d.getDate()+'. '+MON[d.getMonth()]+'.</span></div><div class="wknd-scroll">';
     if(!evts.length)h+='<div class="wknd-none">Keine Termine</div>';
     else for(var i=0;i<evts.length;i++){
       var ev=evts[i],ts=ev.allDay?'Ganztag':ft(ev.start);
@@ -916,19 +977,33 @@ function buildWkndView(container){
   container.innerHTML=html;
 }
 
+function updateRedLines(){
+  var now=new Date();
+  var nowPx=(now.getHours()+now.getMinutes()/60)*HH;
+  // find red line in heute view and update
+  var rl=gel('dv-heute') ? gel('dv-heute').querySelector('.day-red') : null;
+  if(rl){
+    var startH=Math.max(0,now.getHours()-1);
+    rl.style.top=((now.getHours()+now.getMinutes()/60-startH)*HH)+'px';
+    // auto-scroll heute to keep red line at 27%
+    var sw=gel('dv-heute') ? gel('dv-heute').querySelector('.day-scroll-wrap') : null;
+    if(sw&&currentCalView==='heute'){
+      sw.scrollTop=Math.max(0,nowPx-startH*HH-sw.clientHeight*0.27);
+    }
+  }
+}
+
 function renderCalendars(){
   var today=new Date();
   var tomorrow=new Date(today);tomorrow.setDate(today.getDate()+1);
-  // heute: from current hour - 1 to 22, show red line
   var startH=Math.max(0,today.getHours()-1);
   var dvH=gel('dv-heute');dvH.id='dv-heute';
   buildDayView(dvH,today,startH,22,true);
-  // morgen: 7-21
   var dvM=gel('dv-morgen');dvM.id='dv-morgen';
   buildDayView(dvM,tomorrow,7,21,false);
-  // wknd
   var dvW=gel('dv-wknd');dvW.id='dv-wknd';
   buildWkndView(dvW);
+  updateCalTabLabels();
 }
 
 // ── RENDER: FAZ ────────────────────────────────────
@@ -1068,20 +1143,44 @@ loadCfg();
 keepAwake();
 init();
 
-// Refresh timers
+// ── AUTO-REFRESH ──────────────────────────────────
+// Calendars: every 5 min
 setInterval(function(){
   refreshCalendars(function(){renderInfoTile();renderCalendars();});
 },5*60*1000);
+
+// Weather: every 15 min
 setInterval(function(){
   getWeather(cfg.city,function(loc,data){homeWeatherLoc=loc;homeWeather=data;renderWeatherTile();});
   getWeather(cfg.sail,function(loc,data){sailWeatherLoc=loc;sailWeather=data;renderWeatherTile();});
 },15*60*1000);
+
+// FAZ: every 10 min
 setInterval(function(){
   fetchAllRSS(function(){renderFAZ();});
 },10*60*1000);
+
+// Red line: every minute
 setInterval(function(){
-  // update red line every minute
-  renderCalendars();
+  // Only re-render red line, not full calendar
+  updateRedLines();
+},60*1000);
+
+// MIDNIGHT RESET: check every minute if day has changed
+var lastDate = new Date().getDate();
+setInterval(function(){
+  var now = new Date();
+  if(now.getDate() !== lastDate){
+    lastDate = now.getDate();
+    // Full reinit on new day
+    refreshCalendars(function(){
+      renderInfoTile();
+      renderCalendars();
+    });
+    getWeather(cfg.city,function(loc,data){homeWeatherLoc=loc;homeWeather=data;renderWeatherTile();});
+    getWeather(cfg.sail,function(loc,data){sailWeatherLoc=loc;sailWeather=data;renderWeatherTile();});
+    fetchAllRSS(function(){renderFAZ();});
+  }
 },60*1000);
 
 // ── DEBUG ─────────────────────────────────────────
