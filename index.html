@@ -627,28 +627,28 @@ function renderWeatherTile(){
       return '<div class="wl-sm"><div class="wl-sm-d">'+DS[dt.getDay()]+'</div><div class="wl-sm-i">'+wmoIcon(d.weathercode[i])+'</div><div class="wl-sm-t">'+Math.round(d.temperature_2m_max[i])+'°</div><div class="wl-sm-r">'+( d.precipitation_probability_max[i]||0)+'%</div></div>';
     };
     gel('wl-weather').innerHTML=''
-      +'<div class="wl">'
-      +'<div class="wl-loc">🌍 '+homeWeatherLoc.name+'</div>'
-      +'<table style="width:100%;height:calc(100% - 20px);border-collapse:collapse;table-layout:fixed">'
-      +'<tr>'
-      +'<td style="width:66%;vertical-align:middle;padding-right:5px">'
-        +'<div class="wl-today">'
-          +'<div class="wl-today-icon">'+wmoIcon(c.weathercode)+'</div>'
-          +'<div class="wl-today-body">'
-            +'<div class="wl-today-temp">'+Math.round(c.temperature_2m)+'°</div>'
-            +'<div class="wl-today-desc">'+wmoDesc(c.weathercode)+'</div>'
-            +'<div class="wl-today-rain">🌧 '+rain+'%</div>'
+      +'<div style="background:#dff0f8;height:100%;padding:6px 8px;box-sizing:border-box;display:table;width:100%">'
+      +'<div style="display:table-row">'
+      +'<div style="display:table-cell;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:#1a3a5c;font-weight:600;padding-bottom:4px" colspan="2">🌍 '+homeWeatherLoc.name+'</div>'
+      +'</div>'
+      +'<div style="display:table-row;height:100%">'
+      +'<div style="display:table-cell;width:64%;vertical-align:middle;padding-right:5px">'
+        +'<div style="background:rgba(255,255,255,.8);border-radius:7px;padding:6px 8px;height:100%;box-sizing:border-box;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:7px">'
+          +'<div style="font-size:1.8rem;-webkit-flex-shrink:0;flex-shrink:0">'+wmoIcon(c.weathercode)+'</div>'
+          +'<div>'
+            +'<div style="font-family:Playfair Display,serif;font-size:1.8rem;color:#1a1612;line-height:1">'+Math.round(c.temperature_2m)+'°</div>'
+            +'<div style="font-size:.58rem;color:#5a5550;margin-top:2px">'+wmoDesc(c.weathercode)+'</div>'
+            +'<div style="font-size:.55rem;color:#1a3a5c;margin-top:2px">🌧 '+rain+'%</div>'
           +'</div>'
         +'</div>'
-      +'</td>'
-      +'<td style="width:34%;vertical-align:top">'
+      +'</div>'
+      +'<div style="display:table-cell;width:36%;vertical-align:top">'
         +'<table style="width:100%;height:100%;border-collapse:collapse">'
-        +'<tr><td style="height:50%;padding-bottom:3px">'+sm(1)+'</td></tr>'
-        +'<tr><td style="height:50%">'+sm(2)+'</td></tr>'
+        +'<tr style="height:50%"><td style="vertical-align:middle;padding-bottom:2px">'+sm(1)+'</td></tr>'
+        +'<tr style="height:50%"><td style="vertical-align:middle">'+sm(2)+'</td></tr>'
         +'</table>'
-      +'</td>'
-      +'</tr>'
-      +'</table>'
+      +'</div>'
+      +'</div>'
       +'</div>';
   } else {
     gel('wl-weather').innerHTML='<div class="wl"><div class="wl-loc">Wetter wird geladen…</div></div>';
@@ -696,12 +696,12 @@ function renderWeatherTile(){
         rD+='<td class="st-cell">'+(dir!==null?wdirArrow(dir,bftColor(w||0)):'')+'</td>';
       }
       rW+='</tr>';rG+='</tr>';rR+='</tr>';rD+='</tr>';
-      return '<div class="sl-day"><div class="sl-day-name">'+label+'</div>'
-        +'<table class="sail-tbl" style="height:calc(100% - 28px)">'
+      return '<div class="sl-day">'
+        +'<table class="sail-tbl" style="height:100%">'
         +'<thead>'
-        +'<tr><th class="st-lbl"></th><th class="st-hdr" colspan="5" style="text-align:center;font-size:.6rem;color:#7eb8d4;padding-bottom:3px">12 Uhr</th></tr>'
+        +'<tr><th class="st-lbl"></th><th class="st-hdr" colspan="5" style="text-align:center;font-size:.45rem;color:#7eb8d4;padding:1px 0">12 Uhr</th></tr>'
         +'</thead>'
-        +'<tbody style="height:100%">'+rW+rG+rR+rD+'</tbody></table></div>';
+        +'<tbody>'+rW+rG+rR+rD+'</tbody></table></div>';
     }
     var today2=new Date();
     var dSat2=(6-today2.getDay()+7)%7||7;
