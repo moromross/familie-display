@@ -679,7 +679,7 @@ function renderWeatherTile(){
         var wc=w!==null?bftColor(w):'transparent', wtx=w!==null&&w>=7?'#fff':'#000';
         var gc=g!==null?bftColor(g):'transparent', gtx=g!==null&&g>=7?'#fff':'#000';
         var rc=rain!==null&&rain>0?(rain>2?'#e07070':rain>0.5?'#f0c040':'#a8d8a0'):'transparent';
-        rR+='<td class="st-cell" style="color:'+rc+';font-weight:600">'+(rain!==null&&rain>0?rain:'')+'</td>';
+        rR+='<td class="st-cell" style="color:'+rc+';font-weight:600;font-size:.3rem">'+(rain!==null&&rain>0?rain:'')+'</td>';
         rW+='<td class="st-cell st-bft" style="background:'+wc+';color:'+wtx+'">'+(w!==null?w:'')+'</td>';
         rG+='<td class="st-cell st-bft" style="background:'+gc+';color:'+gtx+'">'+(g!==null?g:'')+'</td>';
         rD+='<td class="st-cell">'+(dir!==null?wdirArrow(dir,bftColor(w||0)):'')+'</td>';
@@ -698,12 +698,7 @@ function renderWeatherTile(){
     var html='<div class="sl">'
       +'<div class="sl-title">⛵ '+sailWeatherLoc.name+' ('+satLabel+')</div>'
       +'<table class="sail-tbl" style="height:calc(100% - 22px)">'
-      +'<thead><tr>'
-      +'<th style="width:'+LBLW+'"></th>'
-      +'<th colspan="5" style="text-align:center;font-size:.45rem;color:#7eb8d4;padding-bottom:1px">Sa</th>'
-      +'<th style="width:6px"></th>'
-      +'<th colspan="5" style="text-align:center;font-size:.45rem;color:#7eb8d4;padding-bottom:1px">So</th>'
-      +'</tr></thead>'
+      +'<thead></thead>'
       +'<tbody>'
       +'<tr><td class="st-lbl">mm</td>'+c1.rR+'<td></td>'+c2.rR+'</tr>'
       +'<tr><td class="st-lbl">Bft</td>'+c1.rW+'<td></td>'+c2.rW+'</tr>'
