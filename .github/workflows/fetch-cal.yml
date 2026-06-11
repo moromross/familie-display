@@ -43,8 +43,6 @@ jobs:
           date_from = today - timedelta(days=1)
           date_to   = today + timedelta(days=9)
 
-          # ── helpers ──────────────────────────────────────────────────────
-
           def dt_str(val):
               if isinstance(val, datetime):
                   if val.tzinfo:
@@ -58,8 +56,7 @@ jobs:
           def write_ics(fname, lines):
               open(fname, 'w', encoding='utf-8').write('\r\n'.join(lines) + '\r\n')
 
-          # ── iCloud family calendars ───────────────────────────────────────
-
+          # iCloud family calendars
           for fname, url in [("cal1.ics", os.environ.get("CAL1_URL","")),
                               ("cal2.ics", os.environ.get("CAL2_URL",""))]:
               if not url:
@@ -95,8 +92,7 @@ jobs:
                   print(fname + " error: " + str(e))
                   open(fname,'w').write(EMPTY)
 
-          # ── WebUntis helpers ──────────────────────────────────────────────
-
+          # WebUntis helpers
           def wu_rpc(session_id, method, params=None):
               if params is None: params = {}
               url     = WU_BASE + '/jsonrpc.do?school=' + SCHOOL
@@ -106,7 +102,6 @@ jobs:
                   headers['Cookie'] = 'JSESSIONID=' + session_id
               req  = urllib.request.Request(url, data=payload, headers=headers)
               resp = urllib.request.urlopen(req, timeout=30)
-              # extract session id from Set-Cookie
               sid = ''
               raw = resp.getheader('Set-Cookie','')
               if 'JSESSIONID=' in raw:
@@ -135,8 +130,6 @@ jobs:
           def int_date(d):
               return int(d.strftime('%Y%m%d'))
 
-          # ── WebUntis per child ────────────────────────────────────────────
-
           kids = [
               ('calk1.ics','calhw1.ics', os.environ.get('WU_USER_K1',''), os.environ.get('WU_PASS_K1','')),
               ('calk2.ics','calhw2.ics', os.environ.get('WU_USER_K2',''), os.environ.get('WU_PASS_K2','')),
@@ -155,9 +148,33 @@ jobs:
                       {'user':user,'password':pwd,'client':'familie-display'})
                   if not sid and result:
                       sid = result.get('sessionId','')
-                  person_id   = result.get('personId',0)   if result else 0
-                  person_type = result.get('personType',5) if result else 5
-                  print(tt_f + ": logged in, personId=" + str(person_id))
+
+                  # DEBUG: alle Felder aus dem Login-Result ausgeben
+                  safe = {k:v for k,v in (result or {}).items() if k != 'sessionId'}
+                  print(tt_f + ": auth result = " + str(safe))
+                  print(tt_f + ": sid present = " + str(bool(sid)))
+
+                  # personId aus verschiedenen möglichen Feldnamen
+                  person_id   = 0
+                  person_type = 5
+                  if result:
+                      person_id   = result.get('personId') or result.get('userId') or result.get('studentId') or 0
+                      person_type = result.get('personType', 5)
+
+                  # Fallback: über getStudents suchen
+                  if person_id == 0 and sid:
+                      students, _ = wu_rpc(sid, 'getStudents')
+                      if students:
+                          for s in students:
+                              if s.get('key','').lower() == user.lower() or s.get('name','').lower() == user.lower():
+                                  person_id   = s.get('id', 0)
+                                  person_type = 5
+                                  print(tt_f + ": found via getStudents id=" + str(person_id))
+                                  break
+                      if person_id == 0:
+                          print(tt_f + ": getStudents count=" + str(len(students or [])))
+
+                  print(tt_f + ": personId=" + str(person_id) + " personType=" + str(person_type))
 
                   # Subject lookup
                   subj_result, _ = wu_rpc(sid, 'getSubjects')
@@ -168,43 +185,37 @@ jobs:
 
                   # Timetable
                   tt_result, _ = wu_rpc(sid, 'getTimetable', {'options':{
-                      'startDate':      int_date(date_from),
-                      'endDate':        int_date(date_to),
-                      'element':        {'id':person_id,'type':person_type},
-                      'showInfo':       True,
-                      'showSubstText':  True,
-                      'subjectFields':  ['id','name','longName'],
-                      'roomFields':     ['id','name'],
-                      'teacherFields':  ['id','name'],
+                      'startDate':     int_date(date_from),
+                      'endDate':       int_date(date_to),
+                      'element':       {'id':person_id,'type':person_type},
+                      'showInfo':      True,
+                      'showSubstText': True,
+                      'subjectFields': ['id','name','longName'],
+                      'roomFields':    ['id','name'],
+                      'teacherFields': ['id','name'],
                   }})
 
                   tt_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
                   count_tt = 0
                   for p in (tt_result or []):
-                      # skip cancelled
                       if str(p.get('code', p.get('lessonCode',''))) in ('1','CANCELLED'):
                           continue
                       d_int = p.get('date',0)
                       st    = p.get('startTime',0)
                       et    = p.get('endTime',0)
-                      if not d_int or not st:
-                          continue
+                      if not d_int or not st: continue
                       start = parse_wu_dt(d_int, st)
                       end   = parse_wu_dt(d_int, et) if et else start + timedelta(hours=1)
-                      # subject name
                       subjs = p.get('subjects',[])
                       if subjs:
                           s0 = subjs[0]
                           subj_name = (s0.get('longName') or s0.get('name','?')) if isinstance(s0,dict) else subjects.get(s0, str(s0))
                       else:
                           subj_name = '?'
-                      # room
-                      rooms = p.get('rooms',[])
-                      room  = (rooms[0].get('name','') if isinstance(rooms[0],dict) else '') if rooms else ''
-                      # teacher
-                      tchrs  = p.get('teachers',[])
+                      rooms   = p.get('rooms',[])
+                      room    = (rooms[0].get('name','') if isinstance(rooms[0],dict) else '') if rooms else ''
+                      tchrs   = p.get('teachers',[])
                       teacher = (tchrs[0].get('name','') if isinstance(tchrs[0],dict) else '') if tchrs else ''
-
                       tt_lines.append("BEGIN:VEVENT")
                       tt_lines.append("DTSTART:" + start.strftime('%Y%m%dT%H%M%S'))
                       tt_lines.append("DTEND:"   + end.strftime('%Y%m%dT%H%M%S'))
@@ -215,11 +226,11 @@ jobs:
                       count_tt += 1
                   tt_lines.append("END:VCALENDAR")
                   write_ics(tt_f, tt_lines)
-                  print(tt_f + ": " + str(count_tt) + " periods")
+                  print(tt_f + ": " + str(count_tt) + " periods written")
 
                   # Homework
-                  hw_data = wu_get(sid, 'api/homeworks/lessons?startDate=' + str(date_from) + '&endDate=' + str(date_to))
-                  homeworks   = hw_data.get('data',{}).get('homeworks',[])
+                  hw_data   = wu_get(sid, 'api/homeworks/lessons?startDate=' + str(date_from) + '&endDate=' + str(date_to))
+                  homeworks = hw_data.get('data',{}).get('homeworks',[])
                   lessons_map = {}
                   for ls in hw_data.get('data',{}).get('lessons',[]):
                       lid  = ls.get('id')
@@ -244,14 +255,15 @@ jobs:
                       count_hw += 1
                   hw_lines.append("END:VCALENDAR")
                   write_ics(hw_f, hw_lines)
-                  print(hw_f + ": " + str(count_hw) + " homeworks")
+                  print(hw_f + ": " + str(count_hw) + " homeworks written")
 
-                  # Logout
                   try: wu_rpc(sid, 'logout')
                   except: pass
 
               except Exception as e:
+                  import traceback
                   print(tt_f + " error: " + str(e))
+                  print(traceback.format_exc())
                   open(tt_f,'w').write(EMPTY)
                   open(hw_f,'w').write(EMPTY)
           PYEOF
