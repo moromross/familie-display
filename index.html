@@ -261,28 +261,52 @@ function xhrGet(url,ok,fail){
   x.ontimeout=function(){if(fail)fail();};
   x.send();
 }
-function geocode(city,cb){
+// Known coordinates - no geocoding needed
+var COORDS={
+  'wohltorf':{latitude:53.52,longitude:10.33,name:'Wohltorf'},
+  'kiel':{latitude:54.32,longitude:10.13,name:'Kiel'},
+  'hamburg':{latitude:53.55,longitude:9.99,name:'Hamburg'},
+  'luebeck':{latitude:53.87,longitude:10.69,name:'Lübeck'},
+  'flensburg':{latitude:54.79,longitude:9.44,name:'Flensburg'}
+};
+
+function getCoords(city,cb){
+  var key=city.toLowerCase().replace(/[^a-zäöü]/g,'');
+  if(COORDS[key]){cb(COORDS[key]);return;}
+  // Fallback: geocode API
   xhrGet('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=de&format=json',
-    function(t){
-      try{
-        var d=JSON.parse(t);
-        if(d.results&&d.results.length)cb(d.results[0]);
-        else cb(null);
-      }catch(e){cb(null);}
-    },
+    function(t){try{var d=JSON.parse(t);cb(d.results&&d.results.length?d.results[0]:null);}catch(e){cb(null);}},
     function(){cb(null);});
 }
+
 function getWeather(city,cb){
-  geocode(city,function(loc){
+  getCoords(city,function(loc){
     if(!loc){cb(null,null);return;}
     var u='https://api.open-meteo.com/v1/forecast?latitude='+loc.latitude+'&longitude='+loc.longitude
-      +'&current=temperature_2m,weathercode,precipitation_probability'
-      +'&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,windspeed_10m_max,weathercode'
-      +'&hourly=temperature_2m,precipitation,windspeed_10m,windgusts_10m,winddirection_10m,weathercode'
+      +'&current=temperature_2m,weather_code,precipitation_probability'
+      +'&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,weather_code'
+      +'&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,wind_direction_10m,weather_code'
       +'&wind_speed_unit=kn&timezone=Europe%2FBerlin&forecast_days=9';
     xhrGet(u,function(t){
-      try{cb(loc,JSON.parse(t));}
-      catch(e){cb(null,null);}
+      try{
+        var d=JSON.parse(t);
+        // Normalize API response keys (Open-Meteo sometimes uses underscores)
+        if(d.current){
+          if(d.current.weather_code!==undefined&&d.current.weathercode===undefined)d.current.weathercode=d.current.weather_code;
+          if(d.current.precipitation_probability===undefined)d.current.precipitation_probability=0;
+        }
+        if(d.daily){
+          if(d.daily.weather_code&&!d.daily.weathercode)d.daily.weathercode=d.daily.weather_code;
+          if(d.daily.wind_speed_10m_max&&!d.daily.windspeed_10m_max)d.daily.windspeed_10m_max=d.daily.wind_speed_10m_max;
+        }
+        if(d.hourly){
+          if(d.hourly.wind_speed_10m&&!d.hourly.windspeed_10m)d.hourly.windspeed_10m=d.hourly.wind_speed_10m;
+          if(d.hourly.wind_gusts_10m&&!d.hourly.windgusts_10m)d.hourly.windgusts_10m=d.hourly.wind_gusts_10m;
+          if(d.hourly.wind_direction_10m&&!d.hourly.winddirection_10m)d.hourly.winddirection_10m=d.hourly.wind_direction_10m;
+          if(d.hourly.weather_code&&!d.hourly.weathercode)d.hourly.weathercode=d.hourly.weather_code;
+        }
+        cb(loc,d);
+      }catch(e){cb(null,null);}
     },function(){cb(null,null);});
   });
 }
