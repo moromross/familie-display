@@ -92,12 +92,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 #tile-info{
   -webkit-flex:1;flex:1;
 }
-.fl{background:#f0f8e8;height:100%;padding:8px 10px;overflow:hidden;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;}
-/* Primary block: 63% */
-.fl-main{background:rgba(255,255,255,.85);border-radius:7px;padding:7px 10px;height:63%;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:space-between;justify-content:space-between;}
-.fl-divider{height:2%;background:rgba(26,74,42,.2);border-radius:2px;margin:2px 0;-webkit-flex-shrink:0;flex-shrink:0;}
-/* Secondary block: remaining */
-.fl-sec{background:rgba(255,255,255,.6);border-radius:6px;padding:5px 8px;-webkit-flex:1;flex:1;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:space-between;justify-content:space-between;}
+.fl{background:#f0f8e8;width:100%;height:100%;padding:5px 8px;overflow:hidden;box-sizing:border-box;display:table;}
+.fl-main{background:rgba(255,255,255,.85);border-radius:7px;padding:7px 10px;height:65%;display:table;width:100%;box-sizing:border-box;}
+.fl-main-inner{display:table-cell;vertical-align:middle;width:100%;}
+.fl-divider{height:3px;background:rgba(26,74,42,.2);border-radius:2px;margin:3px 0;}
+.fl-sec{background:rgba(255,255,255,.6);border-radius:6px;padding:4px 8px;height:30%;display:table;width:100%;box-sizing:border-box;}
+.fl-sec-inner{display:table-cell;vertical-align:middle;width:100%;}
 /* Row 1 */
 .fl-name-row{display:-webkit-flex;display:flex;-webkit-align-items:baseline;align-items:baseline;gap:5px;white-space:nowrap;overflow:hidden;}
 .fl-name{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--ink);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -633,30 +633,28 @@ function renderWeatherTile(){
       var dt=new Date();dt.setDate(dt.getDate()+i);
       return '<div class="wl-sm"><div class="wl-sm-d">'+DS[dt.getDay()]+'</div><div class="wl-sm-i">'+wmoIcon(d.weathercode[i])+'</div><div class="wl-sm-t">'+Math.round(d.temperature_2m_max[i])+'°</div><div class="wl-sm-r">'+( d.precipitation_probability_max[i]||0)+'%</div></div>';
     };
+    var wlH=gel('wl-weather').parentNode.offsetHeight||120;
     gel('wl-weather').innerHTML=''
-      +'<div style="background:#dff0f8;height:100%;padding:6px 8px;box-sizing:border-box;display:table;width:100%">'
-      +'<div style="display:table-row">'
-      +'<div style="display:table-cell;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:#1a3a5c;font-weight:600;padding-bottom:4px" colspan="2">🌍 '+homeWeatherLoc.name+'</div>'
-      +'</div>'
-      +'<div style="display:table-row;height:100%">'
-      +'<div style="display:table-cell;width:64%;vertical-align:middle;padding-right:5px">'
-        +'<div style="background:rgba(255,255,255,.8);border-radius:7px;padding:6px 8px;height:100%;box-sizing:border-box;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:7px">'
-          +'<div style="font-size:1.8rem;-webkit-flex-shrink:0;flex-shrink:0">'+wmoIcon(c.weathercode)+'</div>'
-          +'<div>'
-            +'<div style="font-family:Playfair Display,serif;font-size:1.8rem;color:#1a1612;line-height:1">'+Math.round(c.temperature_2m)+'°</div>'
-            +'<div style="font-size:.58rem;color:#5a5550;margin-top:2px">'+wmoDesc(c.weathercode)+'</div>'
+      +'<table style="width:100%;height:100%;border-collapse:collapse;background:#dff0f8;border-radius:8px;overflow:hidden">'
+      +'<thead><tr><td colspan="2" style="font-size:.5rem;letter-spacing:.07em;text-transform:uppercase;color:#1a3a5c;font-weight:600;padding:4px 8px 2px;height:16px">🌍 '+homeWeatherLoc.name+'</td></tr></thead>'
+      +'<tbody><tr style="height:calc(100% - 16px)">'
+      +'<td style="width:66%;vertical-align:middle;padding:4px 3px 4px 6px">'
+        +'<div style="background:rgba(255,255,255,.85);border-radius:7px;width:100%;height:100%;box-sizing:border-box;display:table">'
+          +'<div style="display:table-cell;vertical-align:middle;padding:6px 8px">'
+            +'<div style="font-size:2rem;line-height:1">'+wmoIcon(c.weathercode)+'</div>'
+            +'<div style="font-family:'Playfair Display',serif;font-size:2rem;color:#1a1612;line-height:1;margin-top:2px">'+Math.round(c.temperature_2m)+'°</div>'
+            +'<div style="font-size:.58rem;color:#5a5550;margin-top:3px">'+wmoDesc(c.weathercode)+'</div>'
             +'<div style="font-size:.55rem;color:#1a3a5c;margin-top:2px">🌧 '+rain+'%</div>'
           +'</div>'
         +'</div>'
-      +'</div>'
-      +'<div style="display:table-cell;width:36%;vertical-align:top">'
+      +'</td>'
+      +'<td style="width:34%;vertical-align:top;padding:4px 6px 4px 3px">'
         +'<table style="width:100%;height:100%;border-collapse:collapse">'
-        +'<tr style="height:50%"><td style="vertical-align:middle;padding-bottom:2px">'+sm(1)+'</td></tr>'
-        +'<tr style="height:50%"><td style="vertical-align:middle">'+sm(2)+'</td></tr>'
+        +'<tr style="height:50%"><td style="padding-bottom:2px;height:50%">'+sm(1)+'</td></tr>'
+        +'<tr style="height:50%"><td style="height:50%">'+sm(2)+'</td></tr>'
         +'</table>'
-      +'</div>'
-      +'</div>'
-      +'</div>';
+      +'</td>'
+      +'</tr></tbody></table>';
   } else {
     gel('wl-weather').innerHTML='<div class="wl"><div class="wl-loc">Wetter wird geladen…</div></div>';
   }
@@ -749,7 +747,7 @@ function renderInfoTile(){
     var wColor=inF?'var(--accent)':'var(--green)';
     var prefix=inF?'noch':'in';
     if(big){
-      return'<div class="fl-main">'
+      return'<div class="fl-main"><div class="fl-main-inner">'
         +'<div class="fl-name-row"><span class="fl-name">'+f.name+'</span><span class="fl-state">für '+sn+'</span></div>'
         +'<div class="fl-count-row">'
           +'<div class="fl-weeks-block"><span class="fl-in">'+prefix+'</span><span class="fl-weeks" style="color:'+wColor+'">'+wLabel+'</span></div>'
@@ -758,9 +756,9 @@ function renderInfoTile(){
             +'<span class="fl-dates">'+fmtD(f.start)+' – '+fmtD(f.end)+'</span>'
           +'</div>'
         +'</div>'
-        +'</div>';
+        +'</div></div>';
     }
-    return'<div class="fl-sec">'
+    return'<div class="fl-sec"><div class="fl-sec-inner">'
       +'<div class="fl-sec-name-row"><span class="fl-sec-name">'+f.name+'</span><span class="fl-sec-state">für '+sn+'</span></div>'
       +'<div class="fl-sec-count-row">'
         +'<div class="fl-sec-weeks-block"><span class="fl-sec-in">'+prefix+'</span><span class="fl-sec-weeks" style="color:'+wColor+'">'+wLabel+'</span></div>'
@@ -769,7 +767,7 @@ function renderInfoTile(){
           +'<span class="fl-sec-dates">'+fmtD(f.start)+' – '+fmtD(f.end)+'</span>'
         +'</div>'
       +'</div>'
-      +'</div>';
+      +'</div></div>';
   }
   gel('info-ferien').innerHTML='<div class="fl">'+ferienBlock(f1,cfg.st1,true)+'<div class="fl-divider"></div>'+ferienBlock(f2,cfg.st2,false)+'</div>';
 
@@ -848,7 +846,10 @@ function switchCal(view,manual){
         var now=new Date();
         var startH=Math.max(0,now.getHours()-1);
         var nowPx=(now.getHours()+now.getMinutes()/60-startH)*HH;
-        sw.scrollTop=Math.max(0,nowPx-sw.clientHeight*0.27);
+        var visH3=sw.clientHeight;
+        var idealS=nowPx-visH3*0.33;
+        var maxS=(23-startH)*HH-visH3;
+        sw.scrollTop=Math.max(0,Math.min(idealS,maxS));
       }
     },50);
   }
@@ -1055,7 +1056,10 @@ function updateRedLines(){
     // auto-scroll heute to keep red line at 27%
     var sw=gel('dv-heute') ? gel('dv-heute').querySelector('.day-scroll-wrap') : null;
     if(sw&&currentCalView==='heute'){
-      sw.scrollTop=Math.max(0,nowPx-startH*HH-sw.clientHeight*0.27);
+      var visH2=sw.clientHeight;
+      var idealScroll2=(nowPx-startH*HH)-visH2*0.33;
+      var maxScroll2=(23-startH)*HH-visH2;
+      sw.scrollTop=Math.max(0,Math.min(idealScroll2,maxScroll2));
     }
   }
 }
