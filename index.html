@@ -73,7 +73,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1612;font-family:
 .faz-l{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;-webkit-transition:opacity .7s;transition:opacity .7s;padding:7px 12px;overflow:hidden;}
 .faz-l.on{opacity:1;}
 .faz-r{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#8b1a1a;font-weight:600;margin-bottom:4px;}
-.faz-i{float:left;width:48%;margin-right:2%;overflow:hidden;height:calc(100% - 24px);}
+.faz-i{float:left;width:48%;margin-right:2%;overflow:hidden;height:calc(50% - 18px);}
 .faz-ti{font-family:'Playfair Display',serif;font-size:.88rem;line-height:1.25;color:#1a1612;margin-bottom:2px;}
 .faz-de{font-size:.62rem;color:#5a5550;line-height:1.35;overflow:hidden;}
 
@@ -325,7 +325,7 @@ function renderWeather(){
       +'<tr>'
       +'<td style="width:66%;padding:3px 2px 5px 5px;vertical-align:middle">'
         +'<table style="width:100%;height:100%;border-collapse:collapse;background:rgba(255,255,255,.85);border-radius:7px"><tr>'
-        +'<td style="width:42%;text-align:center;vertical-align:middle;font-size:2.2rem">'+wIcon(c.weathercode)+'</td>'
+        +'<td style="width:42%;text-align:center;vertical-align:middle;font-size:3.3rem">'+wIcon(c.weathercode)+'</td>'
         +'<td style="vertical-align:middle;padding:3px">'
           +'<div style="font-family:\'Playfair Display\',serif;font-size:1.9rem;color:#1a1612;line-height:1">'+Math.round(c.temperature_2m)+'°</div>'
           +'<div style="font-size:.55rem;color:#5a5550;margin-top:2px">'+wDesc(c.weathercode)+'</div>'
@@ -446,7 +446,7 @@ function renderInfo(){
       var b=bds[i],isT=b.days===0;
       var nm=b.s.replace(/geburtstag/gi,'').trim()||b.s;
       bh+='<div style="display:flex;align-items:baseline;gap:7px;margin-bottom:5px">'
-        +'<span style="font-size:.52rem;color:#8b1a1a;font-weight:600;text-transform:uppercase;white-space:nowrap">'+(isT?'🎂 Heute!':'🎁 in '+b.days+' Tag'+(b.days===1?'':'en'))+'</span>'
+        +'<span style="font-size:.52rem;color:#8b1a1a;font-weight:600;text-transform:uppercase;white-space:nowrap">'+(isT?'🎂 Heute!':'🎁 in '+b.days+' Tag'+(b.days===1?'':'en'))+'&nbsp;&nbsp;&nbsp;</span>'
         +'<span style="font-family:\'Playfair Display\',serif;font-size:'+(isT?'1.4rem':'1rem')+';color:#8b1a1a">'+esc(nm)+'</span>'
         +'</div>';
     }
@@ -625,24 +625,27 @@ function buildDay(viewId,date,minH,maxH,redline){
     +red
     +'<div class="dv-cols" style="height:'+totalPx+'px">'
     +'<div class="dv-col" style="height:'+totalPx+'px;background:#fff">'+gl+evHtml(byc.fam)+'</div>'
-    +'<div class="dv-col" style="height:'+totalPx+'px;background:rgba(200,240,200,.35)">'+gl+evHtml(byc.k1)+'</div>'
-    +'<div class="dv-col" style="height:'+totalPx+'px;background:rgba(200,218,255,.35)">'+gl+evHtml(byc.k2)+'</div>'
-    +'<div class="dv-col" style="height:'+totalPx+'px;background:rgba(255,210,220,.35)">'+gl+evHtml(byc.k3)+'</div>'
+    +'<div class="dv-col" style="height:'+totalPx+'px;background:rgba(220,250,220,.20)">'+gl+evHtml(byc.k1)+'</div>'
+    +'<div class="dv-col" style="height:'+totalPx+'px;background:rgba(220,233,255,.20)">'+gl+evHtml(byc.k2)+'</div>'
+    +'<div class="dv-col" style="height:'+totalPx+'px;background:rgba(255,225,232,.20)">'+gl+evHtml(byc.k3)+'</div>'
     +'<div style="clear:both"></div></div>'
     +'</div></div>';
 
-  // scroll positioning
+  // scroll positioning + freeze
   var sw2=v.querySelector('.dv-scroll');
   if(sw2){
-    var now2=new Date();
-    var scrollTo=redline?(now2.getHours()+now2.getMinutes()/60-minH)*HH:0;
-    setTimeout(function(){
-      var vh=sw2.clientHeight;
-      var maxS=totalPx-vh;
-      sw2.scrollTop=Math.max(0,Math.min(scrollTo-vh*0.33,maxS));
-    },80);
-    // scroll freeze: pause tab cycle 3s after user scrolls
+    if(redline){
+      var now2=new Date();
+      var scrollTo=(now2.getHours()+now2.getMinutes()/60-minH)*HH;
+      setTimeout(function(){
+        var vh=sw2.clientHeight,maxS=totalPx-vh;
+        isAutoScrolling=true;
+        sw2.scrollTop=Math.max(0,Math.min(scrollTo-vh*0.33,maxS));
+        setTimeout(function(){isAutoScrolling=false;},150);
+      },80);
+    }
     sw2.addEventListener('scroll',function(){
+      if(isAutoScrolling)return;
       calFrozen=true;
       clearTimeout(calScrollTimer);
       calScrollTimer=setTimeout(function(){calFrozen=false;startCalCycle();},3000);
@@ -656,20 +659,28 @@ function buildWknd(viewId){
   var dSat=(6-today.getDay()+7)%7||7;
   var sat=new Date(today);sat.setDate(today.getDate()+dSat);sat.setHours(0,0,0,0);
   var sun=new Date(sat);sun.setDate(sat.getDate()+1);
-  var minH=7,maxH=23,totalPx=(maxH-minH)*HH;
+  var minH=7,maxH=23,headerH=28;
+  // Available height — no scroll, scale to fit
+  var avail=(v.clientHeight||v.offsetHeight||450)-headerH;
+  if(avail<80)avail=350;
+  var HOURS=maxH-minH;
+  function hPx(hh){return Math.round(Math.max(hh-minH,0)/HOURS*avail);}
   // headers
-  var heads='<div class="wk-heads">'
-    +'<div class="wk-h-sp"></div>'
-    +'<div class="wk-h">'+DAY[sat.getDay()]+'<small>'+sat.getDate()+'. '+MS[sat.getMonth()]+'.</small></div>'
-    +'<div class="wk-h">'+DAY[sun.getDay()]+'<small>'+sun.getDate()+'. '+MS[sun.getMonth()]+'.</small></div>'
+  var heads='<div style="position:absolute;top:0;left:0;right:0;height:'+headerH+'px;border-bottom:1px solid #c8c2ba;background:#fff9c4;z-index:5;overflow:hidden">'
+    +'<div style="float:left;width:34px;height:'+headerH+'px;border-right:1px solid #c8c2ba"></div>'
+    +'<div style="float:left;width:calc((100% - 34px)/2);height:'+headerH+'px;text-align:center;border-right:1px solid #e0dbd4;padding-top:4px;font-family:\'Playfair Display\',serif;font-size:.82rem">'+DAY[sat.getDay()]+'<small style="font-size:.54rem;color:#5a5020;margin-left:3px">'+sat.getDate()+'. '+MS[sat.getMonth()]+'.</small></div>'
+    +'<div style="float:left;width:calc((100% - 34px)/2);height:'+headerH+'px;text-align:center;padding-top:4px;font-family:\'Playfair Display\',serif;font-size:.82rem">'+DAY[sun.getDay()]+'<small style="font-size:.54rem;color:#5a5020;margin-left:3px">'+sun.getDate()+'. '+MS[sun.getMonth()]+'.</small></div>'
     +'<div style="clear:both"></div></div>';
   // time axis
   var axis='';
-  for(var h=minH;h<=maxH;h++)
-    axis+='<div class="dv-hm" style="top:'+((h-minH)*HH)+'px"><span class="dv-hl">'+p2(h)+'</span></div>';
+  for(var h=minH;h<=maxH;h++){
+    var tp=hPx(h);
+    axis+='<div style="position:absolute;left:0;right:0;top:'+tp+'px;border-top:1px solid #e0dbd4"><span style="position:absolute;right:2px;top:-7px;font-family:\'JetBrains Mono\',monospace;font-size:.44rem;color:#9a9088">'+p2(h)+'</span></div>';
+  }
   // grid lines
   var gl='';
-  for(var h2=minH;h2<=maxH;h2++)gl+='<div class="dv-gl" style="top:'+((h2-minH)*HH)+'px"></div>';
+  for(var h2=minH;h2<=maxH;h2++)
+    gl+='<div style="position:absolute;left:0;right:0;top:'+hPx(h2)+'px;border-top:1px solid #ece8e2"></div>';
   // events per day
   function dayEvHtml(d){
     var evs=[];
@@ -683,39 +694,31 @@ function buildWknd(viewId){
       var sh=ev.start.getHours()+ev.start.getMinutes()/60;
       var eh=ev.end.getHours()+ev.end.getMinutes()/60;
       if(eh<=minH||sh>=maxH)continue;
-      var top=Math.max(0,sh-minH)*HH;
-      var hh2=Math.max(16,(Math.min(eh,maxH)-Math.max(sh,minH))*HH-2);
-      out+='<div class="ev" style="top:'+top+'px;height:'+hh2+'px;left:2px;right:2px;border-left-color:'+ev.color+';background:'+rgba(ev.color,.1)+'">'
-        +'<div class="ev-t">'+ft(ev.start)+'</div><div class="ev-s">'+esc(ev.summary)+'</div></div>';
+      var top2=hPx(sh);
+      var bot=hPx(Math.min(eh,maxH));
+      var hh2=Math.max(10,bot-top2-1);
+      out+='<div style="position:absolute;top:'+top2+'px;height:'+hh2+'px;left:2px;right:2px;border-radius:3px;border-left:3px solid '+ev.color+';background:'+rgba(ev.color,.1)+';overflow:hidden;padding:1px 3px">'
+        +'<div style="font-family:\'JetBrains Mono\',monospace;font-size:.42rem;color:#5a5550">'+ft(ev.start)+'</div>'
+        +'<div style="font-size:.54rem;font-weight:600;color:#1a1612;line-height:1.2">'+esc(ev.summary)+'</div>'
+        +'</div>';
     }
     return out;
   }
   v.innerHTML=heads
-    +'<div class="wk-scroll"><div class="wk-inner" style="height:'+totalPx+'px">'
-    +'<div class="dv-axis" style="height:'+totalPx+'px">'+axis+'</div>'
-    +'<div class="wk-daycols" style="height:'+totalPx+'px">'
-    +'<div class="wk-dcol" style="height:'+totalPx+'px">'+gl+dayEvHtml(sat)+'</div>'
-    +'<div class="wk-dcol" style="height:'+totalPx+'px">'+gl+dayEvHtml(sun)+'</div>'
-    +'<div style="clear:both"></div></div>'
+    +'<div style="position:absolute;top:'+headerH+'px;left:0;right:0;bottom:0;overflow:hidden">'
+    +'<div style="position:absolute;top:0;left:0;width:34px;bottom:0;border-right:1px solid #c8c2ba">'+axis+'</div>'
+    +'<div style="position:absolute;top:0;left:34px;right:0;bottom:0">'
+    +'<div style="position:absolute;top:0;left:0;width:50%;bottom:0;border-right:2px solid #c8c2ba">'+gl+dayEvHtml(sat)+'</div>'
+    +'<div style="position:absolute;top:0;left:50%;right:0;bottom:0">'+gl+dayEvHtml(sun)+'</div>'
     +'</div></div>';
-  // scroll freeze
-  var wsw=v.querySelector('.wk-scroll');
-  if(wsw)wsw.addEventListener('scroll',function(){
-    calFrozen=true;clearTimeout(calScrollTimer);
-    calScrollTimer=setTimeout(function(){calFrozen=false;startCalCycle();},3000);
-  },{passive:true});
 }
 
 function buildHw(viewId){
   var v=el(viewId);
   var today=new Date();today.setHours(0,0,0,0);
   var tomorrow=new Date(today);tomorrow.setDate(today.getDate()+1);
-  var heads='<div class="dv-heads">'
-    +'<div class="dvh-sp"></div>'
-    +'<div class="dvh"><div class="dvh-n"><span class="dvh-d" style="background:'+cfg.c1+'"></span>'+esc(cfg.n1)+'</div></div>'
-    +'<div class="dvh"><div class="dvh-n"><span class="dvh-d" style="background:'+cfg.c2+'"></span>'+esc(cfg.n2)+'</div></div>'
-    +'<div class="dvh"><div class="dvh-n"><span class="dvh-d" style="background:'+cfg.c3+'"></span>'+esc(cfg.n3)+'</div></div>'
-    +'<div style="clear:both"></div></div>';
+  var CHstyle='font-size:.46rem;text-transform:uppercase;letter-spacing:.07em;color:#9a9088;font-weight:400;text-align:center;vertical-align:middle;border-bottom:1px solid #c8c2ba;background:#fff;height:34px;padding:0 4px;';
+  var DOT='<span style="display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:3px;vertical-align:middle;background:';
   function hwCol(id,color){
     var hw=[];
     for(var i=0;i<allHomework.length;i++){
@@ -734,12 +737,17 @@ function buildHw(viewId){
     }
     return out;
   }
-  v.innerHTML=heads
-    +'<div style="position:absolute;top:34px;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;padding:6px;gap:4px">'
-    +'<div style="flex:1;min-width:0">'+hwCol('hw1',cfg.c1)+'</div>'
-    +'<div style="flex:1;min-width:0;border-left:1px solid #e0dbd4;padding-left:6px">'+hwCol('hw2',cfg.c2)+'</div>'
-    +'<div style="flex:1;min-width:0;border-left:1px solid #e0dbd4;padding-left:6px">'+hwCol('hw3',cfg.c3)+'</div>'
-    +'</div>';
+  v.innerHTML='<table style="width:100%;height:100%;border-collapse:collapse;table-layout:fixed">'
+    +'<thead><tr>'
+    +'<th style="'+CHstyle+'border-right:1px solid #e0dbd4">'+DOT+cfg.c1+'"></span>'+esc(cfg.n1)+'</th>'
+    +'<th style="'+CHstyle+'border-right:1px solid #e0dbd4">'+DOT+cfg.c2+'"></span>'+esc(cfg.n2)+'</th>'
+    +'<th style="'+CHstyle+'">'+DOT+cfg.c3+'"></span>'+esc(cfg.n3)+'</th>'
+    +'</tr></thead>'
+    +'<tbody><tr style="vertical-align:top">'
+    +'<td style="padding:6px;border-right:1px solid #e0dbd4;vertical-align:top">'+hwCol('hw1',cfg.c1)+'</td>'
+    +'<td style="padding:6px;border-right:1px solid #e0dbd4;vertical-align:top">'+hwCol('hw2',cfg.c2)+'</td>'
+    +'<td style="padding:6px;vertical-align:top">'+hwCol('hw3',cfg.c3)+'</td>'
+    +'</tr></tbody></table>';
 }
 
 function renderCal(){
@@ -759,7 +767,7 @@ function renderCal(){
 }
 
 // cal tab switching + cycle
-var calView='heute',calFrozen=false,calCycleIdx=0,calTimer=null,calScrollTimer=null;
+var calView='heute',calFrozen=false,calCycleIdx=0,calTimer=null,calScrollTimer=null,isAutoScrolling=false;
 var allHomework=[];
 var calViews=['heute','morgen','ha','wknd'];
 function switchCal(view){
@@ -769,18 +777,22 @@ function switchCal(view){
     el('cv-'+calViews[i]).className='cview'+(calViews[i]===view?' on':'');
     if(calViews[i]===view)calCycleIdx=i;
   }
-  if(view==='heute'||view==='morgen'){
+  if(view==='heute'){
     setTimeout(function(){
-      var sw=el('cv-'+view).querySelector('.dv-scroll');
+      var sw=el('cv-heute').querySelector('.dv-scroll');
       if(!sw)return;
       var now=new Date();
       var nowPx=(now.getHours()+now.getMinutes()/60-7)*HH;
       var vh=sw.clientHeight;
       var inner=sw.querySelector('.dv-inner');
       var maxS=(inner?inner.offsetHeight:0)-vh;
+      isAutoScrolling=true;
       sw.scrollTop=Math.max(0,Math.min(nowPx-vh*0.33,maxS));
+      setTimeout(function(){isAutoScrolling=false;},150);
     },60);
   }
+  if(view==='ha'){buildHw('cv-ha');}
+  if(view==='wknd'){setTimeout(function(){buildWknd('cv-wknd');},60);}
 }
 function startCalCycle(){
   if(calTimer)clearInterval(calTimer);
@@ -812,7 +824,7 @@ function fetchFAZ(cb){
           try{
             var xml=new DOMParser().parseFromString(t,'text/xml');
             var items=xml.getElementsByTagName('item');
-            for(var j=0;j<Math.min(items.length,2);j++){
+            for(var j=0;j<Math.min(items.length,4);j++){
               var it=items[j];
               var gT=function(tag){var e=it.getElementsByTagName(tag);return e.length?e[0].textContent||e[0].text||'':'';};
               arts.push({t:gT('title'),d:gT('description').replace(/<[^>]+>/g,''),r:fd.l});
@@ -833,7 +845,7 @@ function renderFAZ(){
     if(!fd||!fd.a.length)continue;
     h+='<div class="faz-l'+(h===''?' on':'')+'">'
       +'<div class="faz-r">FAZ — '+esc(fd.l)+'</div>';
-    for(var j=0;j<Math.min(fd.a.length,2);j++){
+    for(var j=0;j<Math.min(fd.a.length,4);j++){
       var a=fd.a[j];
       h+='<div class="faz-i"><div class="faz-ti">'+esc(a.t)+'</div><div class="faz-de">'+esc(a.d.slice(0,110))+'</div></div>';
     }
@@ -908,6 +920,7 @@ tap('sv',closeSett);
 tap('ct-heute',function(){calFrozen=!calFrozen;if(!calFrozen)startCalCycle();switchCal('heute');});
 tap('ct-morgen',function(){calFrozen=!calFrozen;if(!calFrozen)startCalCycle();switchCal('morgen');});
 tap('ct-wknd',function(){calFrozen=!calFrozen;if(!calFrozen)startCalCycle();switchCal('wknd');});
+tap('ct-ha',function(){calFrozen=!calFrozen;if(!calFrozen)startCalCycle();switchCal('ha');});
 el('tile-weather').addEventListener('touchend',function(e){if(e.target.id==='gear')return;wFrozen=!wFrozen;if(!wFrozen)startWCycle();},false);
 el('tile-info').addEventListener('touchend',function(e){iFrozen=!iFrozen;if(!iFrozen)startICycle();},false);
 el('tile-faz').addEventListener('touchend',function(e){fazFrozen=!fazFrozen;if(!fazFrozen)startFazCycle();},false);
