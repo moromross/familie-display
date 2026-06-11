@@ -222,11 +222,11 @@ jobs:
                   print(tt_f + ": " + str(count_tt) + " periods written")
 
                   # 4. Homework via REST + Bearer
-                 hw_path = ('api/homeworks/lessons'
-                 '?startDate=' + date_from.strftime('%Y%m%d') +
-    '&endDate='   + date_to.strftime('%Y%m%d'))
+                  hw_path = ('api/homeworks/lessons'
+                      '?startDate=' + date_from.strftime('%Y%m%d') +
+                      '&endDate='   + date_to.strftime('%Y%m%d'))
                   hw_data   = wu_get(jwt, hw_path, use_bearer=True)
-                  print("hw_data raw: " + str(hw_data)[:500])  # NEU
+                  print("hw_data raw: " + str(hw_data)[:500])
                   homeworks = hw_data.get('data',{}).get('homeworks',[])
                   lessons_map = {}
                   for ls in hw_data.get('data',{}).get('lessons',[]):
