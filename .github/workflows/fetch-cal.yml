@@ -148,31 +148,26 @@ jobs:
                       {'user':user,'password':pwd,'client':'familie-display'})
                   if not sid and result:
                       sid = result.get('sessionId','')
+                  if not sid:
+                      print(tt_f + ": login failed - no session")
+                      open(tt_f,'w').write(EMPTY)
+                      open(hw_f,'w').write(EMPTY)
+                      continue
 
-                  # DEBUG: alle Felder aus dem Login-Result ausgeben
-                  safe = {k:v for k,v in (result or {}).items() if k != 'sessionId'}
-                  print(tt_f + ": auth result = " + str(safe))
-                  print(tt_f + ": sid present = " + str(bool(sid)))
-
-                  # personId aus verschiedenen möglichen Feldnamen
+                  # Get personId via REST app/data endpoint
                   person_id   = 0
                   person_type = 5
-                  if result:
-                      person_id   = result.get('personId') or result.get('userId') or result.get('studentId') or 0
-                      person_type = result.get('personType', 5)
+                  app_data = wu_get(sid, 'api/rest/view/v1/app/data')
+                  user_info = app_data.get('user', {})
+                  print(tt_f + ": app/data user keys = " + str(list(user_info.keys())))
+                  person_id   = user_info.get('personId') or user_info.get('userId') or 0
+                  person_type = user_info.get('personType', 5)
 
-                  # Fallback: über getStudents suchen
-                  if person_id == 0 and sid:
-                      students, _ = wu_rpc(sid, 'getStudents')
-                      if students:
-                          for s in students:
-                              if s.get('key','').lower() == user.lower() or s.get('name','').lower() == user.lower():
-                                  person_id   = s.get('id', 0)
-                                  person_type = 5
-                                  print(tt_f + ": found via getStudents id=" + str(person_id))
-                                  break
-                      if person_id == 0:
-                          print(tt_f + ": getStudents count=" + str(len(students or [])))
+                  # Fallback: try masterdata endpoint
+                  if person_id == 0:
+                      master = wu_get(sid, 'api/rest/view/v1/profile')
+                      print(tt_f + ": profile keys = " + str(list(master.keys())))
+                      person_id = master.get('personId') or master.get('id') or 0
 
                   print(tt_f + ": personId=" + str(person_id) + " personType=" + str(person_type))
 
@@ -194,6 +189,7 @@ jobs:
                       'roomFields':    ['id','name'],
                       'teacherFields': ['id','name'],
                   }})
+                  print(tt_f + ": timetable raw count=" + str(len(tt_result or [])))
 
                   tt_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
                   count_tt = 0
