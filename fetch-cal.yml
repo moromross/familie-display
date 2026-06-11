@@ -155,9 +155,24 @@ jobs:
                       {'user':user,'password':pwd,'client':'familie-display'})
                   if not sid and result:
                       sid = result.get('sessionId','')
-                  person_id   = result.get('personId',0)   if result else 0
-                  person_type = result.get('personType',5) if result else 5
-                  print(tt_f + ": logged in, personId=" + str(person_id))
+                  
+                  # DEBUG: zeige alle Felder außer sessionId
+                  safe = {k:v for k,v in (result or {}).items() if k != 'sessionId'}
+                  print(tt_f + ": auth fields: " + str(safe))
+                  
+                  person_id   = result.get('personId', result.get('userId', 0)) if result else 0
+                  person_type = result.get('personType', 5) if result else 5
+                  
+                  # Fallback: wenn personId=0, über getStudents suchen
+                  if person_id == 0 and sid:
+                      students, _ = wu_rpc(sid, 'getStudents')
+                      if students:
+                          for s in students:
+                              if s.get('key','').lower() == user.lower():
+                                  person_id   = s.get('id', 0)
+                                  person_type = 5
+                                  print(tt_f + ": student found via key: id=" + str(person_id))
+                                  break
 
                   # Subject lookup
                   subj_result, _ = wu_rpc(sid, 'getSubjects')
