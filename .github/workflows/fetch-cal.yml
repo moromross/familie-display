@@ -13,66 +13,253 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Python dependencies
+        run: pip install recurring-ical-events icalendar
+
       - name: Fetch and filter calendars
         env:
-          CAL1_URL: ${{ secrets.CAL1_URL }}
-          CAL2_URL: ${{ secrets.CAL2_URL }}
-          CALK1_URL: ${{ secrets.CALK1_URL }}
-          CALK2_URL: ${{ secrets.CALK2_URL }}
-          CALK3_URL: ${{ secrets.CALK3_URL }}
+          CAL1_URL:   ${{ secrets.CAL1_URL }}
+          CAL2_URL:   ${{ secrets.CAL2_URL }}
+          WU_USER_K1: ${{ secrets.WU_USER_K1 }}
+          WU_PASS_K1: ${{ secrets.WU_PASS_K1 }}
+          WU_USER_K2: ${{ secrets.WU_USER_K2 }}
+          WU_PASS_K2: ${{ secrets.WU_PASS_K2 }}
+          WU_USER_K3: ${{ secrets.WU_USER_K3 }}
+          WU_PASS_K3: ${{ secrets.WU_PASS_K3 }}
         run: |
           python3 << 'PYEOF'
-          import urllib.request, re, os
-          from datetime import datetime, timedelta
+          import urllib.request, json, os
+          from datetime import date, datetime, timedelta
+          from zoneinfo import ZoneInfo
+          from icalendar import Calendar
+          import recurring_ical_events
 
-          urls = [
-            ("cal1.ics",  os.environ.get("CAL1_URL","")),
-            ("cal2.ics",  os.environ.get("CAL2_URL","")),
-            ("calk1.ics", os.environ.get("CALK1_URL","")),
-            ("calk2.ics", os.environ.get("CALK2_URL","")),
-            ("calk3.ics", os.environ.get("CALK3_URL","")),
+          BERLIN  = ZoneInfo('Europe/Berlin')
+          SCHOOL  = 'sachsenwaldschule-reinbek'
+          WU_BASE = 'https://' + SCHOOL + '.webuntis.com/WebUntis'
+          EMPTY   = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR\r\n"
+
+          today     = date.today()
+          date_from = today - timedelta(days=1)
+          date_to   = today + timedelta(days=9)
+
+          # ── helpers ──────────────────────────────────────────────────────
+
+          def dt_str(val):
+              if isinstance(val, datetime):
+                  if val.tzinfo:
+                      val = val.astimezone(BERLIN).replace(tzinfo=None)
+                  return val.strftime('%Y%m%dT%H%M%S')
+              return val.strftime('%Y%m%d')
+
+          def esc(s):
+              return str(s).replace('\\','\\\\').replace('\n','\\n').replace(',','\\,').replace(';','\\;')
+
+          def write_ics(fname, lines):
+              open(fname, 'w', encoding='utf-8').write('\r\n'.join(lines) + '\r\n')
+
+          # ── iCloud family calendars ───────────────────────────────────────
+
+          for fname, url in [("cal1.ics", os.environ.get("CAL1_URL","")),
+                              ("cal2.ics", os.environ.get("CAL2_URL",""))]:
+              if not url:
+                  open(fname,'w').write(EMPTY)
+                  print(fname + ": no URL")
+                  continue
+              url = url.replace("webcal://","https://")
+              try:
+                  req  = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0"})
+                  data = urllib.request.urlopen(req, timeout=30).read()
+                  cal  = Calendar.from_ical(data)
+                  evts = recurring_ical_events.of(cal).between(date_from, date_to)
+                  lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
+                  for ev in evts:
+                      lines.append("BEGIN:VEVENT")
+                      ds = ev.get('DTSTART')
+                      if ds: lines.append("DTSTART:" + dt_str(ds.dt))
+                      de = ev.get('DTEND')
+                      if de:
+                          lines.append("DTEND:" + dt_str(de.dt))
+                      elif ds:
+                          v  = ds.dt
+                          fb = v + timedelta(hours=1) if isinstance(v,datetime) else v + timedelta(days=1)
+                          lines.append("DTEND:" + dt_str(fb))
+                      lines.append("SUMMARY:" + esc(ev.get('SUMMARY','')))
+                      if ev.get('DESCRIPTION'): lines.append("DESCRIPTION:" + esc(ev.get('DESCRIPTION','')))
+                      if ev.get('LOCATION'):    lines.append("LOCATION:"    + esc(ev.get('LOCATION','')))
+                      lines.append("END:VEVENT")
+                  lines.append("END:VCALENDAR")
+                  write_ics(fname, lines)
+                  print(fname + ": " + str(len(evts)) + " events")
+              except Exception as e:
+                  print(fname + " error: " + str(e))
+                  open(fname,'w').write(EMPTY)
+
+          # ── WebUntis helpers ──────────────────────────────────────────────
+
+          def wu_rpc(session_id, method, params=None):
+              if params is None: params = {}
+              url     = WU_BASE + '/jsonrpc.do?school=' + SCHOOL
+              payload = json.dumps({"id":"1","method":method,"params":params,"jsonrpc":"2.0"}).encode('utf-8')
+              headers = {'Content-Type':'application/json'}
+              if session_id:
+                  headers['Cookie'] = 'JSESSIONID=' + session_id
+              req  = urllib.request.Request(url, data=payload, headers=headers)
+              resp = urllib.request.urlopen(req, timeout=30)
+              # extract session id from Set-Cookie
+              sid = ''
+              raw = resp.getheader('Set-Cookie','')
+              if 'JSESSIONID=' in raw:
+                  sid = raw.split('JSESSIONID=')[1].split(';')[0]
+              result = json.loads(resp.read().decode('utf-8')).get('result')
+              return result, sid
+
+          def wu_get(session_id, path):
+              url = WU_BASE + '/' + path
+              req = urllib.request.Request(url, headers={
+                  'Cookie':'JSESSIONID=' + session_id,
+                  'Accept':'application/json'
+              })
+              try:
+                  resp = urllib.request.urlopen(req, timeout=30)
+                  return json.loads(resp.read().decode('utf-8'))
+              except Exception as e:
+                  print("  GET " + path + " failed: " + str(e))
+                  return {}
+
+          def parse_wu_dt(date_int, time_int):
+              s = str(date_int)
+              return datetime(int(s[:4]), int(s[4:6]), int(s[6:8]),
+                              time_int // 100, time_int % 100)
+
+          def int_date(d):
+              return int(d.strftime('%Y%m%d'))
+
+          # ── WebUntis per child ────────────────────────────────────────────
+
+          kids = [
+              ('calk1.ics','calhw1.ics', os.environ.get('WU_USER_K1',''), os.environ.get('WU_PASS_K1','')),
+              ('calk2.ics','calhw2.ics', os.environ.get('WU_USER_K2',''), os.environ.get('WU_PASS_K2','')),
+              ('calk3.ics','calhw3.ics', os.environ.get('WU_USER_K3',''), os.environ.get('WU_PASS_K3','')),
           ]
 
-          today = datetime.now()
-          date_from = (today - timedelta(days=1)).strftime("%Y%m%d")
-          date_to   = (today + timedelta(days=8)).strftime("%Y%m%d")
+          for tt_f, hw_f, user, pwd in kids:
+              if not user or not pwd:
+                  open(tt_f,'w').write(EMPTY)
+                  open(hw_f,'w').write(EMPTY)
+                  print(tt_f + ": no credentials")
+                  continue
+              try:
+                  # Login
+                  result, sid = wu_rpc(None, 'authenticate',
+                      {'user':user,'password':pwd,'client':'familie-display'})
+                  if not sid and result:
+                      sid = result.get('sessionId','')
+                  person_id   = result.get('personId',0)   if result else 0
+                  person_type = result.get('personType',5) if result else 5
+                  print(tt_f + ": logged in, personId=" + str(person_id))
 
-          for fname, url in urls:
-            if not url:
-              open(fname,'w').write("BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n")
-              print(fname + ": no URL configured")
-              continue
-            url = url.replace("webcal://","https://")
-            try:
-              req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-              data = urllib.request.urlopen(req, timeout=30).read().decode("utf-8","ignore")
-              blocks = data.split("BEGIN:VEVENT")
-              header = blocks[0]
-              filtered = []
-              for blk in blocks[1:]:
-                m = re.search(r'DTSTART[^:]*:(\d{8})', blk)
-                if m:
-                  d = m.group(1)
-                  if date_from <= d <= date_to:
-                    filtered.append("BEGIN:VEVENT" + blk)
-                else:
-                  m2 = re.search(r'DTSTART[^:]*:(\d{8})T', blk)
-                  if m2:
-                    d = m2.group(1)
-                    if date_from <= d <= date_to:
-                      filtered.append("BEGIN:VEVENT" + blk)
-              result = header + "".join(filtered) + "END:VCALENDAR\n"
-              open(fname,'w').write(result)
-              print(fname + ": " + str(len(filtered)) + " events")
-            except Exception as e:
-              print(fname + " error: " + str(e))
-              open(fname,'w').write("BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n")
+                  # Subject lookup
+                  subj_result, _ = wu_rpc(sid, 'getSubjects')
+                  subjects = {}
+                  if subj_result:
+                      for s in subj_result:
+                          subjects[s['id']] = s.get('longName', s.get('name', str(s['id'])))
+
+                  # Timetable
+                  tt_result, _ = wu_rpc(sid, 'getTimetable', {'options':{
+                      'startDate':      int_date(date_from),
+                      'endDate':        int_date(date_to),
+                      'element':        {'id':person_id,'type':person_type},
+                      'showInfo':       True,
+                      'showSubstText':  True,
+                      'subjectFields':  ['id','name','longName'],
+                      'roomFields':     ['id','name'],
+                      'teacherFields':  ['id','name'],
+                  }})
+
+                  tt_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
+                  count_tt = 0
+                  for p in (tt_result or []):
+                      # skip cancelled
+                      if str(p.get('code', p.get('lessonCode',''))) in ('1','CANCELLED'):
+                          continue
+                      d_int = p.get('date',0)
+                      st    = p.get('startTime',0)
+                      et    = p.get('endTime',0)
+                      if not d_int or not st:
+                          continue
+                      start = parse_wu_dt(d_int, st)
+                      end   = parse_wu_dt(d_int, et) if et else start + timedelta(hours=1)
+                      # subject name
+                      subjs = p.get('subjects',[])
+                      if subjs:
+                          s0 = subjs[0]
+                          subj_name = (s0.get('longName') or s0.get('name','?')) if isinstance(s0,dict) else subjects.get(s0, str(s0))
+                      else:
+                          subj_name = '?'
+                      # room
+                      rooms = p.get('rooms',[])
+                      room  = (rooms[0].get('name','') if isinstance(rooms[0],dict) else '') if rooms else ''
+                      # teacher
+                      tchrs  = p.get('teachers',[])
+                      teacher = (tchrs[0].get('name','') if isinstance(tchrs[0],dict) else '') if tchrs else ''
+
+                      tt_lines.append("BEGIN:VEVENT")
+                      tt_lines.append("DTSTART:" + start.strftime('%Y%m%dT%H%M%S'))
+                      tt_lines.append("DTEND:"   + end.strftime('%Y%m%dT%H%M%S'))
+                      tt_lines.append("SUMMARY:" + esc(subj_name))
+                      if room:    tt_lines.append("LOCATION:"    + esc(room))
+                      if teacher: tt_lines.append("DESCRIPTION:" + esc(teacher))
+                      tt_lines.append("END:VEVENT")
+                      count_tt += 1
+                  tt_lines.append("END:VCALENDAR")
+                  write_ics(tt_f, tt_lines)
+                  print(tt_f + ": " + str(count_tt) + " periods")
+
+                  # Homework
+                  hw_data = wu_get(sid, 'api/homeworks/lessons?startDate=' + str(date_from) + '&endDate=' + str(date_to))
+                  homeworks   = hw_data.get('data',{}).get('homeworks',[])
+                  lessons_map = {}
+                  for ls in hw_data.get('data',{}).get('lessons',[]):
+                      lid  = ls.get('id')
+                      subj = ls.get('subject',{}) or {}
+                      lessons_map[lid] = subj.get('longName', subj.get('name','?'))
+
+                  hw_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
+                  count_hw = 0
+                  for hw in homeworks:
+                      due = str(hw.get('dueDate', hw.get('date',0)))
+                      if len(due) != 8: continue
+                      due_d = date(int(due[:4]), int(due[4:6]), int(due[6:8]))
+                      if not (date_from <= due_d <= date_to): continue
+                      subj_name = lessons_map.get(hw.get('lessonId'), '?')
+                      txt = hw.get('text','').strip()
+                      hw_lines.append("BEGIN:VEVENT")
+                      hw_lines.append("DTSTART:" + due)
+                      hw_lines.append("DTEND:"   + due)
+                      hw_lines.append("SUMMARY:📝 " + esc(subj_name))
+                      if txt: hw_lines.append("DESCRIPTION:" + esc(txt))
+                      hw_lines.append("END:VEVENT")
+                      count_hw += 1
+                  hw_lines.append("END:VCALENDAR")
+                  write_ics(hw_f, hw_lines)
+                  print(hw_f + ": " + str(count_hw) + " homeworks")
+
+                  # Logout
+                  try: wu_rpc(sid, 'logout')
+                  except: pass
+
+              except Exception as e:
+                  print(tt_f + " error: " + str(e))
+                  open(tt_f,'w').write(EMPTY)
+                  open(hw_f,'w').write(EMPTY)
           PYEOF
 
       - name: Commit calendars
         run: |
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-          git add cal1.ics cal2.ics calk1.ics calk2.ics calk3.ics
+          git add cal1.ics cal2.ics calk1.ics calk2.ics calk3.ics calhw1.ics calhw2.ics calhw3.ics
           git diff --staged --quiet || git commit -m "Update calendars $(date -u +%H:%M)"
           git push
