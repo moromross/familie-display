@@ -175,54 +175,55 @@ jobs:
                       '&periodTypes=&timetableType=MY_TIMETABLE&layout=START_TIME')
                   tt_data = wu_get(jwt, tt_path, use_bearer=True)
 
-                  # DEBUG: show top-level keys and one sample entry
                   print(tt_f + ": response keys=" + str(list(tt_data.keys())))
-                  periods = (tt_data.get('periods') or tt_data.get('data') or
-                             tt_data.get('entries') or tt_data.get('rows') or [])
-                  if not periods and tt_data:
-                      # try first list value
-                      for v in tt_data.values():
-                          if isinstance(v, list) and v:
-                              periods = v; break
-                  print(tt_f + ": periods count=" + str(len(periods)))
-                  if periods:
-                      print(tt_f + ": sample keys=" + str(list(periods[0].keys())))
+                  days = tt_data.get('days', [])
+                  print(tt_f + ": days count=" + str(len(days)))
+
+                  # DEBUG: show structure of first day's entries
+                  if days:
+                      ge = days[0].get('gridEntries', [])
+                      de = days[0].get('dayEntries', [])
+                      if ge: print(tt_f + ": gridEntry[0] keys=" + str(list(ge[0].keys())))
+                      if de: print(tt_f + ": dayEntry[0] keys="  + str(list(de[0].keys())))
 
                   tt_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
                   count_tt = 0
-                  for p in periods:
-                      try:
-                          # flexible field extraction
-                          code = str(p.get('code','') or p.get('lessonCode','') or p.get('type',''))
-                          if code in ('CANCELLED','1'): continue
-                          d_val  = p.get('date') or p.get('day') or p.get('start','')[:10]
-                          st_val = p.get('startTime') or p.get('start','')[11:16] or p.get('from','')
-                          et_val = p.get('endTime')   or p.get('end','')[11:16]   or p.get('to','')
-                          if not d_val or not st_val: continue
-                          start  = make_dt(d_val, st_val)
-                          end    = make_dt(d_val, et_val) if et_val else start + timedelta(hours=1)
-                          # subject
-                          subj   = p.get('subject') or p.get('subjects',{})
-                          if isinstance(subj, list): subj = subj[0] if subj else {}
-                          subj_name = (subj.get('longName') or subj.get('name','?')) if isinstance(subj,dict) else str(subj)
-                          # room
-                          room_raw = p.get('room') or p.get('rooms','')
-                          if isinstance(room_raw, list): room_raw = room_raw[0] if room_raw else {}
-                          room = (room_raw.get('name','') if isinstance(room_raw,dict) else str(room_raw))
-                          # teacher
-                          tch_raw = p.get('teacher') or p.get('teachers','')
-                          if isinstance(tch_raw, list): tch_raw = tch_raw[0] if tch_raw else {}
-                          teacher = (tch_raw.get('name','') if isinstance(tch_raw,dict) else str(tch_raw))
-                          tt_lines += ["BEGIN:VEVENT",
-                              "DTSTART:" + start.strftime('%Y%m%dT%H%M%S'),
-                              "DTEND:"   + end.strftime('%Y%m%dT%H%M%S'),
-                              "SUMMARY:" + esc(subj_name)]
-                          if room:    tt_lines.append("LOCATION:"    + esc(room))
-                          if teacher: tt_lines.append("DESCRIPTION:" + esc(teacher))
-                          tt_lines.append("END:VEVENT")
-                          count_tt += 1
-                      except Exception as pe:
-                          print("  period parse error: " + str(pe))
+                  for day in days:
+                      d_val = day.get('date','')
+                      if not d_val: continue
+                      entries = day.get('gridEntries', []) + day.get('dayEntries', [])
+                      for p in entries:
+                          try:
+                              # skip cancelled
+                              status = str(p.get('status','') or p.get('type','') or p.get('code',''))
+                              if status in ('CANCELLED','CANCEL','1'): continue
+                              st_val = p.get('startTime') or p.get('from') or p.get('start','')[11:16]
+                              et_val = p.get('endTime')   or p.get('to')   or p.get('end','')[11:16]
+                              if not st_val: continue
+                              start = make_dt(d_val, st_val)
+                              end   = make_dt(d_val, et_val) if et_val else start + timedelta(hours=1)
+                              # subject
+                              subj = p.get('subject') or p.get('subjects','')
+                              if isinstance(subj, list): subj = subj[0] if subj else {}
+                              subj_name = (subj.get('longName') or subj.get('name','?')) if isinstance(subj,dict) else str(subj or '?')
+                              # room
+                              room_raw = p.get('room') or p.get('rooms','')
+                              if isinstance(room_raw, list): room_raw = room_raw[0] if room_raw else {}
+                              room = (room_raw.get('name','') if isinstance(room_raw,dict) else str(room_raw or ''))
+                              # teacher
+                              tch_raw = p.get('teacher') or p.get('teachers','')
+                              if isinstance(tch_raw, list): tch_raw = tch_raw[0] if tch_raw else {}
+                              teacher = (tch_raw.get('name','') if isinstance(tch_raw,dict) else str(tch_raw or ''))
+                              tt_lines += ["BEGIN:VEVENT",
+                                  "DTSTART:" + start.strftime('%Y%m%dT%H%M%S'),
+                                  "DTEND:"   + end.strftime('%Y%m%dT%H%M%S'),
+                                  "SUMMARY:" + esc(subj_name)]
+                              if room:    tt_lines.append("LOCATION:"    + esc(room))
+                              if teacher: tt_lines.append("DESCRIPTION:" + esc(teacher))
+                              tt_lines.append("END:VEVENT")
+                              count_tt += 1
+                          except Exception as pe:
+                              print("  period parse error: " + str(pe))
                   tt_lines.append("END:VCALENDAR")
                   write_ics(tt_f, tt_lines)
                   print(tt_f + ": " + str(count_tt) + " periods written")
