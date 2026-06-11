@@ -59,7 +59,7 @@ jobs:
           def write_ics(fname, lines):
               open(fname, 'w', encoding='utf-8').write('\r\n'.join(lines) + '\r\n')
 
-          # iCloud family calendars
+          # ── iCloud family calendars ───────────────────────────────────────
           for fname, url in [("cal1.ics", os.environ.get("CAL1_URL","")),
                               ("cal2.ics", os.environ.get("CAL2_URL",""))]:
               if not url:
@@ -91,7 +91,7 @@ jobs:
               except Exception as e:
                   print(fname + " error: " + str(e)); open(fname,'w').write(EMPTY)
 
-          # WebUntis — cookie-jar based session
+          # ── WebUntis helpers ──────────────────────────────────────────────
           def make_opener():
               jar = http.cookiejar.CookieJar()
               return urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
@@ -107,21 +107,35 @@ jobs:
                   print("  RPC error [" + method + "]: " + str(body['error']))
               return body.get('result')
 
-          def wu_get_json(opener, path):
+          def wu_get(opener_or_jwt, path, use_bearer=False):
               url = WU_BASE + '/' + path
-              req = urllib.request.Request(url, headers={'Accept':'application/json'})
+              headers = {'Accept':'application/json'}
+              if use_bearer:
+                  headers['Authorization'] = 'Bearer ' + opener_or_jwt.strip()
+                  req = urllib.request.Request(url, headers=headers)
+                  opener_fn = urllib.request.urlopen
+              else:
+                  req = urllib.request.Request(url, headers=headers)
+                  opener_fn = opener_or_jwt.open
               try:
-                  resp = opener.open(req, timeout=30)
+                  resp = opener_fn(req, timeout=30)
                   return json.loads(resp.read().decode('utf-8'))
               except Exception as e:
                   print("  GET " + path + " failed: " + str(e)); return {}
 
-          def parse_wu_dt(date_int, time_int):
-              s = str(date_int)
-              return datetime(int(s[:4]), int(s[4:6]), int(s[6:8]),
-                              time_int // 100, time_int % 100)
+          def parse_time_str(t):
+              # handles "08:00", "0800", 800 (int)
+              if isinstance(t, int):
+                  return t // 100, t % 100
+              t = str(t).replace(':','')
+              return int(t[:2]), int(t[2:4])
 
-          def int_date(d): return int(d.strftime('%Y%m%d'))
+          def make_dt(d_str, t_val):
+              # d_str: "2026-06-08" or "20260608"
+              d_str = str(d_str).replace('-','')
+              y,mo,d = int(d_str[:4]),int(d_str[4:6]),int(d_str[6:8])
+              h,m = parse_time_str(t_val)
+              return datetime(y,mo,d,h,m)
 
           kids = [
               ('calk1.ics','calhw1.ics', os.environ.get('WU_USER_K1',''), os.environ.get('WU_PASS_K1',''), os.environ.get('WU_ID_K1','0')),
@@ -136,70 +150,95 @@ jobs:
               try:
                   person_id = int(entity_id_str) if entity_id_str.isdigit() else 0
 
-                  # neuer Cookie-Jar pro Kind
+                  # 1. Login via JSON-RPC → JSESSIONID cookie
                   opener = make_opener()
-
-                  # Login
                   result = wu_rpc(opener, 'authenticate',
                       {'user':user,'password':pwd,'client':'familie-display'})
                   if result is None:
-                      print(tt_f + ": login failed"); open(tt_f,'w').write(EMPTY); open(hw_f,'w').write(EMPTY); continue
+                      print(tt_f + ": login failed")
+                      open(tt_f,'w').write(EMPTY); open(hw_f,'w').write(EMPTY); continue
+                  print(tt_f + ": logged in")
 
-                  print(tt_f + ": logged in, personId=" + str(person_id))
+                  # 2. Get JWT Bearer token
+                  jwt_url = WU_BASE + '/api/token/new'
+                  jwt_req = urllib.request.Request(jwt_url, headers={'Accept':'*/*'})
+                  jwt_resp = opener.open(jwt_req, timeout=30)
+                  jwt = jwt_resp.read().decode('utf-8').strip()
+                  print(tt_f + ": jwt ok=" + str(bool(jwt and '.' in jwt)))
 
-                  # Subject lookup
-                  subj_result = wu_rpc(opener, 'getSubjects')
-                  subjects = {}
-                  if subj_result:
-                      for s in subj_result:
-                          subjects[s['id']] = s.get('longName', s.get('name', str(s['id'])))
+                  # 3. Timetable via REST + Bearer
+                  tt_path = ('api/rest/view/v1/timetable/entries'
+                      '?start=' + str(date_from) +
+                      '&end='   + str(date_to) +
+                      '&format=10&resourceType=STUDENT'
+                      '&resources=' + str(person_id) +
+                      '&periodTypes=&timetableType=MY_TIMETABLE&layout=START_TIME')
+                  tt_data = wu_get(jwt, tt_path, use_bearer=True)
 
-                  # Timetable — legacy format (no options wrapper)
-                  tt_result = wu_rpc(opener, 'getTimetable', {
-                      'id':        person_id,
-                      'type':      5,
-                      'startDate': int_date(date_from),
-                      'endDate':   int_date(date_to),
-                  })
-                  print(tt_f + ": timetable count=" + str(len(tt_result or [])))
+                  # DEBUG: show top-level keys and one sample entry
+                  print(tt_f + ": response keys=" + str(list(tt_data.keys())))
+                  periods = (tt_data.get('periods') or tt_data.get('data') or
+                             tt_data.get('entries') or tt_data.get('rows') or [])
+                  if not periods and tt_data:
+                      # try first list value
+                      for v in tt_data.values():
+                          if isinstance(v, list) and v:
+                              periods = v; break
+                  print(tt_f + ": periods count=" + str(len(periods)))
+                  if periods:
+                      print(tt_f + ": sample keys=" + str(list(periods[0].keys())))
 
                   tt_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
                   count_tt = 0
-                  for p in (tt_result or []):
-                      if str(p.get('code', p.get('lessonCode',''))) in ('1','CANCELLED'): continue
-                      d_int = p.get('date',0); st = p.get('startTime',0); et = p.get('endTime',0)
-                      if not d_int or not st: continue
-                      start = parse_wu_dt(d_int, st)
-                      end   = parse_wu_dt(d_int, et) if et else start + timedelta(hours=1)
-                      subjs = p.get('subjects',[])
-                      if subjs:
-                          s0 = subjs[0]
-                          subj_name = (s0.get('longName') or s0.get('name','?')) if isinstance(s0,dict) else subjects.get(s0, str(s0))
-                      else:
-                          subj_name = '?'
-                      rooms   = p.get('rooms',[])
-                      room    = (rooms[0].get('name','') if isinstance(rooms[0],dict) else '') if rooms else ''
-                      tchrs   = p.get('teachers',[])
-                      teacher = (tchrs[0].get('name','') if isinstance(tchrs[0],dict) else '') if tchrs else ''
-                      tt_lines += ["BEGIN:VEVENT",
-                          "DTSTART:" + start.strftime('%Y%m%dT%H%M%S'),
-                          "DTEND:"   + end.strftime('%Y%m%dT%H%M%S'),
-                          "SUMMARY:" + esc(subj_name)]
-                      if room:    tt_lines.append("LOCATION:"    + esc(room))
-                      if teacher: tt_lines.append("DESCRIPTION:" + esc(teacher))
-                      tt_lines.append("END:VEVENT")
-                      count_tt += 1
+                  for p in periods:
+                      try:
+                          # flexible field extraction
+                          code = str(p.get('code','') or p.get('lessonCode','') or p.get('type',''))
+                          if code in ('CANCELLED','1'): continue
+                          d_val  = p.get('date') or p.get('day') or p.get('start','')[:10]
+                          st_val = p.get('startTime') or p.get('start','')[11:16] or p.get('from','')
+                          et_val = p.get('endTime')   or p.get('end','')[11:16]   or p.get('to','')
+                          if not d_val or not st_val: continue
+                          start  = make_dt(d_val, st_val)
+                          end    = make_dt(d_val, et_val) if et_val else start + timedelta(hours=1)
+                          # subject
+                          subj   = p.get('subject') or p.get('subjects',{})
+                          if isinstance(subj, list): subj = subj[0] if subj else {}
+                          subj_name = (subj.get('longName') or subj.get('name','?')) if isinstance(subj,dict) else str(subj)
+                          # room
+                          room_raw = p.get('room') or p.get('rooms','')
+                          if isinstance(room_raw, list): room_raw = room_raw[0] if room_raw else {}
+                          room = (room_raw.get('name','') if isinstance(room_raw,dict) else str(room_raw))
+                          # teacher
+                          tch_raw = p.get('teacher') or p.get('teachers','')
+                          if isinstance(tch_raw, list): tch_raw = tch_raw[0] if tch_raw else {}
+                          teacher = (tch_raw.get('name','') if isinstance(tch_raw,dict) else str(tch_raw))
+                          tt_lines += ["BEGIN:VEVENT",
+                              "DTSTART:" + start.strftime('%Y%m%dT%H%M%S'),
+                              "DTEND:"   + end.strftime('%Y%m%dT%H%M%S'),
+                              "SUMMARY:" + esc(subj_name)]
+                          if room:    tt_lines.append("LOCATION:"    + esc(room))
+                          if teacher: tt_lines.append("DESCRIPTION:" + esc(teacher))
+                          tt_lines.append("END:VEVENT")
+                          count_tt += 1
+                      except Exception as pe:
+                          print("  period parse error: " + str(pe))
                   tt_lines.append("END:VCALENDAR")
                   write_ics(tt_f, tt_lines)
                   print(tt_f + ": " + str(count_tt) + " periods written")
 
-                  # Homework
-                  hw_data   = wu_get_json(opener, 'api/homeworks/lessons?startDate=' + str(date_from) + '&endDate=' + str(date_to))
+                  # 4. Homework via REST + Bearer
+                  hw_path = ('api/homeworks/lessons'
+                      '?startDate=' + str(date_from) +
+                      '&endDate='   + str(date_to))
+                  hw_data   = wu_get(jwt, hw_path, use_bearer=True)
                   homeworks = hw_data.get('data',{}).get('homeworks',[])
                   lessons_map = {}
                   for ls in hw_data.get('data',{}).get('lessons',[]):
                       lid = ls.get('id'); subj = ls.get('subject',{}) or {}
                       lessons_map[lid] = subj.get('longName', subj.get('name','?'))
+                  print(hw_f + ": homeworks raw=" + str(len(homeworks)))
+
                   hw_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
                   count_hw = 0
                   for hw in homeworks:
@@ -209,7 +248,7 @@ jobs:
                       if not (date_from <= due_d <= date_to): continue
                       subj_name = lessons_map.get(hw.get('lessonId'), '?')
                       txt = hw.get('text','').strip()
-                      hw_lines += ["BEGIN:VEVENT", "DTSTART:"+due, "DTEND:"+due,
+                      hw_lines += ["BEGIN:VEVENT","DTSTART:"+due,"DTEND:"+due,
                           "SUMMARY:📝 " + esc(subj_name)]
                       if txt: hw_lines.append("DESCRIPTION:" + esc(txt))
                       hw_lines.append("END:VEVENT")
