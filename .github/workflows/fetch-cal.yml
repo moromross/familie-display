@@ -154,16 +154,11 @@ jobs:
                       for s in subj_result:
                           subjects[s['id']] = s.get('longName', s.get('name', str(s['id'])))
 
-                  # Timetable
+                  # Timetable — minimal params (subjectFields etc. not supported here)
                   tt_result = wu_rpc(opener, 'getTimetable', {'options':{
-                      'startDate':     int_date(date_from),
-                      'endDate':       int_date(date_to),
-                      'element':       {'id':person_id,'type':5},
-                      'showInfo':      True,
-                      'showSubstText': True,
-                      'subjectFields': ['id','name','longName'],
-                      'roomFields':    ['id','name'],
-                      'teacherFields': ['id','name'],
+                      'startDate': int_date(date_from),
+                      'endDate':   int_date(date_to),
+                      'element':   {'id':person_id,'type':5},
                   }})
                   print(tt_f + ": timetable count=" + str(len(tt_result or [])))
 
