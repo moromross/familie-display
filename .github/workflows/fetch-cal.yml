@@ -28,7 +28,7 @@ jobs:
           WU_PASS_K3: ${{ secrets.WU_PASS_K3 }}
         run: |
           python3 << 'PYEOF'
-          import urllib.request, json, os
+          import urllib.request, json, os, base64
           from datetime import date, datetime, timedelta
           from zoneinfo import ZoneInfo
           from icalendar import Calendar
@@ -60,9 +60,7 @@ jobs:
           for fname, url in [("cal1.ics", os.environ.get("CAL1_URL","")),
                               ("cal2.ics", os.environ.get("CAL2_URL",""))]:
               if not url:
-                  open(fname,'w').write(EMPTY)
-                  print(fname + ": no URL")
-                  continue
+                  open(fname,'w').write(EMPTY); print(fname + ": no URL"); continue
               url = url.replace("webcal://","https://")
               try:
                   req  = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0"})
@@ -75,10 +73,9 @@ jobs:
                       ds = ev.get('DTSTART')
                       if ds: lines.append("DTSTART:" + dt_str(ds.dt))
                       de = ev.get('DTEND')
-                      if de:
-                          lines.append("DTEND:" + dt_str(de.dt))
+                      if de: lines.append("DTEND:" + dt_str(de.dt))
                       elif ds:
-                          v  = ds.dt
+                          v = ds.dt
                           fb = v + timedelta(hours=1) if isinstance(v,datetime) else v + timedelta(days=1)
                           lines.append("DTEND:" + dt_str(fb))
                       lines.append("SUMMARY:" + esc(ev.get('SUMMARY','')))
@@ -89,8 +86,7 @@ jobs:
                   write_ics(fname, lines)
                   print(fname + ": " + str(len(evts)) + " events")
               except Exception as e:
-                  print(fname + " error: " + str(e))
-                  open(fname,'w').write(EMPTY)
+                  print(fname + " error: " + str(e)); open(fname,'w').write(EMPTY)
 
           # WebUntis helpers
           def wu_rpc(session_id, method, params=None):
@@ -98,8 +94,7 @@ jobs:
               url     = WU_BASE + '/jsonrpc.do?school=' + SCHOOL
               payload = json.dumps({"id":"1","method":method,"params":params,"jsonrpc":"2.0"}).encode('utf-8')
               headers = {'Content-Type':'application/json'}
-              if session_id:
-                  headers['Cookie'] = 'JSESSIONID=' + session_id
+              if session_id: headers['Cookie'] = 'JSESSIONID=' + session_id
               req  = urllib.request.Request(url, data=payload, headers=headers)
               resp = urllib.request.urlopen(req, timeout=30)
               sid = ''
@@ -109,26 +104,35 @@ jobs:
               result = json.loads(resp.read().decode('utf-8')).get('result')
               return result, sid
 
-          def wu_get(session_id, path):
+          def wu_get_raw(session_id, path):
               url = WU_BASE + '/' + path
               req = urllib.request.Request(url, headers={
-                  'Cookie':'JSESSIONID=' + session_id,
-                  'Accept':'application/json'
-              })
+                  'Cookie':'JSESSIONID=' + session_id, 'Accept':'*/*'})
               try:
-                  resp = urllib.request.urlopen(req, timeout=30)
-                  return json.loads(resp.read().decode('utf-8'))
+                  return urllib.request.urlopen(req, timeout=30).read().decode('utf-8')
               except Exception as e:
-                  print("  GET " + path + " failed: " + str(e))
-                  return {}
+                  print("  GET " + path + " failed: " + str(e)); return ''
+
+          def wu_get_json(session_id, path):
+              raw = wu_get_raw(session_id, path)
+              try: return json.loads(raw)
+              except: return {}
+
+          def decode_jwt(token):
+              try:
+                  parts = token.strip().split('.')
+                  if len(parts) < 2: return {}
+                  pad = parts[1] + '=' * ((4 - len(parts[1]) % 4) % 4)
+                  return json.loads(base64.b64decode(pad).decode('utf-8'))
+              except Exception as e:
+                  print("  JWT decode error: " + str(e)); return {}
 
           def parse_wu_dt(date_int, time_int):
               s = str(date_int)
               return datetime(int(s[:4]), int(s[4:6]), int(s[6:8]),
                               time_int // 100, time_int % 100)
 
-          def int_date(d):
-              return int(d.strftime('%Y%m%d'))
+          def int_date(d): return int(d.strftime('%Y%m%d'))
 
           kids = [
               ('calk1.ics','calhw1.ics', os.environ.get('WU_USER_K1',''), os.environ.get('WU_PASS_K1','')),
@@ -138,10 +142,8 @@ jobs:
 
           for tt_f, hw_f, user, pwd in kids:
               if not user or not pwd:
-                  open(tt_f,'w').write(EMPTY)
-                  open(hw_f,'w').write(EMPTY)
-                  print(tt_f + ": no credentials")
-                  continue
+                  open(tt_f,'w').write(EMPTY); open(hw_f,'w').write(EMPTY)
+                  print(tt_f + ": no credentials"); continue
               try:
                   # Login
                   result, sid = wu_rpc(None, 'authenticate',
@@ -149,25 +151,19 @@ jobs:
                   if not sid and result:
                       sid = result.get('sessionId','')
                   if not sid:
-                      print(tt_f + ": login failed - no session")
-                      open(tt_f,'w').write(EMPTY)
-                      open(hw_f,'w').write(EMPTY)
-                      continue
+                      print(tt_f + ": login failed"); open(tt_f,'w').write(EMPTY); open(hw_f,'w').write(EMPTY); continue
 
-                  # Get personId via REST app/data endpoint
+                  # Get personId via JWT token
                   person_id   = 0
                   person_type = 5
-                  app_data = wu_get(sid, 'api/rest/view/v1/app/data')
-                  user_info = app_data.get('user', {})
-                  print(tt_f + ": app/data user keys = " + str(list(user_info.keys())))
-                  person_id   = user_info.get('personId') or user_info.get('userId') or 0
-                  person_type = user_info.get('personType', 5)
-
-                  # Fallback: try masterdata endpoint
-                  if person_id == 0:
-                      master = wu_get(sid, 'api/rest/view/v1/profile')
-                      print(tt_f + ": profile keys = " + str(list(master.keys())))
-                      person_id = master.get('personId') or master.get('id') or 0
+                  jwt_raw = wu_get_raw(sid, 'api/token/new')
+                  if jwt_raw and '.' in jwt_raw:
+                      payload = decode_jwt(jwt_raw)
+                      print(tt_f + ": JWT keys = " + str(list(payload.keys())))
+                      person_id   = int(payload.get('personId') or payload.get('userId') or payload.get('sub') or 0)
+                      person_type = int(payload.get('personType') or 5)
+                  else:
+                      print(tt_f + ": JWT response = " + repr(jwt_raw[:200]))
 
                   print(tt_f + ": personId=" + str(person_id) + " personType=" + str(person_type))
 
@@ -178,7 +174,7 @@ jobs:
                       for s in subj_result:
                           subjects[s['id']] = s.get('longName', s.get('name', str(s['id'])))
 
-                  # Timetable
+                  # Timetable — try options format first, then legacy format
                   tt_result, _ = wu_rpc(sid, 'getTimetable', {'options':{
                       'startDate':     int_date(date_from),
                       'endDate':       int_date(date_to),
@@ -189,16 +185,19 @@ jobs:
                       'roomFields':    ['id','name'],
                       'teacherFields': ['id','name'],
                   }})
+                  if not tt_result:
+                      # legacy format
+                      tt_result, _ = wu_rpc(sid, 'getTimetable', {
+                          'id': person_id, 'type': person_type,
+                          'startDate': int_date(date_from), 'endDate': int_date(date_to)
+                      })
                   print(tt_f + ": timetable raw count=" + str(len(tt_result or [])))
 
                   tt_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
                   count_tt = 0
                   for p in (tt_result or []):
-                      if str(p.get('code', p.get('lessonCode',''))) in ('1','CANCELLED'):
-                          continue
-                      d_int = p.get('date',0)
-                      st    = p.get('startTime',0)
-                      et    = p.get('endTime',0)
+                      if str(p.get('code', p.get('lessonCode',''))) in ('1','CANCELLED'): continue
+                      d_int = p.get('date',0); st = p.get('startTime',0); et = p.get('endTime',0)
                       if not d_int or not st: continue
                       start = parse_wu_dt(d_int, st)
                       end   = parse_wu_dt(d_int, et) if et else start + timedelta(hours=1)
@@ -212,10 +211,10 @@ jobs:
                       room    = (rooms[0].get('name','') if isinstance(rooms[0],dict) else '') if rooms else ''
                       tchrs   = p.get('teachers',[])
                       teacher = (tchrs[0].get('name','') if isinstance(tchrs[0],dict) else '') if tchrs else ''
-                      tt_lines.append("BEGIN:VEVENT")
-                      tt_lines.append("DTSTART:" + start.strftime('%Y%m%dT%H%M%S'))
-                      tt_lines.append("DTEND:"   + end.strftime('%Y%m%dT%H%M%S'))
-                      tt_lines.append("SUMMARY:" + esc(subj_name))
+                      tt_lines += ["BEGIN:VEVENT",
+                          "DTSTART:" + start.strftime('%Y%m%dT%H%M%S'),
+                          "DTEND:"   + end.strftime('%Y%m%dT%H%M%S'),
+                          "SUMMARY:" + esc(subj_name)]
                       if room:    tt_lines.append("LOCATION:"    + esc(room))
                       if teacher: tt_lines.append("DESCRIPTION:" + esc(teacher))
                       tt_lines.append("END:VEVENT")
@@ -225,14 +224,12 @@ jobs:
                   print(tt_f + ": " + str(count_tt) + " periods written")
 
                   # Homework
-                  hw_data   = wu_get(sid, 'api/homeworks/lessons?startDate=' + str(date_from) + '&endDate=' + str(date_to))
+                  hw_data   = wu_get_json(sid, 'api/homeworks/lessons?startDate=' + str(date_from) + '&endDate=' + str(date_to))
                   homeworks = hw_data.get('data',{}).get('homeworks',[])
                   lessons_map = {}
                   for ls in hw_data.get('data',{}).get('lessons',[]):
-                      lid  = ls.get('id')
-                      subj = ls.get('subject',{}) or {}
+                      lid = ls.get('id'); subj = ls.get('subject',{}) or {}
                       lessons_map[lid] = subj.get('longName', subj.get('name','?'))
-
                   hw_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
                   count_hw = 0
                   for hw in homeworks:
@@ -242,10 +239,8 @@ jobs:
                       if not (date_from <= due_d <= date_to): continue
                       subj_name = lessons_map.get(hw.get('lessonId'), '?')
                       txt = hw.get('text','').strip()
-                      hw_lines.append("BEGIN:VEVENT")
-                      hw_lines.append("DTSTART:" + due)
-                      hw_lines.append("DTEND:"   + due)
-                      hw_lines.append("SUMMARY:📝 " + esc(subj_name))
+                      hw_lines += ["BEGIN:VEVENT", "DTSTART:"+due, "DTEND:"+due,
+                          "SUMMARY:📝 " + esc(subj_name)]
                       if txt: hw_lines.append("DESCRIPTION:" + esc(txt))
                       hw_lines.append("END:VEVENT")
                       count_hw += 1
@@ -260,8 +255,7 @@ jobs:
                   import traceback
                   print(tt_f + " error: " + str(e))
                   print(traceback.format_exc())
-                  open(tt_f,'w').write(EMPTY)
-                  open(hw_f,'w').write(EMPTY)
+                  open(tt_f,'w').write(EMPTY); open(hw_f,'w').write(EMPTY)
           PYEOF
 
       - name: Commit calendars
