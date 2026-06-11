@@ -225,7 +225,7 @@ jobs:
                   hw_path = ('api/homeworks/lessons'
                       '?startDate=' + date_from.strftime('%Y%m%d') +
                       '&endDate='   + date_to.strftime('%Y%m%d'))
-                  hw_data   = wu_get(jwt, hw_path, use_bearer=True)
+                  hw_data   = wu_get(opener, hw_path, use_bearer=False)
                   print("hw_data raw: " + str(hw_data)[:500])
                   homeworks = hw_data.get('data',{}).get('homeworks',[])
                   lessons_map = {}
