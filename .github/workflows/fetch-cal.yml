@@ -104,7 +104,10 @@ jobs:
               raw = resp.getheader('Set-Cookie','')
               if 'JSESSIONID=' in raw:
                   sid = raw.split('JSESSIONID=')[1].split(';')[0]
-              result = json.loads(resp.read().decode('utf-8')).get('result')
+              body = json.loads(resp.read().decode('utf-8'))
+              if 'error' in body:
+                  print("  RPC error [" + method + "]: " + str(body['error']))
+              result = body.get('result')
               return result, sid
 
           def wu_get_json(session_id, path):
@@ -154,7 +157,7 @@ jobs:
                       for s in subj_result:
                           subjects[s['id']] = s.get('longName', s.get('name', str(s['id'])))
 
-                  # Timetable
+                  # Timetable — options format
                   tt_result, _ = wu_rpc(sid, 'getTimetable', {'options':{
                       'startDate':     int_date(date_from),
                       'endDate':       int_date(date_to),
@@ -165,12 +168,24 @@ jobs:
                       'roomFields':    ['id','name'],
                       'teacherFields': ['id','name'],
                   }})
+                  print(tt_f + ": timetable options count=" + str(len(tt_result or [])))
+
+                  # Fallback: legacy format
                   if not tt_result:
                       tt_result, _ = wu_rpc(sid, 'getTimetable', {
                           'id': person_id, 'type': person_type,
                           'startDate': int_date(date_from), 'endDate': int_date(date_to)
                       })
-                  print(tt_f + ": timetable raw count=" + str(len(tt_result or [])))
+                      print(tt_f + ": timetable legacy count=" + str(len(tt_result or [])))
+
+                  # Fallback: type=1 (Klasse)
+                  if not tt_result:
+                      tt_result, _ = wu_rpc(sid, 'getTimetable', {'options':{
+                          'startDate': int_date(date_from),
+                          'endDate':   int_date(date_to),
+                          'element':   {'id':person_id,'type':1},
+                      }})
+                      print(tt_f + ": timetable type=1 count=" + str(len(tt_result or [])))
 
                   tt_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
                   count_tt = 0
