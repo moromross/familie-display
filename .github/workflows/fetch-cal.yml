@@ -22,13 +22,16 @@ jobs:
           CAL2_URL:   ${{ secrets.CAL2_URL }}
           WU_USER_K1: ${{ secrets.WU_USER_K1 }}
           WU_PASS_K1: ${{ secrets.WU_PASS_K1 }}
+          WU_ID_K1:   ${{ secrets.WU_ID_K1 }}
           WU_USER_K2: ${{ secrets.WU_USER_K2 }}
           WU_PASS_K2: ${{ secrets.WU_PASS_K2 }}
+          WU_ID_K2:   ${{ secrets.WU_ID_K2 }}
           WU_USER_K3: ${{ secrets.WU_USER_K3 }}
           WU_PASS_K3: ${{ secrets.WU_PASS_K3 }}
+          WU_ID_K3:   ${{ secrets.WU_ID_K3 }}
         run: |
           python3 << 'PYEOF'
-          import urllib.request, json, os, base64
+          import urllib.request, json, os
           from datetime import date, datetime, timedelta
           from zoneinfo import ZoneInfo
           from icalendar import Calendar
@@ -104,33 +107,14 @@ jobs:
               result = json.loads(resp.read().decode('utf-8')).get('result')
               return result, sid
 
-          def wu_get_raw(session_id, path):
+          def wu_get_json(session_id, path):
               url = WU_BASE + '/' + path
               req = urllib.request.Request(url, headers={
-                  'Cookie':'JSESSIONID=' + session_id, 'Accept':'*/*'})
+                  'Cookie':'JSESSIONID=' + session_id, 'Accept':'application/json'})
               try:
-                  return urllib.request.urlopen(req, timeout=30).read().decode('utf-8')
+                  return json.loads(urllib.request.urlopen(req, timeout=30).read().decode('utf-8'))
               except Exception as e:
-                  print("  GET " + path + " failed: " + str(e)); return ''
-
-          def wu_get_json(session_id, path):
-              raw = wu_get_raw(session_id, path)
-              try: return json.loads(raw)
-              except: return {}
-
-          def decode_jwt(token):
-              try:
-                  parts = token.strip().split('.')
-                  if len(parts) < 2: return {}
-                  # base64url → base64
-                  b64 = parts[1].replace('-', '+').replace('_', '/')
-                  pad = b64 + '=' * ((4 - len(b64) % 4) % 4)
-                  decoded = json.loads(base64.urlsafe_b64decode(pad).decode('utf-8'))
-                  return decoded
-              except Exception as e:
-                  print("  JWT raw (first 100): " + repr(token[:100]))
-                  print("  JWT decode error: " + str(e))
-                  return {}
+                  print("  GET " + path + " failed: " + str(e)); return {}
 
           def parse_wu_dt(date_int, time_int):
               s = str(date_int)
@@ -140,16 +124,19 @@ jobs:
           def int_date(d): return int(d.strftime('%Y%m%d'))
 
           kids = [
-              ('calk1.ics','calhw1.ics', os.environ.get('WU_USER_K1',''), os.environ.get('WU_PASS_K1','')),
-              ('calk2.ics','calhw2.ics', os.environ.get('WU_USER_K2',''), os.environ.get('WU_PASS_K2','')),
-              ('calk3.ics','calhw3.ics', os.environ.get('WU_USER_K3',''), os.environ.get('WU_PASS_K3','')),
+              ('calk1.ics','calhw1.ics', os.environ.get('WU_USER_K1',''), os.environ.get('WU_PASS_K1',''), os.environ.get('WU_ID_K1','0')),
+              ('calk2.ics','calhw2.ics', os.environ.get('WU_USER_K2',''), os.environ.get('WU_PASS_K2',''), os.environ.get('WU_ID_K2','0')),
+              ('calk3.ics','calhw3.ics', os.environ.get('WU_USER_K3',''), os.environ.get('WU_PASS_K3',''), os.environ.get('WU_ID_K3','0')),
           ]
 
-          for tt_f, hw_f, user, pwd in kids:
+          for tt_f, hw_f, user, pwd, entity_id_str in kids:
               if not user or not pwd:
                   open(tt_f,'w').write(EMPTY); open(hw_f,'w').write(EMPTY)
                   print(tt_f + ": no credentials"); continue
               try:
+                  person_id   = int(entity_id_str) if entity_id_str.isdigit() else 0
+                  person_type = 5
+
                   # Login
                   result, sid = wu_rpc(None, 'authenticate',
                       {'user':user,'password':pwd,'client':'familie-display'})
@@ -158,19 +145,7 @@ jobs:
                   if not sid:
                       print(tt_f + ": login failed"); open(tt_f,'w').write(EMPTY); open(hw_f,'w').write(EMPTY); continue
 
-                  # Get personId via JWT token
-                  person_id   = 0
-                  person_type = 5
-                  jwt_raw = wu_get_raw(sid, 'api/token/new')
-                  if jwt_raw and '.' in jwt_raw:
-                      payload = decode_jwt(jwt_raw)
-                      print(tt_f + ": JWT keys = " + str(list(payload.keys())))
-                      person_id   = int(payload.get('personId') or payload.get('userId') or payload.get('sub') or 0)
-                      person_type = int(payload.get('personType') or 5)
-                  else:
-                      print(tt_f + ": JWT response = " + repr(jwt_raw[:200]))
-
-                  print(tt_f + ": personId=" + str(person_id) + " personType=" + str(person_type))
+                  print(tt_f + ": logged in, personId=" + str(person_id))
 
                   # Subject lookup
                   subj_result, _ = wu_rpc(sid, 'getSubjects')
@@ -179,7 +154,7 @@ jobs:
                       for s in subj_result:
                           subjects[s['id']] = s.get('longName', s.get('name', str(s['id'])))
 
-                  # Timetable — try options format first, then legacy format
+                  # Timetable
                   tt_result, _ = wu_rpc(sid, 'getTimetable', {'options':{
                       'startDate':     int_date(date_from),
                       'endDate':       int_date(date_to),
@@ -191,7 +166,6 @@ jobs:
                       'teacherFields': ['id','name'],
                   }})
                   if not tt_result:
-                      # legacy format
                       tt_result, _ = wu_rpc(sid, 'getTimetable', {
                           'id': person_id, 'type': person_type,
                           'startDate': int_date(date_from), 'endDate': int_date(date_to)
