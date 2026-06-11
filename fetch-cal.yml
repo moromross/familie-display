@@ -13,6 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Python dependencies
+        run: pip install recurring-ical-events icalendar
+
       - name: Fetch and filter calendars
         env:
           CAL1_URL: ${{ secrets.CAL1_URL }}
@@ -22,8 +25,13 @@ jobs:
           CALK3_URL: ${{ secrets.CALK3_URL }}
         run: |
           python3 << 'PYEOF'
-          import urllib.request, re, os
-          from datetime import datetime, timedelta
+          import urllib.request, os
+          from datetime import date, datetime, timedelta
+          from zoneinfo import ZoneInfo
+          from icalendar import Calendar
+          import recurring_ical_events
+
+          BERLIN = ZoneInfo('Europe/Berlin')
 
           urls = [
             ("cal1.ics",  os.environ.get("CAL1_URL","")),
@@ -33,35 +41,61 @@ jobs:
             ("calk3.ics", os.environ.get("CALK3_URL","")),
           ]
 
-          today = datetime.now()
-          date_from = (today - timedelta(days=1)).strftime("%Y%m%d")
-          date_to   = (today + timedelta(days=9)).strftime("%Y%m%d")
+          today = date.today()
+          date_from = today - timedelta(days=1)
+          date_to   = today + timedelta(days=9)
+
+          def dt_str(val):
+              if isinstance(val, datetime):
+                  if val.tzinfo:
+                      val = val.astimezone(BERLIN).replace(tzinfo=None)
+                  return val.strftime('%Y%m%dT%H%M%S')
+              return val.strftime('%Y%m%d')
+
+          def esc_ical(s):
+              return str(s).replace('\\', '\\\\').replace('\n', '\\n').replace(',', '\\,').replace(';', '\\;')
 
           for fname, url in urls:
-            if not url:
-              open(fname,'w').write("BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n")
-              print(fname + ": no URL configured")
-              continue
-            url = url.replace("webcal://","https://")
-            try:
-              req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-              data = urllib.request.urlopen(req, timeout=30).read().decode("utf-8","ignore")
-              blocks = data.split("BEGIN:VEVENT")
-              header = blocks[0]
-              filtered = []
-              for blk in blocks[1:]:
-                # Match both all-day (DTSTART:YYYYMMDD) and timed (DTSTART:YYYYMMDDTHHmmss)
-                m = re.search(r'DTSTART[^:]*:(\d{8})', blk)
-                if m:
-                  d = m.group(1)
-                  if date_from <= d <= date_to:
-                    filtered.append("BEGIN:VEVENT" + blk)
-              result = header + "".join(filtered) + "END:VCALENDAR\n"
-              open(fname,'w').write(result)
-              print(fname + ": " + str(len(filtered)) + " events")
-            except Exception as e:
-              print(fname + " error: " + str(e))
-              open(fname,'w').write("BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n")
+              if not url:
+                  open(fname,'w').write("BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR\r\n")
+                  print(fname + ": no URL configured")
+                  continue
+              url = url.replace("webcal://","https://")
+              try:
+                  req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+                  data = urllib.request.urlopen(req, timeout=30).read()
+                  cal = Calendar.from_ical(data)
+                  events = recurring_ical_events.of(cal).between(date_from, date_to)
+
+                  lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Familie Display//DE"]
+                  for ev in events:
+                      lines.append("BEGIN:VEVENT")
+                      dtstart = ev.get('DTSTART')
+                      if dtstart:
+                          lines.append("DTSTART:" + dt_str(dtstart.dt))
+                      dtend = ev.get('DTEND')
+                      if dtend:
+                          lines.append("DTEND:" + dt_str(dtend.dt))
+                      elif dtstart:
+                          val = dtstart.dt
+                          fallback = val + timedelta(hours=1) if isinstance(val, datetime) else val + timedelta(days=1)
+                          lines.append("DTEND:" + dt_str(fallback))
+                      summary = ev.get('SUMMARY', '')
+                      lines.append("SUMMARY:" + esc_ical(summary))
+                      desc = ev.get('DESCRIPTION', '')
+                      if desc:
+                          lines.append("DESCRIPTION:" + esc_ical(desc))
+                      loc = ev.get('LOCATION', '')
+                      if loc:
+                          lines.append("LOCATION:" + esc_ical(loc))
+                      lines.append("END:VEVENT")
+                  lines.append("END:VCALENDAR")
+
+                  open(fname, 'w', encoding='utf-8').write('\r\n'.join(lines) + '\r\n')
+                  print(fname + ": " + str(len(events)) + " events")
+              except Exception as e:
+                  print(fname + " error: " + str(e))
+                  open(fname,'w').write("BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR\r\n")
           PYEOF
 
       - name: Commit calendars
