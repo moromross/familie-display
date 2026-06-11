@@ -227,11 +227,14 @@ jobs:
                       '&endDate='   + date_to.strftime('%Y%m%d'))
                   hw_data   = wu_get(opener, hw_path, use_bearer=False)
                   print("hw_data raw: " + str(hw_data)[:500])
-                  homeworks = hw_data.get('data',{}).get('homeworks',[])
-                  lessons_map = {}
-                  for ls in hw_data.get('data',{}).get('lessons',[]):
-                      lid = ls.get('id'); subj = ls.get('subject',{}) or {}
-                      lessons_map[lid] = subj.get('longName', subj.get('name','?'))
+
+                homeworks = hw_data.get('data',{}).get('homeworks',[])
+                lessons_map = {}
+                for rec in hw_data.get('data',{}).get('records',[]):
+                  lid = rec.get('lessonId') or rec.get('homeworkId')
+                  subj = rec.get('subject',{}) or {}
+                  lessons_map[lid] = subj.get('longName', subj.get('name', str(lid)))
+                      
                   print(hw_f + ": homeworks raw=" + str(len(homeworks)))
 
                   now_berlin  = datetime.now(BERLIN)
