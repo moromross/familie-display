@@ -52,10 +52,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1612;font-family:
 .redline{position:absolute;left:0;right:0;height:2px;background:#e02020;z-index:10;}
 .redline:before{content:'';position:absolute;left:0;top:-3px;width:8px;height:8px;border-radius:50%;background:#e02020;}
 .ev{position:absolute;border-radius:3px;padding:2px 4px;overflow:hidden;border-left:3px solid;min-height:16px;}
-.ev-t{font-family:'JetBrains Mono',monospace;font-size:.46rem;color:#5a5550;white-space:nowrap;}
-.ev-s{font-size:.58rem;font-weight:600;color:#1a1612;line-height:1.2;}
-.ev-d{font-size:.5rem;color:#5a5550;line-height:1.2;}
-.ev-b{font-size:.42rem;font-weight:700;text-transform:uppercase;opacity:.7;}
+.ev-t{font-family:'JetBrains Mono',monospace;font-size:.69rem;color:#5a5550;white-space:nowrap;}
+.ev-s{font-size:.87rem;font-weight:600;color:#1a1612;line-height:1.2;}
+.ev-d{font-size:.75rem;color:#5a5550;line-height:1.2;}
+.ev-b{font-size:.63rem;font-weight:700;text-transform:uppercase;opacity:.7;}
 
 /* weekend view — time axis */
 .wk-heads{position:absolute;top:0;left:0;right:0;height:28px;border-bottom:1px solid #c8c2ba;background:#fff9c4;z-index:5;overflow:hidden;}
@@ -325,7 +325,7 @@ function renderWeather(){
       +'<tr>'
       +'<td style="width:66%;padding:3px 2px 5px 5px;vertical-align:middle">'
         +'<table style="width:100%;height:100%;border-collapse:collapse;background:rgba(255,255,255,.85);border-radius:7px"><tr>'
-        +'<td style="width:42%;text-align:center;vertical-align:middle;font-size:3.3rem">'+wIcon(c.weathercode)+'</td>'
+        +'<td style="width:42%;text-align:center;vertical-align:middle;font-size:5rem">'+wIcon(c.weathercode)+'</td>'
         +'<td style="vertical-align:middle;padding:3px">'
           +'<div style="font-family:\'Playfair Display\',serif;font-size:1.9rem;color:#1a1612;line-height:1">'+Math.round(c.temperature_2m)+'°</div>'
           +'<div style="font-size:.55rem;color:#5a5550;margin-top:2px">'+wDesc(c.weathercode)+'</div>'
@@ -777,20 +777,7 @@ function switchCal(view){
     el('cv-'+calViews[i]).className='cview'+(calViews[i]===view?' on':'');
     if(calViews[i]===view)calCycleIdx=i;
   }
-  if(view==='heute'){
-    setTimeout(function(){
-      var sw=el('cv-heute').querySelector('.dv-scroll');
-      if(!sw)return;
-      var now=new Date();
-      var nowPx=(now.getHours()+now.getMinutes()/60-7)*HH;
-      var vh=sw.clientHeight;
-      var inner=sw.querySelector('.dv-inner');
-      var maxS=(inner?inner.offsetHeight:0)-vh;
-      isAutoScrolling=true;
-      sw.scrollTop=Math.max(0,Math.min(nowPx-vh*0.33,maxS));
-      setTimeout(function(){isAutoScrolling=false;},150);
-    },60);
-  }
+  // Heute + Morgen: no auto-scroll — user scrolls freely, red line shows current time
   if(view==='ha'){buildHw('cv-ha');}
   if(view==='wknd'){setTimeout(function(){buildWknd('cv-wknd');},60);}
 }
