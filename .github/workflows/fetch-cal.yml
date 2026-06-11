@@ -221,20 +221,17 @@ jobs:
                   write_ics(tt_f, tt_lines)
                   print(tt_f + ": " + str(count_tt) + " periods written")
 
-                  # 4. Homework via REST + Bearer
+                  # 4. Homework via cookie session
                   hw_path = ('api/homeworks/lessons'
                       '?startDate=' + date_from.strftime('%Y%m%d') +
                       '&endDate='   + date_to.strftime('%Y%m%d'))
-                  hw_data   = wu_get(opener, hw_path, use_bearer=False)
-                  print("hw_data raw: " + str(hw_data)[:500])
-
-                homeworks = hw_data.get('data',{}).get('homeworks',[])
-                lessons_map = {}
-                for rec in hw_data.get('data',{}).get('records',[]):
-                  lid = rec.get('lessonId') or rec.get('homeworkId')
-                  subj = rec.get('subject',{}) or {}
-                  lessons_map[lid] = subj.get('longName', subj.get('name', str(lid)))
-                      
+                  hw_data = wu_get(opener, hw_path, use_bearer=False)
+                  homeworks = hw_data.get('data',{}).get('homeworks',[])
+                  lessons_map = {}
+                  for rec in hw_data.get('data',{}).get('records',[]):
+                      lid = rec.get('lessonId') or rec.get('homeworkId')
+                      subj = rec.get('subject',{}) or {}
+                      lessons_map[lid] = subj.get('longName', subj.get('name', str(lid)))
                   print(hw_f + ": homeworks raw=" + str(len(homeworks)))
 
                   now_berlin  = datetime.now(BERLIN)
