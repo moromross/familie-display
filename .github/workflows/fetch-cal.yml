@@ -233,13 +233,19 @@ jobs:
                       lessons_map[lid] = subj.get('longName', subj.get('name','?'))
                   print(hw_f + ": homeworks raw=" + str(len(homeworks)))
 
+                  now_berlin  = datetime.now(BERLIN)
+                  if now_berlin.hour < 13:
+                      hw_min_due = today - timedelta(days=1)
+                  else:
+                      hw_min_due = today
+
                   hw_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
                   count_hw = 0
                   for hw in homeworks:
                       due = str(hw.get('dueDate', hw.get('date',0)))
                       if len(due) != 8: continue
                       due_d = date(int(due[:4]), int(due[4:6]), int(due[6:8]))
-                      if not (date_from <= due_d <= date_to): continue
+                      if not (due_d > hw_min_due): continue
                       subj_name = lessons_map.get(hw.get('lessonId'), '?')
                       txt = hw.get('text','').strip()
                       hw_lines += ["BEGIN:VEVENT","DTSTART:"+due,"DTEND:"+due,
