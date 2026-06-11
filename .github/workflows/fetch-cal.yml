@@ -122,10 +122,15 @@ jobs:
               try:
                   parts = token.strip().split('.')
                   if len(parts) < 2: return {}
-                  pad = parts[1] + '=' * ((4 - len(parts[1]) % 4) % 4)
-                  return json.loads(base64.b64decode(pad).decode('utf-8'))
+                  # base64url → base64
+                  b64 = parts[1].replace('-', '+').replace('_', '/')
+                  pad = b64 + '=' * ((4 - len(b64) % 4) % 4)
+                  decoded = json.loads(base64.urlsafe_b64decode(pad).decode('utf-8'))
+                  return decoded
               except Exception as e:
-                  print("  JWT decode error: " + str(e)); return {}
+                  print("  JWT raw (first 100): " + repr(token[:100]))
+                  print("  JWT decode error: " + str(e))
+                  return {}
 
           def parse_wu_dt(date_int, time_int):
               s = str(date_int)
