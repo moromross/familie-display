@@ -179,12 +179,23 @@ jobs:
                   days = tt_data.get('days', [])
                   print(tt_f + ": days count=" + str(len(days)))
 
-                  # DEBUG: show structure of first day's entries
+                  # DEBUG: show full first entry + timegrid
+                  grid_data = wu_get(jwt, 'api/rest/view/v1/timetable/grid?timetableType=MY_TIMETABLE', use_bearer=True)
+                  print(tt_f + ": grid keys=" + str(list(grid_data.keys()))[:200])
+                  rows = grid_data.get('rows') or grid_data.get('timegrid') or grid_data.get('periods') or []
+                  if rows: print(tt_f + ": grid row[0]=" + json.dumps(rows[0])[:300])
+
                   if days:
                       ge = days[0].get('gridEntries', [])
                       de = days[0].get('dayEntries', [])
-                      if ge: print(tt_f + ": gridEntry[0] keys=" + str(list(ge[0].keys())))
-                      if de: print(tt_f + ": dayEntry[0] keys="  + str(list(de[0].keys())))
+                      # find first day with entries
+                      for day in days:
+                          ge = day.get('gridEntries', [])
+                          if ge:
+                              print(tt_f + ": gridEntry[0]=" + json.dumps(ge[0])[:500])
+                              break
+                      if de: print(tt_f + ": dayEntry[0]=" + json.dumps(de[0])[:300])
+                  print(tt_f + ": format=" + json.dumps(tt_data.get('format'))[:300])
 
                   tt_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
                   count_tt = 0
