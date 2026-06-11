@@ -154,12 +154,13 @@ jobs:
                       for s in subj_result:
                           subjects[s['id']] = s.get('longName', s.get('name', str(s['id'])))
 
-                  # Timetable — minimal params (subjectFields etc. not supported here)
-                  tt_result = wu_rpc(opener, 'getTimetable', {'options':{
+                  # Timetable — legacy format (no options wrapper)
+                  tt_result = wu_rpc(opener, 'getTimetable', {
+                      'id':        person_id,
+                      'type':      5,
                       'startDate': int_date(date_from),
                       'endDate':   int_date(date_to),
-                      'element':   {'id':person_id,'type':5},
-                  }})
+                  })
                   print(tt_f + ": timetable count=" + str(len(tt_result or [])))
 
                   tt_lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Familie Display//DE"]
