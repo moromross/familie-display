@@ -238,4 +238,5 @@ jobs:
           git config user.name "GitHub Action"
           git add cal1.ics cal2.ics calk1.ics calk2.ics calk3.ics calhw1.ics calhw2.ics calhw3.ics
           git diff --staged --quiet || git commit -m "Update calendars $(date -u +%H:%M)"
+          git pull --rebase origin main
           git push
