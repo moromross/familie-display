@@ -723,8 +723,9 @@ function buildHw(viewId){
     var hw=[];
     for(var i=0;i<allHomework.length;i++){
       var e=allHomework[i];
-      if(e.calId===id&&e.start>=today&&e.start<tomorrow)hw.push(e);
+      if(e.calId===id&&e.start>=today)hw.push(e);
     }
+    hw.sort(function(a,b){return a.start-b.start;});
     if(!hw.length)return '<div style="font-size:.62rem;color:#9a9088;font-style:italic;padding:8px 6px">Keine Aufgaben</div>';
     var out='';
     for(var i2=0;i2<hw.length;i2++){
@@ -733,6 +734,7 @@ function buildHw(viewId){
       out+='<div style="border-left:3px solid '+color+';background:'+rgba(color,.07)+';border-radius:4px;padding:6px 7px;margin-bottom:6px">'
         +'<div style="font-size:.65rem;font-weight:600;color:#1a1612">'+esc(subj)+'</div>'
         +(e2.desc?'<div style="font-size:.58rem;color:#5a5550;line-height:1.35;margin-top:2px">'+esc(e2.desc)+'</div>':'')
+        +'<div style="font-size:.52rem;color:#9a9088;margin-top:3px">\u23f0 '+DS[e2.start.getDay()]+', '+e2.start.getDate()+'. '+MS[e2.start.getMonth()]+'.</div>'
         +'</div>';
     }
     return out;
