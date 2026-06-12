@@ -437,7 +437,7 @@ function renderInfo(){
     var diff=Math.round((ty-today)/86400000);
     if(diff>=0&&diff<=7)bds.push({s:ev.summary,d:ty,days:diff});
   }
-  var bh='<div style="background:#fff0f0;width:100%;height:100%;padding:7px 10px;overflow:hidden">'
+  var bh='<div style="background:#f0f8e8;width:100%;height:100%;padding:7px 10px;overflow:hidden">'
     +'<div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:#8b1a1a;font-weight:600;margin-bottom:4px">🎂 Geburtstage</div>';
   if(!bds.length){
     bh+='<div style="font-size:.7rem;color:#9a9088;font-style:italic;padding-top:6px">Keine in den nächsten 7 Tagen</div>';
@@ -850,7 +850,7 @@ function renderFAZ(){
     h+='<div style="clear:both"></div></div>';
   }
   t.innerHTML=h||'<div style="padding:14px;font-size:.7rem;color:#9a9088">Nachrichten werden geladen…</div>';
-  startFazCycle();
+  setTimeout(function(){startFazCycle();},1500);
 }
 function startFazCycle(){
   if(fazTimer)clearInterval(fazTimer);
@@ -935,8 +935,8 @@ loadCfg();
 keepAwake();
 initData();
 startWCycle();
-startICycle();
-startCalCycle();
+setTimeout(function(){startICycle();},500);
+setTimeout(function(){startCalCycle();},1000);
 
 // Calendars every 5 min
 setInterval(function(){refreshCals(function(){renderInfo();renderCal();});},5*60*1000);
