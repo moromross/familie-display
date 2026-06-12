@@ -223,15 +223,22 @@ jobs:
 
                   # 4. Homework via cookie session
                   hw_path = ('api/homeworks/lessons'
-                      '?startDate=' + date_from.strftime('%Y%m%d') +
-                      '&endDate='   + date_to.strftime('%Y%m%d'))
+                      '?startDate=' + str(date_from) +
+                      '&endDate='   + str(date_to))
                   hw_data = wu_get(opener, hw_path, use_bearer=False)
                   homeworks = hw_data.get('data',{}).get('homeworks',[])
                   lessons_map = {}
+                  for ls in hw_data.get('data',{}).get('lessons',[]):
+                      lid = ls.get('id')
+                      subj = ls.get('subject',{}) or {}
+                      if lid is not None:
+                          lessons_map[lid] = subj.get('longName', subj.get('name','?'))
+                  # fallback: try 'records' key as well
                   for rec in hw_data.get('data',{}).get('records',[]):
-                      lid = rec.get('lessonId') or rec.get('homeworkId')
+                      lid = rec.get('lessonId') or rec.get('id')
                       subj = rec.get('subject',{}) or {}
-                      lessons_map[lid] = subj.get('longName', subj.get('name', str(lid)))
+                      if lid is not None and lid not in lessons_map:
+                          lessons_map[lid] = subj.get('longName', subj.get('name','?'))
                   print(hw_f + ": homeworks raw=" + str(len(homeworks)))
 
                   now_berlin  = datetime.now(BERLIN)
