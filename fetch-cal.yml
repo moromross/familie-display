@@ -226,19 +226,6 @@ jobs:
                       '?startDate=' + str(date_from) +
                       '&endDate='   + str(date_to))
                   hw_data = wu_get(opener, hw_path, use_bearer=False)
-                  # DEBUG: show raw structure
-                  top_keys = list(hw_data.keys()) if hw_data else []
-                  print(hw_f + ': hw_data top keys=' + str(top_keys))
-                  d = hw_data.get('data',{})
-                  print(hw_f + ': data keys=' + str(list(d.keys()) if d else []))
-                  hws = d.get('homeworks',[])
-                  print(hw_f + ': homeworks count=' + str(len(hws)))
-                  if hws:
-                      print(hw_f + ': hw[0] keys=' + str(list(hws[0].keys())))
-                      print(hw_f + ': hw[0]=' + str({k:v for k,v in hws[0].items() if k not in ('text',)}))
-                  for dk,dv in d.items():
-                      if dk != 'homeworks' and isinstance(dv,list) and dv:
-                          print(hw_f + ': ' + dk + '[0]=' + str(dv[0])[:200])
                   homeworks = hw_data.get('data',{}).get('homeworks',[])
                   lessons_map = {}
                   for ls in hw_data.get('data',{}).get('lessons',[]):
@@ -252,6 +239,17 @@ jobs:
                       subj = rec.get('subject',{}) or {}
                       if lid is not None and lid not in lessons_map:
                           lessons_map[lid] = subj.get('longName', subj.get('name','?'))
+                  # DEBUG
+                  d_keys = list((hw_data.get('data') or {}).keys())
+                  print(hw_f + ": data keys=" + str(d_keys))
+                  print(hw_f + ": lessons_map=" + str(lessons_map))
+                  if homeworks:
+                      print(hw_f + ": hw[0]=" + str({k:v for k,v in homeworks[0].items() if k!='text'}))
+                  for dk in d_keys:
+                      if dk != 'homeworks':
+                          dv = (hw_data.get('data') or {}).get(dk,[])
+                          if isinstance(dv,list) and dv:
+                              print(hw_f + ": " + dk + "[0]=" + str(dv[0])[:200])
                   print(hw_f + ": homeworks raw=" + str(len(homeworks)))
 
                   now_berlin  = datetime.now(BERLIN)
