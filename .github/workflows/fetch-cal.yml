@@ -227,21 +227,18 @@ jobs:
                       '&endDate='   + date_to.strftime('%Y%m%d'))
                   hw_data = wu_get(opener, hw_path, use_bearer=False)
                   homeworks = hw_data.get('data',{}).get('homeworks',[])
+                  # subject in lessons[] is a plain string e.g. 'REL (4)'
                   lessons_map = {}
-                  for rec in hw_data.get('data',{}).get('records',[]):
-                      lid = rec.get('lessonId') or rec.get('homeworkId')
-                      subj = rec.get('subject',{}) or {}
-                      lessons_map[lid] = subj.get('longName', subj.get('name', str(lid)))
+                  for ls in hw_data.get('data',{}).get('lessons',[]):
+                      lid = ls.get('id')
+                      subj = ls.get('subject','')
+                      if lid is not None and subj:
+                          lessons_map[lid] = str(subj)
                   d_keys = list((hw_data.get('data') or {}).keys())
                   print(hw_f + ": data keys=" + str(d_keys))
                   print(hw_f + ": lessons_map=" + str(lessons_map))
                   if homeworks:
                       print(hw_f + ": hw[0]=" + str({k:v for k,v in homeworks[0].items() if k!='text'}))
-                  for dk in d_keys:
-                      if dk != 'homeworks':
-                          dv = (hw_data.get('data') or {}).get(dk,[])
-                          if isinstance(dv,list) and dv:
-                              print(hw_f + ": " + dk + "[0]=" + str(dv[0])[:200])
                   print(hw_f + ": homeworks raw=" + str(len(homeworks)))
 
                   now_berlin  = datetime.now(BERLIN)
