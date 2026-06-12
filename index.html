@@ -681,23 +681,27 @@ function buildWknd(viewId){
   var gl='';
   for(var h2=minH;h2<=maxH;h2++)
     gl+='<div style="position:absolute;left:0;right:0;top:'+hPx(h2)+'px;border-top:1px solid #ece8e2"></div>';
-  // events per day
+  // events per day — with overlap detection via layoutEvts
   function dayEvHtml(d){
     var evs=[];
     for(var i=0;i<allEvents.length;i++){
       var e=allEvents[i];
       if((e.calId==='f1'||e.calId==='f2')&&sameDay(e.start,d)&&!e.allDay)evs.push(e);
     }
+    var laid=layoutEvts(evs);
     var out='';
-    for(var i2=0;i2<evs.length;i2++){
-      var ev=evs[i2];
+    for(var li=0;li<laid.length;li++){
+      var L=laid[li],ev=L.ev;
       var sh=ev.start.getHours()+ev.start.getMinutes()/60;
       var eh=ev.end.getHours()+ev.end.getMinutes()/60;
       if(eh<=minH||sh>=maxH)continue;
-      var top2=hPx(sh);
+      var top2=hPx(Math.max(sh,minH));
       var bot=hPx(Math.min(eh,maxH));
       var hh2=Math.max(10,bot-top2-1);
-      out+='<div style="position:absolute;top:'+top2+'px;height:'+hh2+'px;left:2px;right:2px;border-radius:3px;border-left:3px solid '+ev.color+';background:'+rgba(ev.color,.1)+';overflow:hidden;padding:1px 3px">'
+      var pct=100/L.tot;
+      var lPct=L.sub*pct;
+      var rPct=100-(L.sub+1)*pct;
+      out+='<div style="position:absolute;top:'+top2+'px;height:'+hh2+'px;left:calc('+lPct+'% + 1px);right:calc('+rPct+'% + 1px);border-radius:3px;border-left:3px solid '+ev.color+';background:'+rgba(ev.color,.1)+';overflow:hidden;padding:1px 3px">'
         +'<div style="font-family:\'JetBrains Mono\',monospace;font-size:.42rem;color:#5a5550">'+ft(ev.start)+'</div>'
         +'<div style="font-size:.54rem;font-weight:600;color:#1a1612;line-height:1.2">'+esc(ev.summary)+'</div>'
         +'</div>';
@@ -723,7 +727,7 @@ function buildHw(viewId){
     var hw=[];
     for(var i=0;i<allHomework.length;i++){
       var e=allHomework[i];
-      if(e.calId===id&&e.start>=today)hw.push(e);
+      if(e.calId===id)hw.push(e); // fetch-cal already filters dates
     }
     hw.sort(function(a,b){return a.start-b.start;});
     if(!hw.length)return '<div style="font-size:.62rem;color:#9a9088;font-style:italic;padding:8px 6px">Keine Aufgaben</div>';
