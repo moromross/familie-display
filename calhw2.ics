@@ -2,9 +2,9 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
-DTSTART:20260612
-DTEND:20260612
+DTSTART:20260618
+DTEND:20260618
 SUMMARY:📝 ?
-DESCRIPTION:Bitte\, wenn noch nicht geschehen\, den Fragebogen ausfüllen. Dafür auf folgende Seite navigieren und den Code eingeben:\nhttp://www.feedbackschule.de/Fragebogen \nQWRZL
+DESCRIPTION:Aufgaben zu Märchen beenden
 END:VEVENT
 END:VCALENDAR
