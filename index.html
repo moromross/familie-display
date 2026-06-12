@@ -593,7 +593,12 @@ function buildDay(viewId,date,minH,maxH,redline){
   for(var i2=0;i2<all.length;i2++){var ck=colKey(all[i2].calId);if(byc[ck])byc[ck].push(all[i2]);}
 
   function evHtml(list){
-    var laid=layoutEvts(list),out='';
+    // only timed events participate in overlap layout; all-day = full width
+    var timed=[],allDay=[];
+    for(var xi=0;xi<list.length;xi++){(list[xi].allDay?allDay:timed).push(list[xi]);}
+    var laid=layoutEvts(timed);
+    for(var ai=0;ai<allDay.length;ai++)laid.push({ev:allDay[ai],sub:0,tot:1});
+    var out='';
     for(var li=0;li<laid.length;li++){
       var L=laid[li],ev=L.ev;
       var sm,em;
