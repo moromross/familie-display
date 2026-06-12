@@ -940,6 +940,12 @@ setTimeout(function(){startCalCycle();},1000);
 
 // Calendars every 5 min
 setInterval(function(){refreshCals(function(){renderInfo();renderCal();});},5*60*1000);
+// Refresh immediately when screen wakes up / tab becomes visible
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'){
+    refreshCals(function(){renderInfo();renderCal();});
+  }
+});
 // Weather every 15 min
 setInterval(function(){
   getWeather(cfg.city,function(l,d){wHomeLoc=l;wHome=d;renderWeather();});
@@ -947,11 +953,10 @@ setInterval(function(){
 },15*60*1000);
 // FAZ every 10 min
 setInterval(function(){fetchFAZ(function(){renderFAZ();});},10*60*1000);
-// Red line + scroll every minute (only heute view rebuild)
+// Red line update every minute
 setInterval(function(){
   var now=new Date();
-  var startH=Math.max(0,now.getHours()-1);
-  buildDay('cv-heute',now,startH,23,true);
+  buildDay('cv-heute',now,7,23,true);
 },60*1000);
 // Midnight reset
 var lastD=new Date().getDate();
