@@ -226,6 +226,19 @@ jobs:
                       '?startDate=' + str(date_from) +
                       '&endDate='   + str(date_to))
                   hw_data = wu_get(opener, hw_path, use_bearer=False)
+                  # DEBUG: show raw structure
+                  top_keys = list(hw_data.keys()) if hw_data else []
+                  print(hw_f + ': hw_data top keys=' + str(top_keys))
+                  d = hw_data.get('data',{})
+                  print(hw_f + ': data keys=' + str(list(d.keys()) if d else []))
+                  hws = d.get('homeworks',[])
+                  print(hw_f + ': homeworks count=' + str(len(hws)))
+                  if hws:
+                      print(hw_f + ': hw[0] keys=' + str(list(hws[0].keys())))
+                      print(hw_f + ': hw[0]=' + str({k:v for k,v in hws[0].items() if k not in ('text',)}))
+                  for dk,dv in d.items():
+                      if dk != 'homeworks' and isinstance(dv,list) and dv:
+                          print(hw_f + ': ' + dk + '[0]=' + str(dv[0])[:200])
                   homeworks = hw_data.get('data',{}).get('homeworks',[])
                   lessons_map = {}
                   for ls in hw_data.get('data',{}).get('lessons',[]):
