@@ -12,6 +12,13 @@ DTEND:20260621
 SUMMARY:Segeln
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260623T160000
+DTEND:20260623T165500
+SUMMARY:mu12 Athletik
+DESCRIPTION:Athletiktraining mit Summer und Marlon im Center. Im Anschluss geht es direkt in die Halle
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260615T180000
 DTEND:20260615T200000
 SUMMARY:Nina Sofie kommt 
@@ -58,11 +65,17 @@ DTEND:20260618T160000
 SUMMARY:Toti und Franz Impftermin Uhlig 
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260619T160000
-DTEND:20260619T190000
-SUMMARY:Mu12 Punktspiel Rahlstedt 
-DESCRIPTION:Zeiten sind noch vakant. 
+DTSTART:20260619T161500
+DTEND:20260619T181500
+SUMMARY:mU12 Punktspiel vs Rahlstedt
 LOCATION:Rahlstedter Hockey- und Tennis-Club e.V.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260623T180000
+DTEND:20260623T193000
+SUMMARY:mu14 Feldtraining
+DESCRIPTION:Kunstrasen unten
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260616T090000
@@ -70,23 +83,10 @@ DTEND:20260616T160000
 SUMMARY:Tita Präsenztermin Uni 
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260613T093000
-DTEND:20260613T134500
-SUMMARY:Franz: Testung Martin-Luther-KingPlatz mit Federtasche\, Essen und trinken 
-DESCRIPTION:ICON: 297|1504448\n#AN\n
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260614T094500
 DTEND:20260614T120000
 SUMMARY:Schiedsrichter für das U8 Turnier
 DESCRIPTION:Wir brauchen 6 Schiedsrichter für das U8 Turnier. Bitte gebt über Spond Bescheid\, ob ihr pfeifen könnt.  
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260616T180000
-DTEND:20260616T193000
-SUMMARY:mu14 Feldtraining
-DESCRIPTION:Kunstrasen unten
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
@@ -103,16 +103,9 @@ DESCRIPTION:Athletiktraining mit Summer und Marlon. ACHTUNG DRAUẞEN! Bitte ent
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260620
-DTEND:20260621
-SUMMARY:Dicta Hockeyspiel Vicky gegen HTHC Zeit steht noch nicht fest 
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260619T162000
-DTEND:20260619T180000
-SUMMARY:mu12 Feldtraining
-DESCRIPTION:Kunstrasen unten
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+DTSTART:20260620T090000
+DTEND:20260620T113000
+SUMMARY:Dicta Hockeyspiel Vicky 
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260617T181500
@@ -133,9 +126,11 @@ DESCRIPTION:Kunstrasen unten
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260613T170000
-DTEND:20260613T180000
-SUMMARY:Toti zu aatos
+DTSTART:20260623T162000
+DTEND:20260623T183000
+SUMMARY:mU12 Feldtraining + Athletiktraining
+DESCRIPTION:mU12 Feldtraining. Bitte denkt an Wettergerechte Kleidung. \n\nTraining beginnt um 16:30
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260617T171500
@@ -167,6 +162,13 @@ DTEND:20260622T184500
 SUMMARY:Dicta Hockey Vossberg 
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260623T170000
+DTEND:20260623T181500
+SUMMARY:mU14 Testspiel Bergstedt 
+DESCRIPTION:Bitte gebt mir schnell eine Rückmeldung. Jeder ist hier bewusst eingeladen und darf sich angesprochen fühlen. Ich werde daraus einen 16-18 Mann Kader erstellen. \n\nDa die Trainingszeiten noch vakant sind\, gibt es hier eine große Spanne!
+LOCATION:Volksdorfer Damm
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260619T080000
 DTEND:20260619T090000
 SUMMARY:Dicta: bitte am 19.6 bei Herrn Lüders im Büro A008 die Webuntiszugänge für die Eltern noch mal abholen
@@ -177,9 +179,18 @@ DTEND:20260614T210000
 SUMMARY:Franz: Henning Sportpark Reinbek 
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260613T180000
-DTEND:20260613T220000
-SUMMARY:Nachtreffen Dicta Hilfe von uns insbesondere abends 
+DTSTART:20260623T170000
+DTEND:20260623T180000
+SUMMARY:mu12 Hallentraining
+DESCRIPTION:Hallentraining
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260623T180000
+DTEND:20260623T190000
+SUMMARY:mu12 Athletiktraining
+DESCRIPTION:Athletiktraining mit Phil und Summer
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260616T180000
@@ -189,9 +200,11 @@ DESCRIPTION:Athletiktraining mit Phil und Summer
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260613T100000
-DTEND:20260613T170000
-SUMMARY:Dicta: Konfirmation Lilja vormittags bis Open end -Zeit steht noch nicht fest 
+DTSTART:20260623T162000
+DTEND:20260623T180000
+SUMMARY:mu12 Feldtraining
+DESCRIPTION:Kunstrasen unten
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260622T160000
