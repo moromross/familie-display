@@ -34,6 +34,11 @@ DTEND:20260619T120000
 SUMMARY:Nagoya Compliance Iffucer Neeting 
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260624T200000
+DTEND:20260624T230000
+SUMMARY:Vortrag bei Mami und Papi 
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260615T174500
 DTEND:20260615T184500
 SUMMARY:Klavier Toti 
@@ -52,6 +57,11 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260617T150000
 DTEND:20260617T153000
+SUMMARY:Franz Gitarre
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260624T150000
+DTEND:20260624T153000
 SUMMARY:Franz Gitarre
 END:VEVENT
 BEGIN:VEVENT
@@ -83,16 +93,15 @@ DTEND:20260616T160000
 SUMMARY:Tita Präsenztermin Uni 
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260614T094500
-DTEND:20260614T120000
-SUMMARY:Schiedsrichter für das U8 Turnier
-DESCRIPTION:Wir brauchen 6 Schiedsrichter für das U8 Turnier. Bitte gebt über Spond Bescheid\, ob ihr pfeifen könnt.  
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260621T090000
 DTEND:20260621T113000
 SUMMARY:mU12 Punktspiel vs Klipper
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260624T164000
+DTEND:20260624T175000
+SUMMARY:mU12 Födertraining
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
@@ -119,6 +128,11 @@ DTEND:20260617T203000
 SUMMARY:Dicta Hockey Langenhorn
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260624T184500
+DTEND:20260624T203000
+SUMMARY:Dicta Hockey Langenhorn
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260619T175000
 DTEND:20260619T193000
 SUMMARY:mu14 Feldtraining
@@ -136,7 +150,7 @@ BEGIN:VEVENT
 DTSTART:20260617T171500
 DTEND:20260617T201500
 SUMMARY:Screening für Hockeyjugend
-DESCRIPTION:Weitere Termine für Screenings für alle die noch nicht zum Zug gekommen sind:\nZur Anmeldung bitte die folgenden Links benutzen\, dort auch noch weitere Informationen.\n17:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1715-uhr-1\n18:00 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1800-uhr-1\n18:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1815-uhr-1\n18:45 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1845-uhr-1\n19:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1915-uhr-1\n19:30 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1930-uhr-1
+DESCRIPTION:Weitere Termine für Screenings für alle die noch nicht zum Zug gekommen sind:\nZur Anmeldung bitte die folgenden Links benutzen\, dort auch noch weitere Informationen.\n17:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1715-uhr-1\n18:00 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1800-uhr-1\n18:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1815-uhr-1\n18:45 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1845-uhr-1\n19:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1915-uhr-1\n19:30 ausgebucht
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
@@ -162,7 +176,7 @@ DTEND:20260622T184500
 SUMMARY:Dicta Hockey Vossberg 
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260623T170000
+DTSTART:20260623T162000
 DTEND:20260623T181500
 SUMMARY:mU14 Testspiel Bergstedt 
 DESCRIPTION:Bitte gebt mir schnell eine Rückmeldung. Jeder ist hier bewusst eingeladen und darf sich angesprochen fühlen. Ich werde daraus einen 16-18 Mann Kader erstellen. \n\nDa die Trainingszeiten noch vakant sind\, gibt es hier eine große Spanne!
@@ -172,11 +186,6 @@ BEGIN:VEVENT
 DTSTART:20260619T080000
 DTEND:20260619T090000
 SUMMARY:Dicta: bitte am 19.6 bei Herrn Lüders im Büro A008 die Webuntiszugänge für die Eltern noch mal abholen
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260614T144500
-DTEND:20260614T210000
-SUMMARY:Franz: Henning Sportpark Reinbek 
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260623T170000
