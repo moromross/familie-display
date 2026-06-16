@@ -1,7 +1,7 @@
 name: Fetch Calendars
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '0 6,8,10,12,14,16,18,20 * * *'
   workflow_dispatch:
 
 permissions:
