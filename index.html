@@ -688,26 +688,37 @@ function buildWknd(viewId){
     gl+='<div style="position:absolute;left:0;right:0;top:'+hPx(h2)+'px;border-top:1px solid #ece8e2"></div>';
   // events per day — with overlap detection via layoutEvts
   function dayEvHtml(d){
-    var evs=[];
+    var dS=new Date(d);dS.setHours(0,0,0,0);
+    var dE=new Date(d);dE.setHours(23,59,59,999);
+    var timed=[],allDay=[];
     for(var i=0;i<allEvents.length;i++){
       var e=allEvents[i];
-      if((e.calId==='f1'||e.calId==='f2')&&sameDay(e.start,d)&&!e.allDay)evs.push(e);
+      if(e.calId!=='f1'&&e.calId!=='f2')continue;
+      // include if event overlaps this day (covers multi-day events too)
+      if(e.start<=dE&&e.end>dS){
+        if(e.allDay)allDay.push(e);else timed.push(e);
+      }
     }
-    var laid=layoutEvts(evs);
+    var laid=layoutEvts(timed);
+    for(var ai=0;ai<allDay.length;ai++)laid.push({ev:allDay[ai],sub:0,tot:1});
     var out='';
     for(var li=0;li<laid.length;li++){
       var L=laid[li],ev=L.ev;
-      var sh=ev.start.getHours()+ev.start.getMinutes()/60;
-      var eh=ev.end.getHours()+ev.end.getMinutes()/60;
-      if(eh<=minH||sh>=maxH)continue;
-      var top2=hPx(Math.max(sh,minH));
-      var bot=hPx(Math.min(eh,maxH));
-      var hh2=Math.max(10,bot-top2-1);
-      var pct=100/L.tot;
-      var lPct=L.sub*pct;
-      var rPct=100-(L.sub+1)*pct;
+      var pct=100/L.tot,lPct=L.sub*pct,rPct=100-(L.sub+1)*pct;
+      var top2,hh2;
+      if(ev.allDay){
+        top2=2;hh2=Math.max(14,Math.round(avail/20));
+        lPct=0;rPct=0;
+      } else {
+        var sh=ev.start.getHours()+ev.start.getMinutes()/60;
+        var eh=ev.end.getHours()+ev.end.getMinutes()/60;
+        if(eh<=minH||sh>=maxH)continue;
+        top2=hPx(Math.max(sh,minH));
+        var bot=hPx(Math.min(eh,maxH));
+        hh2=Math.max(10,bot-top2-1);
+      }
       out+='<div style="position:absolute;top:'+top2+'px;height:'+hh2+'px;left:calc('+lPct+'% + 1px);right:calc('+rPct+'% + 1px);border-radius:3px;border-left:3px solid '+ev.color+';background:'+rgba(ev.color,.1)+';overflow:hidden;padding:1px 3px">'
-        +'<div style="font-family:\'JetBrains Mono\',monospace;font-size:.42rem;color:#5a5550">'+ft(ev.start)+'</div>'
+        +'<div style="font-family:\'JetBrains Mono\',monospace;font-size:.42rem;color:#5a5550">'+(ev.allDay?'Ganztag':ft(ev.start))+'</div>'
         +'<div style="font-size:.54rem;font-weight:600;color:#1a1612;line-height:1.2">'+esc(ev.summary)+'</div>'
         +'</div>';
     }
