@@ -961,6 +961,14 @@ document.addEventListener('visibilitychange',function(){
     refreshCals(function(){renderInfo();renderCal();});
   }
 });
+// iOS home screen: pageshow fires when restored from page cache
+window.addEventListener('pageshow',function(e){
+  if(e.persisted){
+    // Page was restored from iOS cache — force fresh data
+    refreshCals(function(){renderInfo();renderCal();});
+    getWeather(cfg.city,function(w){if(w)buildFeed(w);});
+  }
+});
 // Weather every 15 min
 setInterval(function(){
   getWeather(cfg.city,function(l,d){wHomeLoc=l;wHome=d;renderWeather();});
