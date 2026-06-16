@@ -694,32 +694,36 @@ function buildWknd(viewId){
     for(var i=0;i<allEvents.length;i++){
       var e=allEvents[i];
       if(e.calId!=='f1'&&e.calId!=='f2')continue;
-      // include if event overlaps this day (covers multi-day events too)
       if(e.start<=dE&&e.end>dS){
         if(e.allDay)allDay.push(e);else timed.push(e);
       }
     }
-    var laid=layoutEvts(timed);
-    for(var ai=0;ai<allDay.length;ai++)laid.push({ev:allDay[ai],sub:0,tot:1});
+    var laidT=layoutEvts(timed);
+    var laidA=layoutEvts(allDay);
+    var adH=Math.max(14,Math.round(avail/20));
     var out='';
-    for(var li=0;li<laid.length;li++){
-      var L=laid[li],ev=L.ev;
+    // allDay events side by side at top
+    for(var li=0;li<laidA.length;li++){
+      var L=laidA[li],ev=L.ev;
       var pct=100/L.tot,lPct=L.sub*pct,rPct=100-(L.sub+1)*pct;
-      var top2,hh2;
-      if(ev.allDay){
-        top2=2;hh2=Math.max(14,Math.round(avail/20));
-        lPct=0;rPct=0;
-      } else {
-        var sh=ev.start.getHours()+ev.start.getMinutes()/60;
-        var eh=ev.end.getHours()+ev.end.getMinutes()/60;
-        if(eh<=minH||sh>=maxH)continue;
-        top2=hPx(Math.max(sh,minH));
-        var bot=hPx(Math.min(eh,maxH));
-        hh2=Math.max(10,bot-top2-1);
-      }
-      out+='<div style="position:absolute;top:'+top2+'px;height:'+hh2+'px;left:calc('+lPct+'% + 1px);right:calc('+rPct+'% + 1px);border-radius:3px;border-left:3px solid '+ev.color+';background:'+rgba(ev.color,.1)+';overflow:hidden;padding:1px 3px">'
-        +'<div style="font-family:\'JetBrains Mono\',monospace;font-size:.42rem;color:#5a5550">'+(ev.allDay?'Ganztag':ft(ev.start))+'</div>'
+      out+='<div style="position:absolute;top:2px;height:'+adH+'px;left:calc('+lPct+'% + 1px);right:calc('+rPct+'% + 1px);border-radius:3px;border-left:3px solid '+ev.color+';background:'+rgba(ev.color,.15)+';overflow:hidden;padding:1px 3px">'
+        +'<div style="font-family:\'JetBrains Mono\',monospace;font-size:.42rem;color:#5a5550">Ganztag</div>'
         +'<div style="font-size:.54rem;font-weight:600;color:#1a1612;line-height:1.2">'+esc(ev.summary)+'</div>'
+        +'</div>';
+    }
+    // timed events with overlap detection
+    for(var li2=0;li2<laidT.length;li2++){
+      var L2=laidT[li2],ev2=L2.ev;
+      var sh=ev2.start.getHours()+ev2.start.getMinutes()/60;
+      var eh=ev2.end.getHours()+ev2.end.getMinutes()/60;
+      if(eh<=minH||sh>=maxH)continue;
+      var top2=hPx(Math.max(sh,minH));
+      var bot=hPx(Math.min(eh,maxH));
+      var hh2=Math.max(10,bot-top2-1);
+      var pct2=100/L2.tot,lPct2=L2.sub*pct2,rPct2=100-(L2.sub+1)*pct2;
+      out+='<div style="position:absolute;top:'+top2+'px;height:'+hh2+'px;left:calc('+lPct2+'% + 1px);right:calc('+rPct2+'% + 1px);border-radius:3px;border-left:3px solid '+ev2.color+';background:'+rgba(ev2.color,.1)+';overflow:hidden;padding:1px 3px">'
+        +'<div style="font-family:\'JetBrains Mono\',monospace;font-size:.42rem;color:#5a5550">'+ft(ev2.start)+'</div>'
+        +'<div style="font-size:.54rem;font-weight:600;color:#1a1612;line-height:1.2">'+esc(ev2.summary)+'</div>'
         +'</div>';
     }
     return out;
