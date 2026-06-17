@@ -2,11 +2,6 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
-DTSTART:20260615T223000
-DTEND:20260615T233000
-SUMMARY:Tita Verabredung und Theater Anna Blanke 
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260620
 DTEND:20260621
 SUMMARY:Segeln
@@ -17,11 +12,6 @@ DTEND:20260623T165500
 SUMMARY:mu12 Athletik
 DESCRIPTION:Athletiktraining mit Summer und Marlon im Center. Im Anschluss geht es direkt in die Halle
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260615T180000
-DTEND:20260615T200000
-SUMMARY:Nina Sofie kommt 
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260618
@@ -39,11 +29,6 @@ DTEND:20260624T230000
 SUMMARY:Vortrag bei Mami und Papi 
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260615T174500
-DTEND:20260615T184500
-SUMMARY:Klavier Toti 
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260622T174500
 DTEND:20260622T184500
 SUMMARY:Klavier Toti 
@@ -53,6 +38,11 @@ DTSTART:20260617T164000
 DTEND:20260617T175000
 SUMMARY:mU12 Födertraining
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260625T080000
+DTEND:20260625T090000
+SUMMARY:Termin Bltabnahme Hamer
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260617T150000
@@ -70,6 +60,11 @@ DTEND:20260618T193000
 SUMMARY:Dicta Hockey Langenhorn
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260625T163000
+DTEND:20260625T193000
+SUMMARY:Dicta Hockey Langenhorn
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260618T150000
 DTEND:20260618T160000
 SUMMARY:Toti und Franz Impftermin Uhlig 
@@ -79,13 +74,6 @@ DTSTART:20260619T161500
 DTEND:20260619T181500
 SUMMARY:mU12 Punktspiel vs Rahlstedt
 LOCATION:Rahlstedter Hockey- und Tennis-Club e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260623T180000
-DTEND:20260623T193000
-SUMMARY:mu14 Feldtraining
-DESCRIPTION:Kunstrasen unten
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260616T090000
@@ -140,6 +128,11 @@ DESCRIPTION:Kunstrasen unten
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260618T080000
+DTEND:20260618T083000
+SUMMARY:Besprechung Brix
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260623T162000
 DTEND:20260623T183000
 SUMMARY:mU12 Feldtraining + Athletiktraining
@@ -150,13 +143,8 @@ BEGIN:VEVENT
 DTSTART:20260617T171500
 DTEND:20260617T201500
 SUMMARY:Screening für Hockeyjugend
-DESCRIPTION:Weitere Termine für Screenings für alle die noch nicht zum Zug gekommen sind:\nZur Anmeldung bitte die folgenden Links benutzen\, dort auch noch weitere Informationen.\n17:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1715-uhr-1\n18:00 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1800-uhr-1\n18:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1815-uhr-1\n18:45 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1845-uhr-1\n19:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1915-uhr-1\n19:30 ausgebucht
+DESCRIPTION:Weitere Termine für Screenings für alle die noch nicht zum Zug gekommen sind:\nZur Anmeldung bitte die folgenden Links benutzen\, dort auch noch weitere Informationen.\n17:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1715-uhr-1\n18:00 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1800-uhr-1\n18:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1815-uhr-1\n18:45 ausgebucht\n19:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1915-uhr-1\n19:30 ausgebucht
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260615T151500
-DTEND:20260615T191500
-SUMMARY:Franz Einladung Padel Freddy
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260616T162000
@@ -164,11 +152,6 @@ DTEND:20260616T180000
 SUMMARY:mu12 Feldtraining
 DESCRIPTION:Kunstrasen unten
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260615T160000
-DTEND:20260615T184500
-SUMMARY:Dicta Hockey Vossberg 
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260622T160000
@@ -219,11 +202,6 @@ BEGIN:VEVENT
 DTSTART:20260622T160000
 DTEND:20260622T170000
 SUMMARY:Franz Tennis
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260615T150000
-DTEND:20260615T160000
-SUMMARY:Toti Tennis 
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260622T150000
