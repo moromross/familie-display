@@ -2,6 +2,11 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
+DTSTART:20260626T200000
+DTEND:20260626T210000
+SUMMARY:Erinnerung geb Mathilda am 4.7.
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260620
 DTEND:20260621
 SUMMARY:Segeln
@@ -65,9 +70,21 @@ DTEND:20260625T193000
 SUMMARY:Dicta Hockey Langenhorn
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260626T150000
+DTEND:20260626T155500
+SUMMARY:mu12 Athletik
+DESCRIPTION:Athletiktraining mit Summer und Marlon. ACHTUNG DRAUẞEN! Bitte entsprechende Kleidung und Schuhe. Im Anschluss geht es in die Halle
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260618T150000
 DTEND:20260618T160000
 SUMMARY:Toti und Franz Impftermin Uhlig 
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260626T182000
+DTEND:20260626T192000
+SUMMARY:Papi nach hause für Totis Abschiedsfeier
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260619T161500
@@ -76,9 +93,9 @@ SUMMARY:mU12 Punktspiel vs Rahlstedt
 LOCATION:Rahlstedter Hockey- und Tennis-Club e.V.
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260616T090000
-DTEND:20260616T160000
-SUMMARY:Tita Präsenztermin Uni 
+DTSTART:20260626T160000
+DTEND:20260626T170000
+SUMMARY:Abschiedsfeier Toti - Klassenfest 
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260621T090000
@@ -121,13 +138,6 @@ DTEND:20260624T203000
 SUMMARY:Dicta Hockey Langenhorn
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260619T175000
-DTEND:20260619T193000
-SUMMARY:mu14 Feldtraining
-DESCRIPTION:Kunstrasen unten
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260618T080000
 DTEND:20260618T083000
 SUMMARY:Besprechung Brix
@@ -144,13 +154,6 @@ DTSTART:20260617T171500
 DTEND:20260617T201500
 SUMMARY:Screening für Hockeyjugend
 DESCRIPTION:Weitere Termine für Screenings für alle die noch nicht zum Zug gekommen sind:\nZur Anmeldung bitte die folgenden Links benutzen\, dort auch noch weitere Informationen.\n17:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1715-uhr-1\n18:00 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1800-uhr-1\n18:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1815-uhr-1\n18:45 ausgebucht\n19:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1915-uhr-1\n19:30 ausgebucht
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260616T162000
-DTEND:20260616T180000
-SUMMARY:mu12 Feldtraining
-DESCRIPTION:Kunstrasen unten
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
@@ -178,15 +181,22 @@ DESCRIPTION:Hallentraining
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260623T180000
-DTEND:20260623T190000
-SUMMARY:mu12 Athletiktraining
-DESCRIPTION:Athletiktraining mit Phil und Summer
+DTSTART:20260626T162000
+DTEND:20260626T180000
+SUMMARY:mu12 Feldtraining
+DESCRIPTION:Kunstrasen unten
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260616T180000
-DTEND:20260616T190000
+DTSTART:20260626T175000
+DTEND:20260626T193000
+SUMMARY:mu14 Feldtraining
+DESCRIPTION:Kunstrasen unten
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260623T180000
+DTEND:20260623T190000
 SUMMARY:mu12 Athletiktraining
 DESCRIPTION:Athletiktraining mit Phil und Summer
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
