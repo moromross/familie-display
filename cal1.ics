@@ -39,20 +39,9 @@ DTEND:20260622T184500
 SUMMARY:Klavier Toti 
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260617T164000
-DTEND:20260617T175000
-SUMMARY:mU12 Födertraining
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260625T080000
 DTEND:20260625T090000
 SUMMARY:Termin Bltabnahme Hamer
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260617T150000
-DTEND:20260617T153000
-SUMMARY:Franz Gitarre
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260624T150000
@@ -104,6 +93,16 @@ SUMMARY:mU12 Punktspiel vs Klipper
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260627
+DTEND:20260629
+SUMMARY:Taufe Carolina def. 
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260627
+DTEND:20260628
+SUMMARY:Vogelschießen
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260624T164000
 DTEND:20260624T175000
 SUMMARY:mU12 Födertraining
@@ -122,17 +121,6 @@ DTEND:20260620T113000
 SUMMARY:Dicta Hockeyspiel Vicky 
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260617T181500
-DTEND:20260617T211500
-SUMMARY:Finanzausschuss wohltorfs
-LOCATION:Thiessches haus
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260617T184500
-DTEND:20260617T203000
-SUMMARY:Dicta Hockey Langenhorn
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260624T184500
 DTEND:20260624T203000
 SUMMARY:Dicta Hockey Langenhorn
@@ -147,13 +135,6 @@ DTSTART:20260623T162000
 DTEND:20260623T183000
 SUMMARY:mU12 Feldtraining + Athletiktraining
 DESCRIPTION:mU12 Feldtraining. Bitte denkt an Wettergerechte Kleidung. \n\nTraining beginnt um 16:30
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260617T171500
-DTEND:20260617T201500
-SUMMARY:Screening für Hockeyjugend
-DESCRIPTION:Weitere Termine für Screenings für alle die noch nicht zum Zug gekommen sind:\nZur Anmeldung bitte die folgenden Links benutzen\, dort auch noch weitere Informationen.\n17:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1715-uhr-1\n18:00 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1800-uhr-1\n18:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1815-uhr-1\n18:45 ausgebucht\n19:15 https://sportision.de/club/ttk-sachsenwald-ev/bookings/screening-fur-ttk-jugend-1706-1915-uhr-1\n19:30 ausgebucht
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
