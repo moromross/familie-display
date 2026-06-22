@@ -44,6 +44,13 @@ DTEND:20260624T153000
 SUMMARY:Franz Gitarre
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260630T164500
+DTEND:20260630T200000
+SUMMARY:w/m u14 26-27 – Chile & Heimfeld
+DESCRIPTION:Freundschaftsspiele gegen Chile (Club Manquehue) und Heimfeld 🇨🇱 🇩🇪 \n\nUnterer KuRa
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260625T163000
 DTEND:20260625T193000
 SUMMARY:Dicta Hockey Langenhorn
@@ -70,11 +77,6 @@ DTSTART:20260621T090000
 DTEND:20260621T113000
 SUMMARY:mU12 Punktspiel vs Klipper
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260630T180000
-DTEND:20260630T210000
-SUMMARY:Amtsausschuss
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260627
@@ -160,6 +162,13 @@ DTEND:20260623T181500
 SUMMARY:mU14 Testspiel Bergstedt 
 DESCRIPTION:Bitte gebt mir schnell eine Rückmeldung. Jeder ist hier bewusst eingeladen und darf sich angesprochen fühlen. Ich werde daraus einen 16-18 Mann Kader erstellen. \n\nDa die Trainingszeiten noch vakant sind\, gibt es hier eine große Spanne!
 LOCATION:Volksdorfer Damm
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260629T154500
+DTEND:20260629T183000
+SUMMARY:w/m u14 26-27 – Spiele gegen Chile
+DESCRIPTION:Freundschaftsspiele gegen Chile (Club Manquehue) 🇨🇱 🇩🇪 \n\nOberer KuRa
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260623T170000
