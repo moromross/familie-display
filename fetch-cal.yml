@@ -1,7 +1,7 @@
 name: Fetch Calendars
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -227,21 +227,18 @@ jobs:
                       '&endDate='   + date_to.strftime('%Y%m%d'))
                   hw_data = wu_get(opener, hw_path, use_bearer=False)
                   homeworks = hw_data.get('data',{}).get('homeworks',[])
+                  # subject in lessons[] is a plain string e.g. 'REL (4)'
                   lessons_map = {}
-                  for rec in hw_data.get('data',{}).get('records',[]):
-                      lid = rec.get('lessonId') or rec.get('homeworkId')
-                      subj = rec.get('subject',{}) or {}
-                      lessons_map[lid] = subj.get('longName', subj.get('name', str(lid)))
+                  for ls in hw_data.get('data',{}).get('lessons',[]):
+                      lid = ls.get('id')
+                      subj = ls.get('subject','')
+                      if lid is not None and subj:
+                          lessons_map[lid] = str(subj)
                   d_keys = list((hw_data.get('data') or {}).keys())
                   print(hw_f + ": data keys=" + str(d_keys))
                   print(hw_f + ": lessons_map=" + str(lessons_map))
                   if homeworks:
                       print(hw_f + ": hw[0]=" + str({k:v for k,v in homeworks[0].items() if k!='text'}))
-                  for dk in d_keys:
-                      if dk != 'homeworks':
-                          dv = (hw_data.get('data') or {}).get(dk,[])
-                          if isinstance(dv,list) and dv:
-                              print(hw_f + ": " + dk + "[0]=" + str(dv[0])[:200])
                   print(hw_f + ": homeworks raw=" + str(len(homeworks)))
 
                   now_berlin  = datetime.now(BERLIN)
@@ -278,11 +275,60 @@ jobs:
                   open(tt_f,'w').write(EMPTY); open(hw_f,'w').write(EMPTY)
           PYEOF
 
+      - name: Fetch Ferientermine (school holidays)
+        run: |
+          python3 << 'PYEOF'
+          import urllib.request, json
+          from datetime import date, timedelta
+
+          STATES = {
+              'SH':'DE-SH','HH':'DE-HH','BY':'DE-BY','NW':'DE-NW',
+              'NI':'DE-NI','BE':'DE-BE','HE':'DE-HE','BW':'DE-BW',
+          }
+          today = date.today()
+          valid_from = today - timedelta(days=30)
+          valid_to   = date(today.year + 2, 12, 31)
+
+          result = {}
+          for code, subdiv in STATES.items():
+              url = ('https://openholidaysapi.org/SchoolHolidays'
+                     '?countryIsoCode=DE&languageIsoCode=DE'
+                     '&subdivisionCode=' + subdiv +
+                     '&validFrom=' + str(valid_from) +
+                     '&validTo=' + str(valid_to))
+              try:
+                  req = urllib.request.Request(url, headers={'Accept':'application/json'})
+                  data = json.loads(urllib.request.urlopen(req, timeout=30).read().decode('utf-8'))
+                  entries = []
+                  for item in data:
+                      name_de = None
+                      for n in item.get('name', []):
+                          if n.get('language') == 'DE':
+                              name_de = n.get('text'); break
+                      if not name_de and item.get('name'):
+                          name_de = item['name'][0].get('text', 'Ferien')
+                      entries.append({
+                          'n': name_de or 'Ferien',
+                          's': item.get('startDate'),
+                          'e': item.get('endDate'),
+                      })
+                  entries.sort(key=lambda x: x['s'])
+                  result[code] = entries
+                  print('ferien ' + code + ': ' + str(len(entries)) + ' entries')
+              except Exception as ex:
+                  print('ferien ' + code + ' error: ' + str(ex))
+                  result[code] = []
+
+          with open('ferien.json', 'w', encoding='utf-8') as f:
+              json.dump(result, f, ensure_ascii=False)
+          print('ferien.json written')
+          PYEOF
+
       - name: Commit calendars
         run: |
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-          git add cal1.ics cal2.ics calk1.ics calk2.ics calk3.ics calhw1.ics calhw2.ics calhw3.ics
+          git add cal1.ics cal2.ics calk1.ics calk2.ics calk3.ics calhw1.ics calhw2.ics calhw3.ics ferien.json
           git diff --staged --quiet || git commit -m "Update calendars $(date -u +%H:%M)"
           git pull --rebase origin main
           git push

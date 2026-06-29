@@ -93,10 +93,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1612;font-family:
 .sb{width:100%;padding:13px;background:#1a1612;color:#fff;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:600;margin-top:5px;display:block;text-align:center;-webkit-appearance:none;}
 #sc{position:fixed;top:10px;right:12px;background:#1a1612;color:#fff;border:none;border-radius:7px;padding:9px 15px;font-size:.74rem;z-index:600;font-family:'DM Sans',sans-serif;-webkit-appearance:none;}
 #gear{position:absolute;bottom:8px;right:8px;z-index:100;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.25);text-align:center;line-height:34px;font-size:.85rem;}
+
+/* Password lock screen */
+#lock-screen{position:fixed;top:0;left:0;right:0;bottom:0;background:#1a1612;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+#lock-screen.hidden{display:none;}
+#lock-box{background:#fff;border-radius:10px;padding:30px 26px;width:260px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.4);}
+#lock-box h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:#1a1612;margin-bottom:14px;}
+#lock-pw{width:100%;padding:10px;font-size:1rem;border:1px solid #c8c2ba;border-radius:6px;text-align:center;letter-spacing:.2em;box-sizing:border-box;}
+#lock-btn{margin-top:12px;width:100%;padding:10px;font-size:.9rem;font-weight:600;background:#1a3a5c;color:#fff;border:none;border-radius:6px;}
+#lock-err{font-size:.7rem;color:#c0392b;margin-top:8px;height:14px;}
 </style>
 </head>
 <body>
 
+<div id="lock-screen">
+  <div id="lock-box">
+    <h2>🔒 Familie Display</h2>
+    <input type="password" id="lock-pw" placeholder="Passwort" autocomplete="off">
+    <button id="lock-btn" onclick="checkLockPw()">Entsperren</button>
+    <div id="lock-err"></div>
+  </div>
+</div>
 <div id="grid">
   <div id="tile-weather">
     <div class="layer on" id="ly-weather"></div>
@@ -214,21 +231,19 @@ function keepAwake(){
   setInterval(function(){try{v.play();}catch(e){}},25000);
 }
 
-// ════════ DATA: FERIEN ════════
-var FERIEN={
-  SH:[{n:'Sommerferien',s:'2025-06-26',e:'2025-08-06'},{n:'Herbstferien',s:'2025-10-06',e:'2025-10-18'},{n:'Weihnachtsferien',s:'2025-12-22',e:'2026-01-06'},{n:'Winterferien',s:'2026-02-02',e:'2026-02-13'},{n:'Osterferien',s:'2026-03-25',e:'2026-04-09'},{n:'Sommerferien',s:'2026-06-25',e:'2026-08-05'}],
-  HH:[{n:'Sommerferien',s:'2025-07-10',e:'2025-08-20'},{n:'Herbstferien',s:'2025-10-03',e:'2025-10-17'},{n:'Weihnachtsferien',s:'2025-12-19',e:'2026-01-02'},{n:'Osterferien',s:'2026-03-12',e:'2026-03-27'},{n:'Sommerferien',s:'2026-07-02',e:'2026-08-12'}],
-  BY:[{n:'Sommerferien',s:'2025-07-28',e:'2025-09-10'},{n:'Herbstferien',s:'2025-10-27',e:'2025-10-31'},{n:'Weihnachtsferien',s:'2025-12-24',e:'2026-01-05'},{n:'Osterferien',s:'2026-04-09',e:'2026-04-24'},{n:'Sommerferien',s:'2026-07-30',e:'2026-09-14'}],
-  NW:[{n:'Sommerferien',s:'2025-06-23',e:'2025-08-05'},{n:'Herbstferien',s:'2025-10-13',e:'2025-10-25'},{n:'Weihnachtsferien',s:'2025-12-22',e:'2026-01-06'},{n:'Osterferien',s:'2026-03-26',e:'2026-04-11'},{n:'Sommerferien',s:'2026-06-22',e:'2026-08-04'}],
-  NI:[{n:'Sommerferien',s:'2025-06-26',e:'2025-08-06'},{n:'Herbstferien',s:'2025-10-06',e:'2025-10-18'},{n:'Weihnachtsferien',s:'2025-12-22',e:'2026-01-05'},{n:'Osterferien',s:'2026-03-25',e:'2026-04-09'},{n:'Sommerferien',s:'2026-06-25',e:'2026-08-05'}],
-  BE:[{n:'Sommerferien',s:'2025-06-19',e:'2025-08-01'},{n:'Herbstferien',s:'2025-10-20',e:'2025-11-01'},{n:'Weihnachtsferien',s:'2025-12-22',e:'2026-01-02'},{n:'Osterferien',s:'2026-03-26',e:'2026-04-09'},{n:'Sommerferien',s:'2026-06-25',e:'2026-08-07'}],
-  HE:[{n:'Sommerferien',s:'2025-07-07',e:'2025-08-15'},{n:'Herbstferien',s:'2025-10-20',e:'2025-11-01'},{n:'Weihnachtsferien',s:'2025-12-22',e:'2026-01-10'},{n:'Osterferien',s:'2026-03-30',e:'2026-04-11'},{n:'Sommerferien',s:'2026-07-06',e:'2026-08-14'}],
-  BW:[{n:'Sommerferien',s:'2025-07-31',e:'2025-09-13'},{n:'Herbstferien',s:'2025-10-27',e:'2025-11-01'},{n:'Weihnachtsferien',s:'2025-12-22',e:'2026-01-05'},{n:'Osterferien',s:'2026-04-01',e:'2026-04-18'},{n:'Sommerferien',s:'2026-07-30',e:'2026-09-12'}]
-};
+// ════════ DATA: FERIEN (loaded from ferien.json, auto-updated by GitHub Action) ════════
+var FERIEN={};
 var STN={SH:'Schleswig-Holstein',HH:'Hamburg',BY:'Bayern',BW:'Baden-Württemberg',NW:'NRW',HE:'Hessen',NI:'Niedersachsen',BE:'Berlin'};
+function loadFerien(cb){
+  xhrGet('ferien.json?t='+(new Date().getTime()),function(t){
+    try{FERIEN=JSON.parse(t);}catch(e){}
+    if(cb)cb();
+  },function(){if(cb)cb();});
+}
 function nextFerien(code){
   var t=new Date();t.setHours(0,0,0,0);
-  var l=FERIEN[code]||FERIEN.SH;
+  var l=FERIEN[code];
+  if(!l||!l.length)return null;
   for(var i=0;i<l.length;i++){
     var s=new Date(l[i].s),e=new Date(l[i].e);e.setHours(23,59,59);
     if(e>=t)return{name:l[i].n,start:s,end:e,days:Math.max(0,Math.ceil((s-t)/86400000)),inF:t>=s};
@@ -311,7 +326,7 @@ function renderWeather(){
   var h='';
   if(wHome&&wHomeLoc){
     var c=wHome.current,d=wHome.daily;
-    var rain=c.precipitation_probability||0;
+    var rainToday=d.precipitation_probability_max?d.precipitation_probability_max[0]:(c.precipitation_probability||0);
     function smday(i){
       var dt=new Date();dt.setDate(dt.getDate()+i);
       return '<table style="width:100%;height:100%;border-collapse:collapse;background:rgba(255,255,255,.65);border-radius:5px"><tr><td style="text-align:center;vertical-align:middle;padding:1px">'
@@ -325,11 +340,11 @@ function renderWeather(){
       +'<tr>'
       +'<td style="width:66%;padding:3px 2px 5px 5px;vertical-align:middle">'
         +'<table style="width:100%;height:100%;border-collapse:collapse;background:rgba(255,255,255,.85);border-radius:7px"><tr>'
-        +'<td style="width:42%;text-align:center;vertical-align:middle;font-size:5rem">'+wIcon(c.weathercode)+'</td>'
+        +'<td style="width:42%;text-align:center;vertical-align:middle;font-size:5rem">'+wIcon(d.weathercode[0])+'</td>'
         +'<td style="vertical-align:middle;padding:3px">'
-          +'<div style="font-family:\'Playfair Display\',serif;font-size:1.9rem;color:#1a1612;line-height:1">'+Math.round(c.temperature_2m)+'°</div>'
-          +'<div style="font-size:.55rem;color:#5a5550;margin-top:2px">'+wDesc(c.weathercode)+'</div>'
-          +'<div style="font-size:.52rem;color:#1a3a5c;margin-top:1px">🌧 '+rain+'%</div>'
+          +'<div style="font-family:\'Playfair Display\',serif;font-size:1.5rem;color:#1a1612;line-height:1">'+Math.round(d.temperature_2m_max[0])+'° <span style="font-size:1rem;color:#5a5550">/ '+Math.round(d.temperature_2m_min[0])+'°</span></div>'
+          +'<div style="font-size:.55rem;color:#5a5550;margin-top:2px">'+wDesc(d.weathercode[0])+'</div>'
+          +'<div style="font-size:.52rem;color:#1a3a5c;margin-top:1px">🌧 '+rainToday+'%</div>'
         +'</td>'
         +'</tr></table>'
       +'</td>'
@@ -940,12 +955,15 @@ el('tile-faz').addEventListener('touchend',function(e){fazFrozen=!fazFrozen;if(!
 
 // ════════ INIT & TIMERS ════════
 function initData(){
-  refreshCals(function(){renderInfo();renderCal();});
+  loadFerien(function(){
+    refreshCals(function(){renderInfo();renderCal();});
+  });
   getWeather(cfg.city,function(l,d){wHomeLoc=l;wHome=d;renderWeather();});
   getWeather(cfg.sail,function(l,d){wSailLoc=l;wSail=d;renderWeather();});
   fetchFAZ(function(){renderFAZ();});
 }
 
+function startApp(){
 loadCfg();
 keepAwake();
 initData();
@@ -990,6 +1008,32 @@ setInterval(function(){
     initData();
   }
 },60*1000);
+} // end startApp
+
+// ════════ PASSWORD LOCK ════════
+var LOCK_PW='familie2026'; // <-- Passwort hier ändern
+function checkLockPw(){
+  var entered=document.getElementById('lock-pw').value;
+  if(entered===LOCK_PW){
+    try{sessionStorage.setItem('fd_unlocked','1');}catch(e){}
+    document.getElementById('lock-screen').classList.add('hidden');
+    startApp();
+  }else{
+    document.getElementById('lock-err').textContent='Falsches Passwort';
+    document.getElementById('lock-pw').value='';
+  }
+}
+document.getElementById('lock-pw').addEventListener('keydown',function(e){
+  if(e.key==='Enter')checkLockPw();
+});
+(function(){
+  var already=false;
+  try{already=sessionStorage.getItem('fd_unlocked')==='1';}catch(e){}
+  if(already){
+    document.getElementById('lock-screen').classList.add('hidden');
+    startApp();
+  }
+})();
 </script>
 </body>
 </html>
