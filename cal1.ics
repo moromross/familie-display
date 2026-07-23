@@ -12,13 +12,6 @@ DTEND:20260727T184500
 SUMMARY:Klavier Toti 
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260721T160000
-DTEND:20260721T165500
-SUMMARY:mu12 Athletik
-DESCRIPTION:Athletiktraining mit Summer und Marlon im Center. Im Anschluss geht es direkt in die Halle
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260722T150000
 DTEND:20260722T153000
 SUMMARY:Franz Gitarre
@@ -56,11 +49,6 @@ DTEND:20260730
 SUMMARY:Für die Radtour zuzuglicb zur Packliste: Zustimmungserklärung\, Wimpel\, warnweste
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260721T171500
-DTEND:20260721T193000
-SUMMARY:Auswahltraining
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260728T171500
 DTEND:20260728T193000
 SUMMARY:Auswahltraining
@@ -81,20 +69,6 @@ BEGIN:VEVENT
 DTSTART:20260729T184500
 DTEND:20260729T203000
 SUMMARY:Dicta Hockey Langenhorn
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260721T162000
-DTEND:20260721T183000
-SUMMARY:mU12 Feldtraining + Athletiktraining
-DESCRIPTION:mU12 Feldtraining. Bitte denkt an Wettergerechte Kleidung. \n\nTraining beginnt um 16:30
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260721T170000
-DTEND:20260721T180000
-SUMMARY:mu12 Hallentraining
-DESCRIPTION:Hallentraining
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260728T162000
@@ -123,10 +97,10 @@ DESCRIPTION:mU12 Feldtraining. Bitte denkt an Wettergerechte Kleidung. \n\nTrain
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260721T162000
-DTEND:20260721T180000
-SUMMARY:mu12 Feldtraining
-DESCRIPTION:Kunstrasen unten
+DTSTART:20260731T150000
+DTEND:20260731T155500
+SUMMARY:mu12 Athletik
+DESCRIPTION:Athletiktraining mit Summer und Marlon. ACHTUNG DRAUẞEN! Bitte entsprechende Kleidung und Schuhe. Im Anschluss geht es in die Halle
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
