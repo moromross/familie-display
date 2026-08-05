@@ -14,6 +14,11 @@ DESCRIPTION:https://www.sportision.de/club/ttk-sachsenwald-ev/bookings/ttk-hocke
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260813T163000
+DTEND:20260813T193000
+SUMMARY:Dicta Hockey Langenhorn
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260805T080000
 DTEND:20260805T090000
 SUMMARY:Termin Blutabnahme Hamer 
