@@ -7,4 +7,10 @@ DTEND:20260821
 SUMMARY:📝 FRA
 DESCRIPTION:Etwas Französisches mitbringen\, les chiffres wiederholen
 END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260820
+DTEND:20260820
+SUMMARY:📝 FRA
+DESCRIPTION:Arbeitsheft kompakt\, Découvertes 1: ISBN: 978-3-12-624006-2 besorgen
+END:VEVENT
 END:VCALENDAR
