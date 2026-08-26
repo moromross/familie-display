@@ -158,12 +158,6 @@ SUMMARY:mU14 Fördertraining
 DESCRIPTION:Treffen 15 Min. vor Trainingsbeginn zur eigenständigen Erwärmung
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260826T173500
-DTEND:20260826T184000
-SUMMARY:mU14 Fördertraining
-DESCRIPTION:Treffen 15 Min. vor Trainingsbeginn zur eigenständigen Erwärmung
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260901T162000
 DTEND:20260901T183000
 SUMMARY:mU12 Feldtraining + Athletiktraining
