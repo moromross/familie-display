@@ -2,6 +2,11 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
+DTSTART:20260912
+DTEND:20260914
+SUMMARY:Segeln
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260906
 DTEND:20260913
 SUMMARY:Segeln Tita 
@@ -46,21 +51,16 @@ SUMMARY:Franz Hockey Auswahl
 DESCRIPTION:Vogt-Groth-Weg 29
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260902T164000
-DTEND:20260902T175000
-SUMMARY:mU12 Födertraining
+DTSTART:20260912T100000
+DTEND:20260913T160000
+SUMMARY:mU10 -> U12 Testspiele Zehlendorfer Wespen
+DESCRIPTION:Testspiele gegen die Zehlendorfer Wespen! Wir wollen als nächster Jahrgang da schon die richtigen Schritte setzten! \n\nAlso bitte den Termin wahrnehmen. 
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260906T121500
 DTEND:20260906T160000
 SUMMARY:Toti Kindergeburtstag Maci Sportpark Reinbek abholen an der Hege 
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260902T183000
-DTEND:20260902T203000
-SUMMARY:Elternabend 9e (Dicta)
-LOCATION:Raum A 015  (siehe Email vom 18-Aug.)
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260911T191500
@@ -71,11 +71,6 @@ BEGIN:VEVENT
 DTSTART:20260904T080000
 DTEND:20260904T090000
 SUMMARY:Mommberger 04131-4004131 ab 8 probieren\, Beginn eigentlich 08:15 laut vorliegender Karte
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260902T184500
-DTEND:20260902T203000
-SUMMARY:Dicta Hockey Langenhorn
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260909T184500
@@ -146,6 +141,12 @@ DTEND:20260906T210000
 SUMMARY:konzert reinbeker kirche johannes kühn
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260912T090000
+DTEND:20260912T120000
+SUMMARY:William-Stern-Gesellschaft Franz 1. Treffen im Foyer Schreibzeug mitnehmen und Eltern bleiben im Hörsall erhalten Info  der Bundesstraße 50b
+LOCATION:siehe Email vom 18aug. von begabtenfoerderung.math@uni-hamburg.de
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260907T160000
 DTEND:20260907T170000
 SUMMARY:Franz Tennis
@@ -168,5 +169,15 @@ BEGIN:VEVENT
 DTSTART:20260907T150000
 DTEND:20260907T160000
 SUMMARY:Toti Tennis 
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260912T133000
+DTEND:20260912T143000
+SUMMARY:Ab 11. Sep 2026 (bis 29. Mär 2027)	??Von Monet bis Picasso – Jüdische Kunstsammler*innen der Moderne??	Hamburger Kunsthalle	Allg. Publikum (unter 18 kostenlos)	Kostenlos für Schüler Meisterwerke aus 15 bedeutenden Sammlungen jüdischer Kunstsammler der Klassischen Moderne – eine kunsthistorisch wichtige Ausstellung über Sammeleidenschaft\, Kulturgeschichte und Verfolgung. Familienführungen jeden Samstag (Kinder 5–13 J.).
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260912T174500
+DTEND:20260912T184500
+SUMMARY:GGF IDEE 	Barockkonzert ??Vento della sera??	Schlosskirche Ahrensburg	Allg. Publikum	Freier Eintritt (Kollekte) Barockes Kammerensemble aus Hamburg in der historischen Schlosskirche Ahrensburg (ca. 5 km von Wohltorf). Anspruchsvolles Barockprogramm mit Händel\, Telemann und Corelli.
 END:VEVENT
 END:VCALENDAR
