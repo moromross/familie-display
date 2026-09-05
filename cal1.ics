@@ -2,6 +2,12 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
+DTSTART:20260913T094500
+DTEND:20260913T120000
+SUMMARY:U8 Freundschaft Spiele Schiri
+DESCRIPTION:Hi zusammen! Der 13.09. ist ein voller Tag für die U8! \n\nWir haben morgens einen Freundschafts-Spieltag und nachmittags dann einen HH-Spieltag. Ich habe deshalb zwei separate Termine erstellt\, falls einige von euch nur morgens oder nur nachmittags pfeifen können.\n\nGebt mir bitte Bescheid\, wenn ihr dabei sein könnt! \n\nDie Kinder brauchen eigentlich nur eine Pfeife – kein großer Druck! Die U8 spielt kaum mit Fuß und es gibt eigentlich keine Fouls. Die Regeln sind super einfach und alles ist sehr entspannt.\n\nIn der Woche vom 07.09. sind die Schiedsrichter außerdem herzlich zum U8-Training eingeladen\, wenn sie vorher ein bisschen üben möchten. 🏑\n
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260912
 DTEND:20260914
 SUMMARY:Segeln
@@ -27,20 +33,9 @@ DTEND:20260909T162000
 SUMMARY:Toti Georgia 
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260903T163000
-DTEND:20260903T193000
-SUMMARY:Dicta Hockey Langenhorn
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260910T163000
 DTEND:20260910T193000
 SUMMARY:Dicta Hockey Langenhorn
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260903T180000
-DTEND:20260903T190000
-SUMMARY:Franz Elternabend Herr Raabe
-LOCATION:Raum G184
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260911T175000
@@ -48,12 +43,6 @@ DTEND:20260911T193000
 SUMMARY:mu14 Feldtraining
 DESCRIPTION:Kunstrasen unten
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260903T170000
-DTEND:20260903T190000
-SUMMARY:Franz Hockey Auswahl 
-DESCRIPTION:Vogt-Groth-Weg 29
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260912T100000
@@ -83,6 +72,12 @@ DTEND:20260904T180000
 SUMMARY:mu12 Feldtraining
 DESCRIPTION:Kunstrasen unten
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260913T094500
+DTEND:20260913T120000
+SUMMARY:U8 Freundschaft Spiele Schiri
+DESCRIPTION:Hi zusammen! Der 13.09. ist ein voller Tag für die U8! \n\nWir haben morgens einen Freundschafts-Spieltag und nachmittags dann einen HH-Spieltag. Ich habe deshalb zwei separate Termine erstellt\, falls einige von euch nur morgens oder nur nachmittags pfeifen können.\n\nGebt mir bitte Bescheid\, wenn ihr dabei sein könnt! \n\nDie Kinder brauchen eigentlich nur eine Pfeife – kein großer Druck! Die U8 spielt kaum mit Fuß und es gibt eigentlich keine Fouls. Die Regeln sind super einfach und alles ist sehr entspannt.\n\nIn der Woche vom 07.09. sind die Schiedsrichter außerdem herzlich zum U8-Training eingeladen\, wenn sie vorher ein bisschen üben möchten. 🏑\n
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260905T120000
@@ -131,6 +126,11 @@ DTEND:20260904T193000
 SUMMARY:mu14 Feldtraining
 DESCRIPTION:Kunstrasen unten
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260913
+DTEND:20260914
+SUMMARY:Dirk müller geburtstag
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260908T162000
