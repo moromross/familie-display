@@ -13,6 +13,13 @@ SUMMARY:U8 Freundschaft Spiele Schiri
 DESCRIPTION:Hi zusammen! Der 13.09. ist ein voller Tag für die U8! \n\nWir haben morgens einen Freundschafts-Spieltag und nachmittags dann einen HH-Spieltag. Ich habe deshalb zwei separate Termine erstellt\, falls einige von euch nur morgens oder nur nachmittags pfeifen können.\n\nGebt mir bitte Bescheid\, wenn ihr dabei sein könnt! \n\nDie Kinder brauchen eigentlich nur eine Pfeife – kein großer Druck! Die U8 spielt kaum mit Fuß und es gibt eigentlich keine Fouls. Die Regeln sind super einfach und alles ist sehr entspannt.\n\nIn der Woche vom 07.09. sind die Schiedsrichter außerdem herzlich zum U8-Training eingeladen\, wenn sie vorher ein bisschen üben möchten. 🏑\n
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260915T165500
+DTEND:20260915T180000
+SUMMARY:mu14 Athletiktraining
+DESCRIPTION:Athletiktraining mit Summer
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260912
 DTEND:20260914
 SUMMARY:Segeln
@@ -47,13 +54,6 @@ DTSTART:20260911T175000
 DTEND:20260911T193000
 SUMMARY:mu14 Feldtraining
 DESCRIPTION:Kunstrasen unten
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260912T100000
-DTEND:20260913T160000
-SUMMARY:mU10 -> U12 Testspiele Zehlendorfer Wespen
-DESCRIPTION:Testspiele gegen die Zehlendorfer Wespen! Wir wollen als nächster Jahrgang da schon die richtigen Schritte setzten! \n\nAlso bitte den Termin wahrnehmen. 
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
