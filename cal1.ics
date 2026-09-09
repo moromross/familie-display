@@ -157,6 +157,12 @@ DTEND:20260914
 SUMMARY:Dirk müller geburtstag
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260909T164000
+DTEND:20260909T175000
+SUMMARY:mU12 Födertraining
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260912T090000
 DTEND:20260912T120000
 SUMMARY:William-Stern-Gesellschaft Franz 1. Treffen im Foyer Schreibzeug mitnehmen und Eltern bleiben im Hörsall erhalten Info  der Bundesstraße 50b
