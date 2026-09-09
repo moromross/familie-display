@@ -8,6 +8,13 @@ SUMMARY:U8 Freundschaft Spiele Schiri
 DESCRIPTION:Hi zusammen! Der 13.09. ist ein voller Tag für die U8! \n\nWir haben morgens einen Freundschafts-Spieltag und nachmittags dann einen HH-Spieltag. Ich habe deshalb zwei separate Termine erstellt\, falls einige von euch nur morgens oder nur nachmittags pfeifen können.\n\nGebt mir bitte Bescheid\, wenn ihr dabei sein könnt! \n\nDie Kinder brauchen eigentlich nur eine Pfeife – kein großer Druck! Die U8 spielt kaum mit Fuß und es gibt eigentlich keine Fouls. Die Regeln sind super einfach und alles ist sehr entspannt.\n\nIn der Woche vom 07.09. sind die Schiedsrichter außerdem herzlich zum U8-Training eingeladen\, wenn sie vorher ein bisschen üben möchten. 🏑\n
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260915T180000
+DTEND:20260915T190000
+SUMMARY:mu12 Athletiktraining
+DESCRIPTION:Athletiktraining mit Phil und Summer
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260917T160000
 DTEND:20260917T190000
 SUMMARY:Sextenfest Toti -Ende weiß ich noch nicht genau 
@@ -28,6 +35,12 @@ BEGIN:VEVENT
 DTSTART:20260906
 DTEND:20260913
 SUMMARY:Segeln Tita 
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260909T173500
+DTEND:20260909T184000
+SUMMARY:mU14 Fördertraining
+DESCRIPTION:Treffen 15 Min. vor Trainingsbeginn zur eigenständigen Erwärmung
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260914T174500
@@ -64,13 +77,6 @@ SUMMARY:Geburtstag [Pieper\, Markus]
 DESCRIPTION:ICON: 297|1504448\n#AN
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260915T180000
-DTEND:20260915T190000
-SUMMARY:mu12 Athletiktraining
-DESCRIPTION:Athletiktraining mit Phil und Summer
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260915T162000
 DTEND:20260915T183000
 SUMMARY:mU12 Feldtraining + Athletiktraining
@@ -86,6 +92,13 @@ BEGIN:VEVENT
 DTSTART:20260909T173500
 DTEND:20260909T183500
 SUMMARY:Fördertraining Franz Ende noch nicht bekannt 
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260911T175000
+DTEND:20260911T193000
+SUMMARY:mu14 Feldtraining
+DESCRIPTION:Kunstrasen unten
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260911T163000
@@ -109,13 +122,6 @@ SUMMARY:U8 Freundschaft Spiele Schiri
 DESCRIPTION:Hi zusammen! Der 13.09. ist ein voller Tag für die U8! \n\nWir haben morgens einen Freundschafts-Spieltag und nachmittags dann einen HH-Spieltag. Ich habe deshalb zwei separate Termine erstellt\, falls einige von euch nur morgens oder nur nachmittags pfeifen können.\n\nGebt mir bitte Bescheid\, wenn ihr dabei sein könnt! \n\nDie Kinder brauchen eigentlich nur eine Pfeife – kein großer Druck! Die U8 spielt kaum mit Fuß und es gibt eigentlich keine Fouls. Die Regeln sind super einfach und alles ist sehr entspannt.\n\nIn der Woche vom 07.09. sind die Schiedsrichter außerdem herzlich zum U8-Training eingeladen\, wenn sie vorher ein bisschen üben möchten. 🏑\n
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260908T180000
-DTEND:20260908T190000
-SUMMARY:mu12 Athletiktraining
-DESCRIPTION:Athletiktraining mit Phil und Summer
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260909T182500
 DTEND:20260909T212500
 SUMMARY:FA st ansgar
@@ -124,6 +130,11 @@ BEGIN:VEVENT
 DTSTART:20260910T173000
 DTEND:20260910T183000
 SUMMARY:Toti mit hand zu ralf kürscher
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260909T170000
+DTEND:20260909T180000
+SUMMARY:Clubturnier Franz Termin bislang 
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260908T171500
