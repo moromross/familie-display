@@ -101,11 +101,6 @@ DESCRIPTION:Kunstrasen unten
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260909T173500
-DTEND:20260909T183500
-SUMMARY:Fördertraining Franz Ende noch nicht bekannt 
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260911T175000
 DTEND:20260911T193000
 SUMMARY:mu14 Feldtraining
@@ -134,11 +129,6 @@ DTEND:20260918T193000
 SUMMARY:Tanzstunde dicta
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260909T184500
-DTEND:20260909T203000
-SUMMARY:Dicta Hockey Langenhorn
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260916T184500
 DTEND:20260916T203000
 SUMMARY:Dicta Hockey Langenhorn
@@ -150,19 +140,9 @@ SUMMARY:U8 Freundschaft Spiele Schiri
 DESCRIPTION:Hi zusammen! Der 13.09. ist ein voller Tag für die U8! \n\nWir haben morgens einen Freundschafts-Spieltag und nachmittags dann einen HH-Spieltag. Ich habe deshalb zwei separate Termine erstellt\, falls einige von euch nur morgens oder nur nachmittags pfeifen können.\n\nGebt mir bitte Bescheid\, wenn ihr dabei sein könnt! \n\nDie Kinder brauchen eigentlich nur eine Pfeife – kein großer Druck! Die U8 spielt kaum mit Fuß und es gibt eigentlich keine Fouls. Die Regeln sind super einfach und alles ist sehr entspannt.\n\nIn der Woche vom 07.09. sind die Schiedsrichter außerdem herzlich zum U8-Training eingeladen\, wenn sie vorher ein bisschen üben möchten. 🏑\n
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260909T182500
-DTEND:20260909T212500
-SUMMARY:FA st ansgar
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260910T173000
 DTEND:20260910T183000
 SUMMARY:Toti mit hand zu ralf kürscher
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260909T170000
-DTEND:20260909T180000
-SUMMARY:Clubturnier Franz Termin bislang 
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260915T171500
@@ -180,21 +160,9 @@ DTEND:20260914
 SUMMARY:Dirk müller geburtstag
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260909T164000
-DTEND:20260909T175000
-SUMMARY:mU12 Födertraining
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260918T120000
 DTEND:20260918T130000
 SUMMARY:Eiseninfusion 
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260909T173500
-DTEND:20260909T184000
-SUMMARY:mU14 Fördertraining
-DESCRIPTION:Treffen 15 Min. vor Trainingsbeginn zur eigenständigen Erwärmung
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260912T090000
