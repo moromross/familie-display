@@ -14,16 +14,16 @@ SUMMARY:📝 KUN
 DESCRIPTION:Farbiges Ideenkonzept fürs Wandplakat Japan
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260917
-DTEND:20260917
-SUMMARY:📝 GEO
-DESCRIPTION:Karte zu den Kontinenten fertig stellen
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260914
 DTEND:20260914
 SUMMARY:📝 DEU
 DESCRIPTION:Tierbeschreibung zu Freddy schreiben.\nMax. 30 Minuten! Keine Faultier-Beschreibung - Deine Fantasie ist gefragt.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260917
+DTEND:20260917
+SUMMARY:📝 GEO
+DESCRIPTION:Karte zu den Kontinenten fertig stellen
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260915
