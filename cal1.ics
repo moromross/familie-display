@@ -8,6 +8,12 @@ SUMMARY:U8 Freundschaft Spiele Schiri
 DESCRIPTION:Hi zusammen! Der 13.09. ist ein voller Tag für die U8! \n\nWir haben morgens einen Freundschafts-Spieltag und nachmittags dann einen HH-Spieltag. Ich habe deshalb zwei separate Termine erstellt\, falls einige von euch nur morgens oder nur nachmittags pfeifen können.\n\nGebt mir bitte Bescheid\, wenn ihr dabei sein könnt! \n\nDie Kinder brauchen eigentlich nur eine Pfeife – kein großer Druck! Die U8 spielt kaum mit Fuß und es gibt eigentlich keine Fouls. Die Regeln sind super einfach und alles ist sehr entspannt.\n\nIn der Woche vom 07.09. sind die Schiedsrichter außerdem herzlich zum U8-Training eingeladen\, wenn sie vorher ein bisschen üben möchten. 🏑\n
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260919T093000
+DTEND:20260919T123000
+SUMMARY:Franz Mathe Uni
+LOCATION:Bundesstrasse 56a
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260915T180000
 DTEND:20260915T190000
 SUMMARY:mu12 Athletiktraining
@@ -51,11 +57,6 @@ DTSTART:20260916T164000
 DTEND:20260916T175000
 SUMMARY:mU12 Födertraining
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260910T163000
-DTEND:20260910T193000
-SUMMARY:Dicta Hockey Langenhorn
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260917T163000
@@ -146,11 +147,6 @@ SUMMARY:U8 Freundschaft Spiele Schiri
 DESCRIPTION:Hi zusammen! Der 13.09. ist ein voller Tag für die U8! \n\nWir haben morgens einen Freundschafts-Spieltag und nachmittags dann einen HH-Spieltag. Ich habe deshalb zwei separate Termine erstellt\, falls einige von euch nur morgens oder nur nachmittags pfeifen können.\n\nGebt mir bitte Bescheid\, wenn ihr dabei sein könnt! \n\nDie Kinder brauchen eigentlich nur eine Pfeife – kein großer Druck! Die U8 spielt kaum mit Fuß und es gibt eigentlich keine Fouls. Die Regeln sind super einfach und alles ist sehr entspannt.\n\nIn der Woche vom 07.09. sind die Schiedsrichter außerdem herzlich zum U8-Training eingeladen\, wenn sie vorher ein bisschen üben möchten. 🏑\n
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260910T173000
-DTEND:20260910T183000
-SUMMARY:Toti mit hand zu ralf kürscher
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260915T171500
 DTEND:20260915T200000
 SUMMARY:Auswahltraining
@@ -173,7 +169,7 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260912T090000
 DTEND:20260912T120000
-SUMMARY:William-Stern-Gesellschaft Franz 1. Treffen im Foyer Schreibzeug mitnehmen und Eltern bleiben im Hörsall erhalten Info  der Bundesstraße 50b
+SUMMARY: Franz mathe uni 1. Treffen im Foyer Schreibzeug mitnehmen Eltern Hörsall 1 Bundesstraße 56b
 LOCATION:siehe Email vom 18aug. von begabtenfoerderung.math@uni-hamburg.de
 END:VEVENT
 BEGIN:VEVENT
