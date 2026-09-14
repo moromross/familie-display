@@ -111,6 +111,11 @@ DESCRIPTION:mU12 Feldtraining. Bitte denkt an Wettergerechte Kleidung. \n\nTrain
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260917T210000
+DTEND:20260917T220000
+SUMMARY:Entscheiden ob Kindergeburtstag paddeln oder Fußball 
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260922T180000
 DTEND:20260922T193000
 SUMMARY:mu14 Feldtraining
