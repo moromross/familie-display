@@ -4,8 +4,8 @@ PRODID:-//Familie Display//DE
 BEGIN:VEVENT
 DTSTART:20260916
 DTEND:20260916
-SUMMARY:📝 MAT
-DESCRIPTION:Bestimme die Mitte der Zahlen 13 und 65
+SUMMARY:📝 ENG
+DESCRIPTION:Please do number 4 on the worksheet from today.
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260917
@@ -16,8 +16,14 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260921
 DTEND:20260921
-SUMMARY:📝 REL (2)
-DESCRIPTION:Wenn ihr es nicht in der Stunde geschafft habt: Beendet Aufgabe 2 auf dem AB "Die Zehn Gebote".
+SUMMARY:📝 DEU
+DESCRIPTION:Eine Tierbeschreibung zu einem Tier deiner Wahl schreiben
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260916
+DTEND:20260916
+SUMMARY:📝 MAT
+DESCRIPTION:Bestimme die Mitte der Zahlen 13 und 65
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260916
@@ -28,7 +34,7 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260921
 DTEND:20260921
-SUMMARY:📝 DEU
-DESCRIPTION:Eine Tierbeschreibung zu einem Tier deiner Wahl schreiben
+SUMMARY:📝 REL (2)
+DESCRIPTION:Wenn ihr es nicht in der Stunde geschafft habt: Beendet Aufgabe 2 auf dem AB "Die Zehn Gebote".
 END:VEVENT
 END:VCALENDAR
