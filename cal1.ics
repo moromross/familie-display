@@ -128,13 +128,6 @@ DESCRIPTION:mU12 Feldtraining. Bitte denkt an Wettergerechte Kleidung. \n\nTrain
 LOCATION:TTK Tontaubenklub Sachsenwald e.V.
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260918T162000
-DTEND:20260918T180000
-SUMMARY:mu12 Feldtraining
-DESCRIPTION:Kunstrasen unten
-LOCATION:TTK Tontaubenklub Sachsenwald e.V.
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260921T190000
 DTEND:20260921T200000
 SUMMARY:Energet haus  vorbereiten (imke)
