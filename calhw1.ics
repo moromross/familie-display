@@ -10,20 +10,14 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260921
 DTEND:20260921
-SUMMARY:📝 REL (2)
-DESCRIPTION:Wenn ihr es nicht in der Stunde geschafft habt: Beendet Aufgabe 2 auf dem AB "Die Zehn Gebote".
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260916
-DTEND:20260916
-SUMMARY:📝 KUN
-DESCRIPTION:Farbiges Ideenkonzept fürs Wandplakat Japan
+SUMMARY:📝 DEU
+DESCRIPTION:Eine Tierbeschreibung zu einem Tier deiner Wahl schreiben
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260921
 DTEND:20260921
-SUMMARY:📝 DEU
-DESCRIPTION:Eine Tierbeschreibung zu einem Tier deiner Wahl schreiben
+SUMMARY:📝 REL (2)
+DESCRIPTION:Wenn ihr es nicht in der Stunde geschafft habt: Beendet Aufgabe 2 auf dem AB "Die Zehn Gebote".
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260916
@@ -36,5 +30,17 @@ DTSTART:20260917
 DTEND:20260917
 SUMMARY:📝 GEO
 DESCRIPTION:Karte zu den Kontinenten fertig stellen
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260922
+DTEND:20260922
+SUMMARY:📝 ENG
+DESCRIPTION:New words: on-now + Yellow box: Präpositionen and Yellow box: In a room (p.2109
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260916
+DTEND:20260916
+SUMMARY:📝 KUN
+DESCRIPTION:Farbiges Ideenkonzept fürs Wandplakat Japan
 END:VEVENT
 END:VCALENDAR
