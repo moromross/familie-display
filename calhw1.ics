@@ -2,12 +2,6 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
-DTSTART:20260922
-DTEND:20260922
-SUMMARY:📝 ENG
-DESCRIPTION:New words: on-now + Yellow box: Präpositionen and Yellow box: In a room (p.210)
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260921
 DTEND:20260921
 SUMMARY:📝 DEU
@@ -24,5 +18,11 @@ DTSTART:20260921
 DTEND:20260921
 SUMMARY:📝 REL (2)
 DESCRIPTION:Wenn ihr es nicht in der Stunde geschafft habt: Beendet Aufgabe 2 auf dem AB "Die Zehn Gebote".
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260922
+DTEND:20260922
+SUMMARY:📝 ENG
+DESCRIPTION:New words: on-now + Yellow box: Präpositionen and Yellow box: In a room (p.210)
 END:VEVENT
 END:VCALENDAR
