@@ -25,10 +25,4 @@ DTEND:20260922
 SUMMARY:📝 MAT
 DESCRIPTION:Üben und \nAH S. 4 5 und 6 beenden
 END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260918
-DTEND:20260918
-SUMMARY:📝 MAT
-DESCRIPTION:S. 14 8 a\,d und Kopfrechnen üben (Strategien zum Kopfrechnen haben wir besprochen (zerlegen: 23 x 7 = 20 x 7 + 3 x 7 und „Nullen ranhängen“ 312 x 100 = 31.200)
-END:VEVENT
 END:VCALENDAR
