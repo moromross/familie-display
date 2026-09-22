@@ -4,13 +4,13 @@ PRODID:-//Familie Display//DE
 BEGIN:VEVENT
 DTSTART:20260922
 DTEND:20260922
-SUMMARY:📝 ENG
-DESCRIPTION:New words: on-now + Yellow box: Präpositionen and Yellow box: In a room (p.210)
+SUMMARY:📝 MAT
+DESCRIPTION:Üben und \nAH S. 4 5 und 6 beenden
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260922
 DTEND:20260922
-SUMMARY:📝 MAT
-DESCRIPTION:Üben und \nAH S. 4 5 und 6 beenden
+SUMMARY:📝 ENG
+DESCRIPTION:New words: on-now + Yellow box: Präpositionen and Yellow box: In a room (p.210)
 END:VEVENT
 END:VCALENDAR
