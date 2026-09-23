@@ -2,6 +2,12 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
+DTSTART:20260923
+DTEND:20260923
+SUMMARY:📝 MAT
+DESCRIPTION:S. 14. Nr. 5 und  6 (im Anschluss selbst vergleichen) und Quadratzahlen bis 20 lernen (mit Hilfe des Lernmaterials)
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260929
 DTEND:20260929
 SUMMARY:📝 ENG
