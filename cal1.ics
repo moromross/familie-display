@@ -78,6 +78,13 @@ DTEND:20260923T093000
 SUMMARY:Fahrzeug Termin kann Dienstag morgen abgegeben werden 
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20261002T163000
+DTEND:20261002T181500
+SUMMARY:mU10 Testspiel gegen mU12 HCL 
+DESCRIPTION:Bitte Zügig Zusagen! \n\nLetzter Test bevor es in die Halle. 
+LOCATION:TTK Tontaubenklub Sachsenwald e.V.
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20261001T170000
 DTEND:20261001T190000
 SUMMARY:Franz Hockey Auswahl 
