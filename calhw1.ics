@@ -2,18 +2,6 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
-DTSTART:20261008
-DTEND:20261008
-SUMMARY:📝 GEO
-DESCRIPTION:Arbeitsbogen Aufgabe 2: Bitte das Experiment mit der Taschenlampe selber durchführen. Kind oder Eltern übernehmen die Rolle des Lehrers. Dann Aufgabe 2 auf dem Arbeitsbogen ausfüllen.
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20261008
-DTEND:20261008
-SUMMARY:📝 ENG
-DESCRIPTION:Please complete the „Selbsteinschätzungsbogen.“
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20261009
 DTEND:20261009
 SUMMARY:📝 MAT
@@ -24,5 +12,17 @@ DTSTART:20261007
 DTEND:20261007
 SUMMARY:📝 MAT
 DESCRIPTION:S. 21 Nr. 6\, 7 (selber kontrollieren)
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20261008
+DTEND:20261008
+SUMMARY:📝 GEO
+DESCRIPTION:Arbeitsbogen Aufgabe 2: Bitte das Experiment mit der Taschenlampe selber durchführen. Kind oder Eltern übernehmen die Rolle des Lehrers. Dann Aufgabe 2 auf dem Arbeitsbogen ausfüllen.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20261008
+DTEND:20261008
+SUMMARY:📝 ENG
+DESCRIPTION:Please complete the „Selbsteinschätzungsbogen.“
 END:VEVENT
 END:VCALENDAR
