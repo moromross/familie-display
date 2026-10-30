@@ -1,4 +1,10 @@
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
+BEGIN:VEVENT
+DTSTART:20261103
+DTEND:20261103
+SUMMARY:📝 DEU
+DESCRIPTION:Zwei bis drei Strophen zum Ende schreiben \n(Wie könnte es enden?)
+END:VEVENT
 END:VCALENDAR
