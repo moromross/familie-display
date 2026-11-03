@@ -7,10 +7,4 @@ DTEND:20261106
 SUMMARY:📝 DEU
 DESCRIPTION:Berichtigung und Unterschrift
 END:VEVENT
-BEGIN:VEVENT
-DTSTART:20261103
-DTEND:20261103
-SUMMARY:📝 DEU
-DESCRIPTION:Zwei bis drei Strophen zum Ende schreiben \n(Wie könnte es enden?)
-END:VEVENT
 END:VCALENDAR
