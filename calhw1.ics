@@ -2,10 +2,10 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
-DTSTART:20261106
-DTEND:20261106
-SUMMARY:📝 MAT
-DESCRIPTION:Umrechnung von Längen üben -> Vorbereitung für das Kopfrechnen
+DTSTART:20261105
+DTEND:20261105
+SUMMARY:📝 GEO
+DESCRIPTION:Lexikonartikel „Wie entstehen die Jahreszeiten?“ schreiben.
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20261109
@@ -20,9 +20,9 @@ SUMMARY:📝 ENG
 DESCRIPTION:new words: to look at-after(p.215-216)
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20261105
-DTEND:20261105
-SUMMARY:📝 GEO
-DESCRIPTION:Lexikonartikel „Wie entstehen die Jahreszeiten?“ schreiben.
+DTSTART:20261106
+DTEND:20261106
+SUMMARY:📝 MAT
+DESCRIPTION:Umrechnung von Längen üben -> Vorbereitung für das Kopfrechnen
 END:VEVENT
 END:VCALENDAR
