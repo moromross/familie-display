@@ -2,15 +2,27 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
+DTSTART:20261111
+DTEND:20261111
+SUMMARY:📝 MAT
+DESCRIPTION:Arbeitsheft\, S. 7 Nr. 4 und 5 \nFehlende Angaben bei Aufgabe 4: Fußgänger Erwachsene 2€ und Fußgänger Kinder 1€.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20261110
+DTEND:20261110
+SUMMARY:📝 ENG
+DESCRIPTION:new words: to look at-after(p.215-216)
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20261117
 DTEND:20261117
 SUMMARY:📝 ENG
 DESCRIPTION:New words: French-when (p.216-217) + yellow box: subjects (p.216)
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20261111
-DTEND:20261111
+DTSTART:20261110
+DTEND:20261110
 SUMMARY:📝 MAT
-DESCRIPTION:Arbeitsheft\, S. 7 Nr. 4 und 5 \nFehlende Angaben bei Aufgabe 4: Fußgänger Erwachsene 2€ und Fußgänger Kinder 1€.
+DESCRIPTION:S. 28 12 b\, c nur Rechnung und Antwortsatz
 END:VEVENT
 END:VCALENDAR
