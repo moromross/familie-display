@@ -8,15 +8,15 @@ SUMMARY:📝 FRA
 DESCRIPTION:Einen Text über eine Person in der Klasse schreiben
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20261119
-DTEND:20261119
-SUMMARY:📝 GES
-DESCRIPTION:In Paaren: Plakat\, Bilder und Infomaterial zum jeweiligen Gott organisieren
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20261117
 DTEND:20261117
 SUMMARY:📝 DEU
 DESCRIPTION:Arbeitsauftrag 2
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20261119
+DTEND:20261119
+SUMMARY:📝 GES
+DESCRIPTION:In Paaren: Plakat\, Bilder und Infomaterial zum jeweiligen Gott organisieren
 END:VEVENT
 END:VCALENDAR
