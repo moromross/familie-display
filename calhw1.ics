@@ -2,12 +2,6 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
-DTSTART:20261123
-DTEND:20261123
-SUMMARY:📝 REL (2)
-DESCRIPTION:Nehmt wahr: Wie erlebe ich im Alltag Nächstenliebe?
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20261117
 DTEND:20261117
 SUMMARY:📝 MAT
@@ -17,12 +11,18 @@ BEGIN:VEVENT
 DTSTART:20261123
 DTEND:20261123
 SUMMARY:📝 REL (2)
-DESCRIPTION:Wenn nicht im Unterricht geschafft: beendet bitte das AB: Die Lehren Jesu über Liebe (5)
+DESCRIPTION:Nehmt wahr: Wie erlebe ich im Alltag Nächstenliebe?
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20261117
 DTEND:20261117
 SUMMARY:📝 ENG
 DESCRIPTION:New words: French-when (p.216-217) + yellow box: subjects (p.216)
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20261123
+DTEND:20261123
+SUMMARY:📝 REL (2)
+DESCRIPTION:Wenn nicht im Unterricht geschafft: beendet bitte das AB: Die Lehren Jesu über Liebe (5)
 END:VEVENT
 END:VCALENDAR
