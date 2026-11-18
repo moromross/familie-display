@@ -2,18 +2,6 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Familie Display//DE
 BEGIN:VEVENT
-DTSTART:20261118
-DTEND:20261118
-SUMMARY:📝 MAT
-DESCRIPTION:S. 32 Nr. 11c\,d S. 33 Nr. 14
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20261120
-DTEND:20261120
-SUMMARY:📝 MAT
-DESCRIPTION:Schriftliche Multiplikation und Division üben
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20261124
 DTEND:20261124
 SUMMARY:📝 ENG
@@ -23,18 +11,18 @@ BEGIN:VEVENT
 DTSTART:20261123
 DTEND:20261123
 SUMMARY:📝 REL (2)
-DESCRIPTION:Nehmt wahr: Wie erlebe ich im Alltag Nächstenliebe?
+DESCRIPTION:Wenn nicht im Unterricht geschafft: beendet bitte das AB: Die Lehren Jesu über Liebe (5)
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20261123
 DTEND:20261123
 SUMMARY:📝 REL (2)
-DESCRIPTION:Wenn nicht im Unterricht geschafft: beendet bitte das AB: Die Lehren Jesu über Liebe (5)
+DESCRIPTION:Nehmt wahr: Wie erlebe ich im Alltag Nächstenliebe?
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20261118
-DTEND:20261118
-SUMMARY:📝 ENG
-DESCRIPTION:If not finished in class: exercises have got 1-5
+DTSTART:20261120
+DTEND:20261120
+SUMMARY:📝 MAT
+DESCRIPTION:Schriftliche Multiplikation und Division üben
 END:VEVENT
 END:VCALENDAR
